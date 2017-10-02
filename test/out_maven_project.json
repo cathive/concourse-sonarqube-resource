@@ -1,0 +1,9 @@
+{
+  "params": {
+    "project_path": "maven_project"
+  },
+  "source": {
+    "host_url": "https://sonar.example.com/",
+    "login": "$$ACCESS_TOKEN$$"
+  }
+}

@@ -1,20 +1,28 @@
 FROM debian:jessie as builder
 RUN apt-get -y update && apt-get -y install curl unzip
-ARG SONAR_RUNNER_DOWNLOAD_URL="http://repo1.maven.org/maven2/org/codehaus/sonar/runner/sonar-runner-dist/2.4/sonar-runner-dist-2.4.zip"
-RUN curl -s -L "${SONAR_RUNNER_DOWNLOAD_URL}" > "/tmp/sonar-runner-dist-2.4.zip" \
-&& unzip "/tmp/sonar-runner-dist-2.4.zip" -d "/data" \
-&& rm -f "/tmp/sonar-runner-dist-2.4.zip"
-#ARG JQ_DOWNLOAD_URL="https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64"
-#RUN curl -s -L "${JQ_DOWNLOAD_URL}" >/data/jq
+ARG SONAR_SCANNER_DOWNLOAD_URL="https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.3.778-linux.zip"
+RUN curl -s -L "${SONAR_SCANNER_DOWNLOAD_URL}" > "/tmp/sonar-scanner-cli-3.0.3.778-linux.zip" \
+&& unzip -qq "/tmp/sonar-scanner-cli-3.0.3.778-linux.zip" -d "/data" \
+&& mv "/data/sonar-scanner-3.0.3.778-linux" "/data/sonar-scanner" \
+&& rm -f "/tmp/sonar-scanner-cli-3.0.3.778-linux.zip"
+ARG MAVEN_DOWNLOAD_URL="http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.zip"
+RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-3.5.0-bin.zip" \
+&& unzip -qq "/tmp/apache-maven-3.5.0-bin.zip" -d "/data" \
+&& mv "/data/apache-maven-3.5.0" "/data/apache-maven" \
+&& rm -f "/tmp/apache-maven-3.5.0-bin.zip"
 
 FROM openjdk:8u131-alpine
 LABEL maintainer="headcr4sh@gmail.com"
-LABEL version="0.0.5"
+LABEL version="0.0.6"
 RUN apk -f -q update \
 && apk -f -q add bash gawk git jq
-COPY --from=builder "/data/sonar-runner-2.4" /opt/sonar-runner
-RUN ln -sf /opt/sonar-runner/bin/sonar-runner /usr/local/bin/sonar-runner
-#COPY --from=builder "/data/jq" /usr/local/bin/jq
+COPY --from=builder "/data/sonar-scanner" "/opt/sonar-scanner"
+RUN ln -sf "/opt/sonar-scanner/bin/sonar-scanner" "/usr/local/bin/sonar-scanner" \
+&& ln -sf "/opt/sonar-scanner/bin/sonar-scanner-debug" "/usr/local/bin/sonar-scanner-debug"
+COPY --from=builder "/data/apache-maven" "/opt/apache-maven"
+RUN ln -sf "/opt/apache-maven/bin/mvn" "/usr/local/bin/mvn" \
+&& ln -sf "/opt/apache-maven/bin/mvnDebug" "/usr/local/bin/mvnDebug"
+ENV M2_HOME="/opt/apache-maven"
 
 COPY ./assets/* /opt/resource/
 

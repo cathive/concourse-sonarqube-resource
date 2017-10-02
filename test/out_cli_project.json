@@ -1,0 +1,11 @@
+{
+    "params": {
+      "project_path": "cli_project",
+      "project_key": "com.example.cli_project",
+      "sources": "src"
+    },
+    "source": {
+      "host_url": "https://sonar.example.com/",
+      "login": "$$ACCESS_TOKEN$$"
+    }
+  }

@@ -58,8 +58,19 @@ if [ ! -z "${sonar_sources}" ]; then
   scanner_opts+=" -Dsonar.sources=${sonar_sources}"
 fi
 
+scanner_type=$(jq -r '.params.scanner_type // ""' < $payload)
+scanner_bin="sonar-scanner"
+if [ -z "${scanner_type}" ] || [ "${scanner_type}" == "auto" ]; then
+  if [ -f "${source}/${project_path}/pom.xml" ]; then
+    scanner_type="maven"
+    scanner_bin="mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar"
+  else
+    scanner_type="cli"
+  fi
+fi
+
 cd "${source}/${project_path}"
-sonar-runner ${scanner_opts}
+${scanner_bin} ${scanner_opts}
 
 
 if [ -f "./.scannerwork/report-task.txt" ]; then
@@ -76,6 +87,7 @@ jq -n "{
     server_url: \"${serverUrl}\",
     server_version: \"${serverVersion}\",
     dashboard_url: \"${dashboardUrl}\",
-    ce_task_url: \"${ceTaskUrl}\"
+    ce_task_url: \"${ceTaskUrl}\",
+    scanner_type: \"${scanner_type}\"
   }
 }" >&3
