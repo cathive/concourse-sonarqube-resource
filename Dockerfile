@@ -15,6 +15,6 @@ COPY --from=builder "/data/sonar-runner-2.4" /opt/sonar-runner
 RUN ln -sf /opt/sonar-runner/bin/sonar-runner /usr/local/bin/sonar-runner
 #COPY --from=builder "/data/jq" /usr/local/bin/jq
 
-COPY ./assets/* /opt/resources/
+COPY ./assets/* /opt/resource/
 
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
