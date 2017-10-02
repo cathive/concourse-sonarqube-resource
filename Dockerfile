@@ -8,7 +8,8 @@ RUN curl -s -L "${SONAR_RUNNER_DOWNLOAD_URL}" > "/tmp/sonar-runner-dist-2.4.zip"
 #RUN curl -s -L "${JQ_DOWNLOAD_URL}" >/data/jq
 
 FROM openjdk:8u131-alpine
-MAINTAINER Benjamin P. Jung <headcr4sh@gmail.com>
+LABEL maintainer="headcr4sh@gmail.com"
+LABEL version="0.0.5"
 RUN apk -f -q update \
 && apk -f -q add bash gawk git jq
 COPY --from=builder "/data/sonar-runner-2.4" /opt/sonar-runner
