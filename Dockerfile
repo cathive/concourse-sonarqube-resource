@@ -12,8 +12,6 @@ RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-3.5.0-bin.zip" \
 && rm -f "/tmp/apache-maven-3.5.0-bin.zip"
 
 FROM openjdk:8u131-alpine
-LABEL maintainer="headcr4sh@gmail.com"
-LABEL version="0.0.6"
 RUN apk -f -q update \
 && apk -f -q add bash gawk git jq
 COPY --from=builder "/data/sonar-scanner" "/opt/sonar-scanner"
@@ -24,6 +22,15 @@ RUN ln -sf "/opt/apache-maven/bin/mvn" "/usr/local/bin/mvn" \
 && ln -sf "/opt/apache-maven/bin/mvnDebug" "/usr/local/bin/mvnDebug"
 ENV M2_HOME="/opt/apache-maven"
 
-COPY ./assets/* /opt/resource/
+RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.0.2:get \
+-DrepoUrl="https://repo.maven.apache.org/maven2/" \
+-Dartifact="org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:jar"
 
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
+
+LABEL maintainer="headcr4sh@gmail.com"
+LABEL version="0.0.7"
+
+COPY ./assets/* /opt/resource/
+
+
