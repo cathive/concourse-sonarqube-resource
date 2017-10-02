@@ -59,7 +59,7 @@ if [ ! -z "${sonar_sources}" ]; then
 fi
 
 cd "${source}/${project_path}"
-sonar-scanner ${scanner_opts}
+sonar-runner ${scanner_opts}
 
 
 if [ -f "./.scannerwork/report-task.txt" ]; then
