@@ -68,7 +68,7 @@ the SonarQube Web API:
   during the out action.
   Format: https://next.sonarqube.com/sonarqube/web_api/api/qualitygates/project_status
 * ce_task_info.json
-  Informatio about the compute engine task that performed the analysis.
+  Information about the compute engine task that performed the analysis.
   Format: https://next.sonarqube.com/sonarqube/web_api/api/ce/task
 
 ## Full example
