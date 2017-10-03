@@ -47,6 +47,7 @@ until [ "${ce_task_status}" != "PENDING" ] && [ "${ce_task_status}" != "IN_PROGR
   sq_ce_task "${sonar_login}:${sonar_password}" "${sonar_host_url}" "${ce_task_id}" > "${ce_task_info}"
   ce_task_status=$(jq -r '.task.status // ""' < "${ce_task_info}")
   if [ "${ce_task_status}" != "PENDING" ] && [ "${ce_task_status}" != "IN_PROGRESS" ]; then
+    echo "Waiting for compute engine result (sleep: 5s)..."
     sleep 5 # Poll SonarQube compute engine task every 5 seconds.
   fi
 done
