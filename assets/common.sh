@@ -10,7 +10,7 @@ function read_properties {
 # $2 - SonarQube URL. Must end with a slash (required)
 # $3 - CE Task ID (required)
 function sq_ce_task {
-  curl -u "${1}" "${2}api/ce/task?id=${3}&additionalField=stacktrace,scannerContext"
+  curl -s -L -u "${1}" "${2}api/ce/task?id=${3}&additionalField=stacktrace,scannerContext"
 }
 
 # Checks the quality gate status of a project
@@ -19,5 +19,5 @@ function sq_ce_task {
 # $2 - SonarQube URL. Must end with a slash (required)
 # $3 - Analysis ID (required)
 function sq_qualitygates_project_status {
-  curl -u ${1} "${2}api/qualitygates/project_status?analysisId=${3}"
+  curl -s -L -u ${1} "${2}api/qualitygates/project_status?analysisId=${3}"
 }
