@@ -77,7 +77,7 @@ The following example pipeline shows how to use the resource to break the build 
 a project doesn't meet the requirements of the associated quality gate.
 
  ```yaml
- resource_types:
+resource_types:
 - name: sonar-runner
   type: docker-image
   source:
@@ -125,24 +125,19 @@ jobs:
     - build-and-analyze
     trigger: true
   - task: break-build
-      config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: node
-          tag: '8.4.0'
-        inputs:
-        - name: sonar-runner
-        run:
-          path: node
-          args:
-          - -e
-          - |
-          const projectStatus = require('./qualitygate_project_status.json');
-          if (projectStatus.status !== 'OK') {
-            console.error('Quality gate goals missed. :-(');
-            process.exit(1);
-          }
-          dir: sonar-runner
+    config:
+    platform: linux
+    image_resource:
+      type: docker-image
+      source:
+        repository: node
+        tag: '8.4.0'
+      inputs:
+      - name: sonar-runner
+      run:
+        path: node
+        args:
+        - -e
+        - "const projectStatus = require('./qualitygate_project_status.json'); if (projectStatus.status !== 'OK') { console.error('Quality gate goals missed. :-('); process.exit(1); }"
+        dir: sonar-runner
 ```
