@@ -1,3 +1,18 @@
 #!/bin/bash
 
-echo "[]"
+set -e
+
+exec 3>&1 # make stdout available as fd 3 for the result
+exec 1>&2 # redirect all output to stderr for logging
+
+payload=$(mktemp ${TMPDIR:-/tmp}/sonarqube-resource-check.XXXXXX)
+cat > $payload <&0
+
+latest_version=$(jq -r '.version.ce_task_id // ""' < $payload)
+if [ ! -z "${latest_version}" ]; then
+  jq -n "[
+    version: {ceTaskId: \"${latest_version}\"},
+  ]" >&3
+else
+  jq -n "[]" >&3
+fi

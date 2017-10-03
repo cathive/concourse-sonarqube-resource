@@ -81,7 +81,7 @@ else
 fi
 
 jq -n "{
-  version: {ceTaskId: \"${ceTaskId}\"},
+  version: {ce_task_id: \"${ceTaskId}\"},
   metadata: [
     { name: \"project_key\", value: \"${projectKey}\" },
     { name: \"server_url\", value: \"${serverUrl}\" },
