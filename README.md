@@ -2,11 +2,15 @@
 
 Performs SonarQube analyses and tracks the state of SonarQube quality gates.
 
+## Requirements
+* A running SonarQube instance (this resource was tested on v6.5, but it should
+  work with every version of SonarQube >= 5.3)
+
 ## Installation
 Add a new resource type to your Concourse CI pipeline:
 ```yaml
  resource_types:
- - name: sonarqube
+ - name: sonar-runner
   type: docker-image
   source:
     repository: cathive/concourse-sonarqube-resource
@@ -28,26 +32,15 @@ Add a new resource type to your Concourse CI pipeline:
   Only used if the scanner_type during the out phase has been set to / determined to use
   Maven.
 
- ### Example
- 
- ```yaml
-resources:
-- name: example-src
-  type: git
-  source:
-    uri: https://github.com/example/example.git
-- name: example-analysis
-  type: sonarqube
-  source:
-    host_url: https://sonarqube.example.com/
-    login: ((SONARQUBE_AUTH_TOKEN))
-    project_key: com.example.my_project
-    branch: master
- ```
-
 ## Behavior
 
-### out: Perform SonarQube analysis
+The resource implements all three actions (check, in and out).
+The analysis is triggered by the out action and check/in will be used to wait for
+the result of the analysis and pull in the project status. Tasks can use this
+information to break the build (if desired) if any of the criterias of the
+quality gate associated with a project are not met.
+
+### out: Trigger SonarQube analysis
 
 #### Parameters
 * `project_path`: *Required* Path to the resource that shall be analyzed.
@@ -65,3 +58,91 @@ resources:
   Only used if the scanner_type during has been set to / determined to use Maven.
   If the resource itself has a maven_settings configuration, this key will override
   it's value.
+
+### in: Fetch result of SonarQube analysis
+
+The action will place two JSON files into the resource's folder which are fetched from
+the SonarQube Web API:
+* qualitygate_project_status.json
+  Quality gate status of the compute engine task that was triggered by the resource
+  during the out action.
+  Format: https://next.sonarqube.com/sonarqube/web_api/api/qualitygates/project_status
+* ce_task_info.json
+  Informatio about the compute engine task that performed the analysis.
+  Format: https://next.sonarqube.com/sonarqube/web_api/api/ce/task
+
+## Full example
+
+The following example pipeline shows how to use the resource to break the build if
+a project doesn't meet the requirements of the associated quality gate.
+
+ ```yaml
+ resource_types:
+- name: sonar-runner
+  type: docker-image
+  source:
+    repository: cathive/concourse-sonarqube-resource
+    tag: latest # For reproducible builds use a specific tag and don't rely on "latest".
+
+resources:
+- name: example-sources-to-be-analyzed
+  type: git
+  source:
+    uri: https://github.com/example/example.git
+- name: code-analysis
+  type: sonar-runner
+  source:
+    host_url: https://sonarqube.example.com/
+    login: ((SONARQUBE_AUTH_TOKEN))
+    project_key: com.example.my_project
+    branch: master
+
+jobs:
+- name: build-and-analyze
+  plan:
+  - get: example-sources-to-be-analyzed
+    trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: debian
+          tag: 'jessie'
+        inputs:
+        - name: example-sources-to-be-analyzed
+        run:
+          path: build.sh
+          dir: example-sources-to-be-analyzed
+  - put: sonar-runner
+    params:
+      project_path: example-sources-to-be-analyzed
+- name: qualitygate
+  plan:
+  - get: sonar-runner
+    passed:
+    - build-and-analyze
+    trigger: true
+  - task: break-build
+      config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: node
+          tag: '8.4.0'
+        inputs:
+        - name: sonar-runner
+        run:
+          path: node
+          args:
+          - -e
+          - |
+          const projectStatus = require('./qualitygate_project_status.json');
+          if (projectStatus.status !== 'OK') {
+            console.error('Quality gate goals missed. :-(');
+            process.exit(1);
+          }
+          dir: sonar-runner
+```
