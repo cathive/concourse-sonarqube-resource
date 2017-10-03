@@ -11,7 +11,7 @@ cat > $payload <&0
 latest_version=$(jq -r '.version.ce_task_id // ""' < $payload)
 if [ ! -z "${latest_version}" ]; then
   jq -n "[
-    { ceTaskId: \"${latest_version}\"}
+    { ce_task_id: \"${latest_version}\"}
   ]" >&3
 else
   jq -n "[]" >&3

@@ -13,7 +13,7 @@ RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-3.5.0-bin.zip" \
 
 FROM openjdk:8u131-alpine
 RUN apk -f -q update \
-&& apk -f -q add bash gawk git jq
+&& apk -f -q add bash curl gawk git jq
 COPY --from=builder "/data/sonar-scanner" "/opt/sonar-scanner"
 RUN rm -Rf "/opt/sonar-scanner/jre" \
 && ln -sf "/usr" "/opt/sonar-scanner/jre" \

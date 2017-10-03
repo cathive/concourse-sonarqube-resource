@@ -15,7 +15,8 @@ Add a new resource type to your Concourse CI pipeline:
 
 ## Source Configuration
 
-* `host_url`: *Required.* The address of the SonarQube instance.
+* `host_url`: *Required.* The address of the SonarQube instance,
+  e.g. "https://sonarqube.example.com/". Must end with a slash.
 
 * `login`: *Required.* The login or authentication token of a SonarQube user with Execute Analysis
   permission.

@@ -37,7 +37,7 @@ fi
 
 sonar_login=$(jq -r '.source.login // ""' < $payload)
 if [ -z "${sonar_login}" ]; then
-  echo "login param has not been specified."
+  echo "sonar_login param has not been specified."
   exit 1
 else
   scanner_opts+=" -Dsonar.login=${sonar_login}"
