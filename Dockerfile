@@ -15,7 +15,9 @@ FROM openjdk:8u131-alpine
 RUN apk -f -q update \
 && apk -f -q add bash gawk git jq
 COPY --from=builder "/data/sonar-scanner" "/opt/sonar-scanner"
-RUN ln -sf "/opt/sonar-scanner/bin/sonar-scanner" "/usr/local/bin/sonar-scanner" \
+RUN rm -Rf "/opt/sonar-scanner/jre" \
+&& ln -sf "/usr" "/opt/sonar-scanner/jre" \
+&& ln -sf "/opt/sonar-scanner/bin/sonar-scanner" "/usr/local/bin/sonar-scanner" \
 && ln -sf "/opt/sonar-scanner/bin/sonar-scanner-debug" "/usr/local/bin/sonar-scanner-debug"
 COPY --from=builder "/data/apache-maven" "/opt/apache-maven"
 RUN ln -sf "/opt/apache-maven/bin/mvn" "/usr/local/bin/mvn" \
