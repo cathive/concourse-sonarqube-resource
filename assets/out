@@ -82,12 +82,12 @@ fi
 
 jq -n "{
   version: {ceTaskId: \"${ceTaskId}\"},
-  metadata: {
-    project_key: \"${projectKey}\",
-    server_url: \"${serverUrl}\",
-    server_version: \"${serverVersion}\",
-    dashboard_url: \"${dashboardUrl}\",
-    ce_task_url: \"${ceTaskUrl}\",
-    scanner_type: \"${scanner_type}\"
-  }
+  metadata: [
+    { name: \"project_key\", value: \"${projectKey}\" },
+    { name: \"server_url\", value: \"${serverUrl}\" },
+    { name: \"server_version\", value: \"${serverVersion}\" },
+    { name: \"dashboard_url\", value: \"${dashboardUrl}\" },
+    { name: \"ce_task_url\", value: \"${ceTaskUrl}\" },
+    { name: \"scanner_type\", value: \"${scanner_type}\" }
+  ]
 }" >&3
