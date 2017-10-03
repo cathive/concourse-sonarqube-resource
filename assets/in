@@ -64,11 +64,12 @@ fi
 project_status="./qualitygate_project_status.json"
 sq_qualitygates_project_status "${sonar_login}:${sonar_password}" "${sonar_host_url}" "${analysis_id}" > "${project_status}"
 
-# TODO Parse contents of project_status and popuplate metadata.
+project_status=$(jq -r '.projectStatus.status // ""' < "${project_status}")
 
 jq -n "{
   version: { ce_task_id: \"${ce_task_id}\"},
   metadata: [
-      { name: \"ce_task_status\", value: \"${ce_task_status}\" }
+      { name: \"ce_task_status\", value: \"${ce_task_status}\" },
+      { name: \"project_status\", value: \"${project_status}\" }
   ]
 }" >&3
