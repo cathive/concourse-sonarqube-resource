@@ -48,6 +48,19 @@ if [ ! -z "${sonar_password}" ]; then
   scanner_opts+=" -Dsonar.password=${sonar_password}"
 fi
 
+maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < $payload)
+if [ -f "${maven_settings_file}" ]; then
+  scanner_opts+=" -s ${maven_settings_file}"
+else
+  maven_settings=$(jq -r '.source.maven_settings // ""' < $payload)
+  if [ ! -z "${sonar_maven_settings}" ]; then
+    maven_settings_file=$(mktemp ${TMPDIR:-/tmp}/sonarqube-resource-maven-settings.xml.XXXXXX)
+    cat "${maven_settings}" > "${maven_settings_file}"
+    scanner_opts+=" -s ${maven_settings_file}"
+  fi
+  unset maven_settings
+fi
+
 sonar_project_key=$(jq -r '.params.project_key // ""' < $payload)
 if [ ! -z "${sonar_project_key}" ]; then
   scanner_opts+=" -Dsonar.projectKey=${sonar_project_key}"

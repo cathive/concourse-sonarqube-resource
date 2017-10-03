@@ -24,9 +24,13 @@ Add a new resource type to your Concourse CI pipeline:
 * `password`: The password that goes with the sonar.login username. This should be left blank if an
   authentication token is being used.
 
- ### Example
- ```yaml
+* `maven_settings`: Maven settings to be used when performing SonarQube analysis.
+  Only used if the scanner_type during the out phase has been set to / determined to use
+  Maven.
 
+ ### Example
+ 
+ ```yaml
 resources:
 - name: example-src
   type: git
@@ -57,3 +61,7 @@ resources:
   * `maven` Forces usage of the Maven plugin to perform the scan.
 * `project_key`: Project key (default value is read from sonar-project.properties)
 * `sources`: Comma-separated paths to directories containing source files.
+* `maven_settings_file`: Path to a Maven settings file that shall be used.
+  Only used if the scanner_type during has been set to / determined to use Maven.
+  If the resource itself has a maven_settings configuration, this key will override
+  it's value.
