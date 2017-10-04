@@ -51,13 +51,13 @@ if [ ! -z "${sonar_password}" ]; then
 fi
 
 maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < $payload)
-if [ -f "${maven_settings_file}" ]; then
+if [ ! -z "${maven_settings_file}" ] && [ -f "${maven_settings_file}" ]; then
   scanner_opts+=" -s ${maven_settings_file}"
 else
   maven_settings=$(jq -r '.source.maven_settings // ""' < $payload)
   if [ ! -z "${maven_settings}" ]; then
     maven_settings_file=$(mktemp ${TMPDIR:-/tmp}/sonarqube-resource-maven-settings.xml.XXXXXX)
-    cat "${maven_settings}" > "${maven_settings_file}"
+    echo "${maven_settings}" > "${maven_settings_file}"
     scanner_opts+=" -s ${maven_settings_file}"
   fi
   unset maven_settings
