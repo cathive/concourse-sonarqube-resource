@@ -19,6 +19,8 @@ fi
 payload=$(mktemp ${TMPDIR:-/tmp}/sonarqube-resource-out.XXXXXX)
 cat > $payload <&0
 
+echo "Preparing SonarQube scanner..."
+
 scanner_opts=""
 
 project_path=$(jq -r '.params.project_path // ""' < $payload)
@@ -73,21 +75,24 @@ fi
 
 scanner_type=$(jq -r '.params.scanner_type // ""' < $payload)
 scanner_bin="sonar-scanner"
+scanner_report_file="./.scannerwork/report-task.txt"
 if [ -z "${scanner_type}" ] || [ "${scanner_type}" == "auto" ]; then
   if [ -f "${source}/${project_path}/pom.xml" ]; then
     scanner_type="maven"
     scanner_bin="mvn -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar"
+    scanner_report_file="./target/sonar/report-task.txt"
   else
     scanner_type="cli"
   fi
 fi
 
 cd "${source}/${project_path}"
+echo "Starting sonar-scanner (type: ${scanner_type})..."
 ${scanner_bin} ${scanner_opts}
 
-
-if [ -f "./.scannerwork/report-task.txt" ]; then
-  eval $(read_properties "./.scannerwork/report-task.txt")
+echo "Reading SonarQube scanner report (${scanner_report_file})..."
+if [ -f "${scanner_report_file}" ]; then
+  eval $(read_properties "${scanner_report_file}")
 else
   echo "SonarQube report could not be located."
   exit 1
