@@ -80,7 +80,7 @@ if [ -z "${scanner_type}" ] || [ "${scanner_type}" == "auto" ]; then
   if [ -f "${source}/${project_path}/pom.xml" ]; then
     scanner_type="maven"
     scanner_bin="mvn -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar"
-    scanner_report_file="./target/sonar/report-task.txt"
+    scanner_report_file="$(mvn -q -f ${source}/${project_path}/pom.xml -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)/sonar/report-task.txt"
   else
     scanner_type="cli"
   fi
