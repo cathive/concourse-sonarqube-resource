@@ -57,6 +57,10 @@ quality gate associated with a project are not met.
 * `project_description`: Project description (default value is read from sonar-project.properties)
 * `project_version`: Project version (default value is read from sonar-project.properties)
 * `branch`: SCM branch. Two branches of the same project are considered to be different projects in SonarQube. Therefore, the default SonarQube behavior is to set the branch to an empty string.
+* `analysis_mode`: One of
+  * `analysis` - this is the default. It tells SonarQube to perform a full, store-it-in-the-database analysis.
+  * `preview` - this was previously known as the dryRun mode. It performs a full analysis, but doesn't store the results in the database.
+  * `incremental` - this is the new option. It performs a preview analysis on only the changed files, allowing impatient developers to perform a pre-commit check of their changes without sinking a lot of time into the endeavor.
 * `sources`: Comma-separated paths to directories containing source files.
 * `maven_settings_file`: Path to a Maven settings file that shall be used.
   Only used if the scanner_type during has been set to / determined to use Maven.
