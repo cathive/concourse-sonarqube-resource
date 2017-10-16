@@ -53,6 +53,10 @@ quality gate associated with a project are not met.
     model (pom.xml) is found in the sources directory.
   * `maven` Forces usage of the Maven plugin to perform the scan.
 * `project_key`: Project key (default value is read from sonar-project.properties)
+* `project_name`: Project name (default value is read from sonar-project.properties)
+* `project_description`: Project description (default value is read from sonar-project.properties)
+* `project_version`: Project version (default value is read from sonar-project.properties)
+* `branch`: SCM branch. Two branches of the same project are considered to be different projects in SonarQube. Therefore, the default SonarQube behavior is to set the branch to an empty string.
 * `sources`: Comma-separated paths to directories containing source files.
 * `maven_settings_file`: Path to a Maven settings file that shall be used.
   Only used if the scanner_type during has been set to / determined to use Maven.

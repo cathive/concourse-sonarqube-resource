@@ -68,6 +68,26 @@ if [ ! -z "${sonar_project_key}" ]; then
   scanner_opts+=" -Dsonar.projectKey=${sonar_project_key}"
 fi
 
+sonar_project_name=$(jq -r '.params.project_name // ""' < $payload)
+if [ ! -z "${sonar_project_name}" ]; then
+  scanner_opts+=" -Dsonar.projectName=${sonar_project_name}"
+fi
+
+sonar_project_description=$(jq -r '.params.project_description // ""' < $payload)
+if [ ! -z "${sonar_project_description}" ]; then
+  scanner_opts+=" -Dsonar.projectDescription=${sonar_project_description}"
+fi
+
+sonar_project_version=$(jq -r '.params.project_version // ""' < $payload)
+if [ ! -z "${sonar_project_version}" ]; then
+  scanner_opts+=" -Dsonar.projectVersion=${sonar_project_version}"
+fi
+
+sonar_branch=$(jq -r '.params.branch // ""' < $payload)
+if [ ! -z "${sonar_branch}" ]; then
+  scanner_opts+=" -Dsonar.branch=${sonar_branch}"
+fi
+
 sonar_sources=$(jq -r '.params.sources // ""' < $payload)
 if [ ! -z "${sonar_sources}" ]; then
   scanner_opts+=" -Dsonar.sources=${sonar_sources}"
