@@ -10,10 +10,14 @@ export root
 
 source "${root}/common.sh"
 
-source=$1
+source="${1}"
 
 if [ -z "${source}" ]; then
   echo "usage: $0 <path/to/source>"
+  exit 1
+fi
+if [ ! -d "${source}" ]; then
+  echo "error: Source path (${source}) does not exist or is not a directory."
   exit 1
 fi
 
@@ -25,8 +29,8 @@ echo "Preparing SonarQube scanner..."
 scanner_opts=""
 
 project_path=$(jq -r '.params.project_path // ""' < "${payload}")
-if [ ! -d "${source}/${project_path}" ]; then
-  echo "Project path (${project_path}) not found or not a directory."
+if [ ! -d "${project_path}" ]; then
+  echo "error: Project path (${project_path}) not found or not a directory."
   exit 1
 fi
 
@@ -114,16 +118,16 @@ scanner_type=$(jq -r '.params.scanner_type // ""' < "${payload}")
 scanner_bin="sonar-scanner"
 scanner_report_file="./.scannerwork/report-task.txt"
 if [ -z "${scanner_type}" ] || [ "${scanner_type}" == "auto" ]; then
-  if [ -f "${source}/${project_path}/pom.xml" ]; then
+  if [ -f "${project_path}/pom.xml" ]; then
     scanner_type="maven"
     scanner_bin="mvn -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar"
-    scanner_report_file="$(mvn -q -f "${source}/${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)/sonar/report-task.txt"
+    scanner_report_file="$(mvn -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)/sonar/report-task.txt"
   else
     scanner_type="cli"
   fi
 fi
 
-cd "${source}/${project_path}"
+cd "${project_path}"
 echo "Starting sonar-scanner (type: ${scanner_type})..."
 ${scanner_bin} "${scanner_opts}"
 
