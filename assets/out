@@ -21,6 +21,8 @@ if [ ! -d "${source}" ]; then
   exit 1
 fi
 
+cd "${source}"
+
 payload=$(mktemp "${TMPDIR:-/tmp}/sonarqube-resource-out.XXXXXX")
 cat > "${payload}" <&0
 
@@ -29,6 +31,10 @@ echo "Preparing SonarQube scanner..."
 scanner_opts=""
 
 project_path=$(jq -r '.params.project_path // ""' < "${payload}")
+if [ -z "${project_path}" ]; then
+  echo "error: params.project_path has not been specified."
+  exit 1
+fi
 if [ ! -d "${project_path}" ]; then
   echo "error: Project path (${project_path}) not found or not a directory."
   exit 1
