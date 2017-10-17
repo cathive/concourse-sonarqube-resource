@@ -127,6 +127,7 @@ if [ -z "${scanner_type}" ] || [ "${scanner_type}" == "auto" ]; then
   if [ -f "${project_path}/pom.xml" ]; then
     scanner_type="maven"
     scanner_bin="mvn -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar"
+    # shellcheck disable=SC2016
     scanner_report_file="$(mvn -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)/sonar/report-task.txt"
   else
     scanner_type="cli"
@@ -135,11 +136,11 @@ fi
 
 cd "${project_path}"
 echo "Starting sonar-scanner (type: ${scanner_type})..."
-${scanner_bin} ${scanner_opts}
+eval "${scanner_bin} ${scanner_opts}"
 
 echo "Reading SonarQube scanner report (${scanner_report_file})..."
 if [ -f "${scanner_report_file}" ]; then
-  eval $(read_properties "${scanner_report_file}")
+  eval "$(read_properties "${scanner_report_file}")"
 else
   echo "error: SonarQube report could not be located."
   exit 1
