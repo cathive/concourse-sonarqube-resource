@@ -23,7 +23,7 @@ fi
 
 cd "${source}"
 
-payload=$(mktemp "${TMPDIR:-/tmp}/sonarqube-resource-out.XXXXXX")
+payload=$(mktemp "${TMPDIR}/sonarqube-resource-out.XXXXXX")
 cat > "${payload}" <&0
 
 echo "Preparing SonarQube scanner..."
@@ -42,32 +42,32 @@ fi
 
 sonar_host_url=$(jq -r '.source.host_url // ""' < "${payload}")
 if [ -z "${sonar_host_url}" ]; then
-  echo "host_url param has not been specified."
+  echo "error: source.host_url has not been specified."
   exit 1
 else
-  scanner_opts+="-Dsonar.host.url=${sonar_host_url}"
+  scanner_opts+=" -Dsonar.host.url=\"${sonar_host_url}\""
 fi
 
 sonar_login=$(jq -r '.source.login // ""' < "${payload}")
 if [ -z "${sonar_login}" ]; then
-  echo "sonar_login param has not been specified."
+  echo "error: source.login has not been specified."
   exit 1
 else
-  scanner_opts+=" -Dsonar.login=${sonar_login}"
+  scanner_opts+=" -Dsonar.login=\"${sonar_login}\""
 fi
 
 sonar_password=$(jq -r '.source.password // ""' < "${payload}")
 if [ ! -z "${sonar_password}" ]; then
-  scanner_opts+=" -Dsonar.password=${sonar_password}"
+  scanner_opts+=" -Dsonar.password=\"${sonar_password}\""
 fi
 
 maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < "${payload}")
 if [ ! -z "${maven_settings_file}" ] && [ -f "${maven_settings_file}" ]; then
-  scanner_opts+=" -s ${maven_settings_file}"
+  scanner_opts+=" -s \"${maven_settings_file}\""
 else
   maven_settings=$(jq -r '.source.maven_settings // ""' < "${payload}")
   if [ ! -z "${maven_settings}" ]; then
-    maven_settings_file=$(mktemp "${TMPDIR:-/tmp}/sonarqube-resource-maven-settings.xml.XXXXXX")
+    maven_settings_file=$(mktemp "${TMPDIR}/sonarqube-resource-maven-settings.xml.XXXXXX")
     echo "${maven_settings}" > "${maven_settings_file}"
     scanner_opts+=" -s ${maven_settings_file}"
   fi
@@ -76,22 +76,22 @@ fi
 
 sonar_project_key=$(jq -r '.params.project_key // ""' < "${payload}")
 if [ ! -z "${sonar_project_key}" ]; then
-  scanner_opts+=" -Dsonar.projectKey=${sonar_project_key}"
+  scanner_opts+=" -Dsonar.projectKey=\"${sonar_project_key}\""
 fi
 
 sonar_project_name=$(jq -r '.params.project_name // ""' < "${payload}")
 if [ ! -z "${sonar_project_name}" ]; then
-  scanner_opts+=" -Dsonar.projectName=${sonar_project_name}"
+  scanner_opts+=" -Dsonar.projectName=\"${sonar_project_name}\""
 fi
 
 sonar_project_description=$(jq -r '.params.project_description // ""' < "${payload}")
 if [ ! -z "${sonar_project_description}" ]; then
-  scanner_opts+=" -Dsonar.projectDescription=${sonar_project_description}"
+  scanner_opts+=" -Dsonar.projectDescription=\"${sonar_project_description}\""
 fi
 
 sonar_project_version=$(jq -r '.params.project_version // ""' < "${payload}")
 if [ ! -z "${sonar_project_version}" ]; then
-  scanner_opts+=" -Dsonar.projectVersion=${sonar_project_version}"
+  scanner_opts+=" -Dsonar.projectVersion=\"${sonar_project_version}\""
 fi
 
 sonar_project_version_file=$(jq -r '.params.project_version_file // ""' < "${payload}")
@@ -101,23 +101,23 @@ if [ ! -z "${sonar_project_version_file}" ]; then
     exit 1
   else
     sonar_project_version=$(cat "${sonar_project_version_file}")
-    scanner_opts+=" -Dsonar.projectVersion=${sonar_project_version}"
+    scanner_opts+=" -Dsonar.projectVersion=\"${sonar_project_version}\""
   fi
 fi
 
 sonar_branch=$(jq -r '.params.branch // ""' < "${payload}")
 if [ ! -z "${sonar_branch}" ]; then
-  scanner_opts+=" -Dsonar.branch=${sonar_branch}"
+  scanner_opts+=" -Dsonar.branch=\"${sonar_branch}\""
 fi
 
 sonar_analysis_mode=$(jq -r '.params.analysis_mode // ""' < "${payload}")
 if [ ! -z "${sonar_analysis_mode}" ]; then
-  scanner_opts+=" -Dsonar.analysis.mode=${sonar_analysis_mode}"
+  scanner_opts+=" -Dsonar.analysis.mode=\"${sonar_analysis_mode}\""
 fi
 
 sonar_sources=$(jq -r '.params.sources // ""' < "${payload}")
 if [ ! -z "${sonar_sources}" ]; then
-  scanner_opts+=" -Dsonar.sources=${sonar_sources}"
+  scanner_opts+=" -Dsonar.sources=\"${sonar_sources}\""
 fi
 
 scanner_type=$(jq -r '.params.scanner_type // ""' < "${payload}")
@@ -135,13 +135,13 @@ fi
 
 cd "${project_path}"
 echo "Starting sonar-scanner (type: ${scanner_type})..."
-${scanner_bin} "${scanner_opts}"
+${scanner_bin} ${scanner_opts}
 
 echo "Reading SonarQube scanner report (${scanner_report_file})..."
 if [ -f "${scanner_report_file}" ]; then
   eval $(read_properties "${scanner_report_file}")
 else
-  echo "SonarQube report could not be located."
+  echo "error: SonarQube report could not be located."
   exit 1
 fi
 

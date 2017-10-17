@@ -1,7 +1,18 @@
+function error() {
+    JOB="${0}"              # job name
+    LASTLINE="${1}"         # line of error occurrence
+    LASTERR="${2}"          # error code
+    echo "ERROR in ${JOB} : line ${LASTLINE} with exit code ${LASTERR}" >&2
+    exit 1
+}
+trap 'error ${LINENO} ${?}' ERR
+
+TMPDIR="${TMPDIR:-/tmp}"
+
 # Reads a properties file and returns a list of variable assignments
 # that can be used to re-use these properties in a shell scripting environment.
 function read_properties {
-  cat $1 | awk -f "${root}/readproperties.awk"
+  awk -f "${root:?}/readproperties.awk" < "${1}"
 }
 
 # Checks on a compute engine task
@@ -19,5 +30,5 @@ function sq_ce_task {
 # $2 - SonarQube URL. Must end with a slash (required)
 # $3 - Analysis ID (required)
 function sq_qualitygates_project_status {
-  curl -s -L -u ${1} "${2}api/qualitygates/project_status?analysisId=${3}"
+  curl -s -L -u "${1}" "${2}api/qualitygates/project_status?analysisId=${3}"
 }
