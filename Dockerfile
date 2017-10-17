@@ -1,3 +1,8 @@
+FROM koalaman/shellcheck-alpine:latest AS shellcheck
+COPY ./assets /assets
+WORKDIR /assets
+RUN /bin/shellcheck --shell=bash check in out *.sh
+
 FROM debian:jessie as builder
 RUN apt-get -y update && apt-get -y install curl unzip
 ARG SONAR_SCANNER_DOWNLOAD_URL="https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.3.778-linux.zip"
@@ -31,7 +36,7 @@ RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.0.2:get \
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="headcr4sh@gmail.com" \
-      version="0.0.16"
+      version="0.0.17"
 
 COPY ./assets/* /opt/resource/
 
