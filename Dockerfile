@@ -18,7 +18,7 @@ RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-3.5.0-bin.zip" \
 
 FROM openjdk:8u131-alpine
 RUN apk -f -q update \
-&& apk -f -q add bash curl gawk git jq
+&& apk -f -q add bash curl gawk git jq nodejs
 COPY --from=builder "/data/sonar-scanner" "/opt/sonar-scanner"
 RUN rm -Rf "/opt/sonar-scanner/jre" \
 && ln -sf "/usr" "/opt/sonar-scanner/jre" \
@@ -36,7 +36,7 @@ RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.0.2:get \
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="headcr4sh@gmail.com" \
-      version="0.0.17"
+      version="0.0.18"
 
 COPY ./assets/* /opt/resource/
 
