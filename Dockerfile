@@ -10,13 +10,13 @@ RUN curl -s -L "${SONAR_SCANNER_DOWNLOAD_URL}" > "/tmp/sonar-scanner-cli-3.0.3.7
 && unzip -qq "/tmp/sonar-scanner-cli-3.0.3.778-linux.zip" -d "/data" \
 && mv "/data/sonar-scanner-3.0.3.778-linux" "/data/sonar-scanner" \
 && rm -f "/tmp/sonar-scanner-cli-3.0.3.778-linux.zip"
-ARG MAVEN_DOWNLOAD_URL="http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.zip"
-RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-3.5.0-bin.zip" \
-&& unzip -qq "/tmp/apache-maven-3.5.0-bin.zip" -d "/data" \
-&& mv "/data/apache-maven-3.5.0" "/data/apache-maven" \
-&& rm -f "/tmp/apache-maven-3.5.0-bin.zip"
+ARG MAVEN_DOWNLOAD_URL="http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.zip"
+RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-3.5.2-bin.zip" \
+&& unzip -qq "/tmp/apache-maven-3.5.2-bin.zip" -d "/data" \
+&& mv "/data/apache-maven-3.5.2" "/data/apache-maven" \
+&& rm -f "/tmp/apache-maven-3.5.2-bin.zip"
 
-FROM openjdk:8u131-alpine
+FROM openjdk:8u151-alpine
 RUN apk -f -q update \
 && apk -f -q add bash curl gawk git jq nodejs
 COPY --from=builder "/data/sonar-scanner" "/opt/sonar-scanner"
@@ -31,12 +31,12 @@ ENV M2_HOME="/opt/apache-maven"
 
 RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.0.2:get \
 -DrepoUrl="https://repo.maven.apache.org/maven2/" \
--Dartifact="org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:jar"
+-Dartifact="org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:jar"
 
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="headcr4sh@gmail.com" \
-      version="0.0.18"
+      version="0.0.19"
 
 COPY ./assets/* /opt/resource/
 
