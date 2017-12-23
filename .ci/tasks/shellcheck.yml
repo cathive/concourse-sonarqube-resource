@@ -1,0 +1,21 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: koalaman/shellcheck
+    tag: latest
+
+inputs:
+- name: src
+  
+
+run:
+  path: shellcheck
+  args:
+  - ./check
+  - ./in
+  - ./out
+  - ./common.sh
+  dir: src/assets
