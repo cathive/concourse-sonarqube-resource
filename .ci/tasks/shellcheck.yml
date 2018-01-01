@@ -5,7 +5,7 @@ image_resource:
   type: docker-image
   source:
     repository: koalaman/shellcheck
-    tag: latest
+    tag: v0.4.6
 
 inputs:
 - name: src
@@ -14,6 +14,7 @@ inputs:
 run:
   path: shellcheck
   args:
+  - --shell=bash
   - ./check
   - ./in
   - ./out
