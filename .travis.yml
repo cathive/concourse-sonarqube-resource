@@ -1,6 +1,14 @@
+dist: trusty
+sudo: required
+
 addons:
   sonarcloud:
     organization: "cathive"
+
+
+cache:
+  directories:
+    - '$HOME/.sonar/cache'
 
 script:
   - sonar-scanner
