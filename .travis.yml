@@ -1,23 +1,26 @@
+---
 dist: trusty
 sudo: required
+
+language: bash
 
 addons:
   sonarcloud:
     organization: "cathive"
 
 services:
-- docker
+  - docker
 
 before_install:
-- docker pull koalaman/shellcheck
+  - docker pull koalaman/shellcheck
 
 cache:
   directories:
-  - '$HOME/.sonar/cache'
+    - '$HOME/.sonar/cache'
 
 script:
- - docker run -v $(pwd)/assets:/assets koalaman/shellcheck --shell=bash /assets/check /assets/in /assets/out /assets/common.sh
-- sonar-scanner
+  - docker run -v $(pwd)/assets:/assets koalaman/shellcheck --shell=bash /assets/check /assets/in /assets/out /assets/common.sh
+  - sonar-scanner
 
 matrix:
   fast_finish: true
