@@ -1,10 +1,12 @@
-# SonarQube Resource
+# [SonarQube](https://sonarqube.org/) Resource for [Concourse CI](https://concourse.ci/)
 
-Performs SonarQube analyses and tracks the state of SonarQube quality gates.
+Performs SonarQube analyses and tracks the state of SonarQube [quality gates](https://docs.sonarqube.org/display/SONAR/Quality+Gates).
+
+If you want to implement a real quality gate in your build pipeline, you might want to also use the [concourse-sonarqube-qualitygate-task](https://github.com/cathive/concourse-sonarqube-qualitygate-task) which can be used to break a build if certain quality goals (as reported by SonarQube) are not reached.
 
 ## Requirements
-* A running SonarQube instance (this resource was tested on v6.5, but it should
-  work with every version of SonarQube >= 5.3)
+* A running SonarQube instance (this resource was tested on v6.5–v6.7, but it should
+  work with every version of SonarQube ≥ v5.3)
 
 ## Installation
 Add a new resource type to your Concourse CI pipeline:
@@ -120,33 +122,38 @@ jobs:
           repository: debian
           tag: 'jessie'
         inputs:
-        - name: example-sources-to-be-analyzed
-        run:
-          path: build.sh
-          dir: example-sources-to-be-analyzed
+        - name: example-sources
+        outputs:
+        # Hint: For some (most?) languages, the sonar-runner needs more than just the
+        # sources to perform a full analysis. Line coverage reports, unit test reports,
+        # Java class files and mutation test results should also be present.
+        # Therefore, you'll have to make sure that your build script provides the sources
+        # and the compilation/test in your Concourse CI build plan.
+        # (And that is the reason, why we need the following output)
+        - name: sonarqube-analysis-input
+         run:
+           path: build.sh
+           dir: example-sources
   - put: sonar-runner
     params:
-      project_path: example-sources-to-be-analyzed
+      project_path: sonarqube-analysis-input
 - name: qualitygate
   plan:
   - get: sonar-runner
     passed:
     - build-and-analyze
     trigger: true
-  - task: break-build
+  - task: check-sonarqube-quality-gate
     config:
-    platform: linux
-    image_resource:
-      type: docker-image
-      source:
-        repository: node
-        tag: '8.4.0'
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: cathive/concourse-sonarqube-qualitygate-task
+          tag: latest # Use one of the versioned tags for reproducible builds!
       inputs:
-      - name: sonar-runner
+      - name: sonar-result
       run:
-        path: node
-        args:
-        - -e
-        - "const projectStatus = require('./qualitygate_project_status.json'); if (projectStatus.status !== 'OK') { console.error('Quality gate goals missed. :-('); process.exit(1); }"
-        dir: sonar-runner
+        path: /sonarqube-gualitygate-check
+        dir: sonar-result
 ```
