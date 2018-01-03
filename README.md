@@ -104,9 +104,8 @@ resources:
   type: sonar-runner
   source:
     host_url: https://sonarqube.example.com/
-    login: ((SONARQUBE_AUTH_TOKEN))
+    login: ((sonarqube-auth-token))
     project_key: com.example.my_project
-    branch: master
 
 jobs:
 - name: build-and-analyze
