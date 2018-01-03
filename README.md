@@ -155,6 +155,6 @@ jobs:
       inputs:
       - name: sonar-result
       run:
-        path: /sonarqube-gualitygate-check
+        path: /sonarqube-qualitygate-check
         dir: sonar-result
 ```
