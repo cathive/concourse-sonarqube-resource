@@ -135,12 +135,12 @@ jobs:
          run:
            path: build.sh
            dir: example-sources
-  - put: sonar-runner
+  - put: code-analysis
     params:
       project_path: sonarqube-analysis-input
 - name: qualitygate
   plan:
-  - get: sonar-runner
+  - get: code-analysis
     passed:
     - build-and-analyze
     trigger: true
