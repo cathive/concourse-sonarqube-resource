@@ -1,0 +1,6 @@
+projectKey=project_key
+ceTaskId=12345678
+ceTaskUrl=http://sonar.local/task/TODO
+serverUrl=http://sonar.local/
+serverVersion=7.0.0
+dashboardUrl=TODO

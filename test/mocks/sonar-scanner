@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+cat "${SONAR_SCANNER_REPORT_FILE_MOCK}" > "${SONAR_SCANNER_REPORT_FILE}"
