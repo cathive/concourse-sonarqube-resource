@@ -2,6 +2,8 @@
 
 Performs SonarQube analyses and tracks the state of SonarQube [quality gates](https://docs.sonarqube.org/display/SONAR/Quality+Gates).
 
+This resource works with [SonarCloud](https://sonarcloud.io/) and self-hosted instaces of SonarQube.
+
 If you want to implement a real quality gate in your build pipeline, you might want to also use the [concourse-sonarqube-qualitygate-task](https://github.com/cathive/concourse-sonarqube-qualitygate-task) which can be used to break a build if certain quality goals (as reported by SonarQube) are not reached.
 
 ## Requirements
@@ -22,7 +24,7 @@ Add a new resource type to your Concourse CI pipeline:
 ## Source Configuration
 
 * `host_url`: *Required.* The address of the SonarQube instance,
-  e.g. "https://sonarqube.example.com/". Must end with a slash.
+  e.g. "https://sonarcloud.io/" (when using SonarCloud). Must end with a slash.
 
 * `login`: *Required.* The login or authentication token of a SonarQube user with Execute Analysis
   permission.
