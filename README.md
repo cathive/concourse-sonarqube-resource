@@ -26,6 +26,10 @@ Add a new resource type to your Concourse CI pipeline:
 * `host_url`: *Required.* The address of the SonarQube instance,
   e.g. "https://sonarcloud.io/" (when using SonarCloud). Must end with a slash.
 
+* `organization`: The organization to be used when submitting stuff to a sonarqube
+  instance. This field is *required* when using SonarCloud to perform the analysis
+  of your code.
+
 * `login`: *Required.* The login or authentication token of a SonarQube user with Execute Analysis
   permission.
 

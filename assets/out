@@ -48,6 +48,11 @@ else
   scanner_opts+=" -Dsonar.host.url=${sonar_host_url}"
 fi
 
+sonar_organization=$(jq -r '.source.organization // ""' < "${payload}")
+if [ ! -z "${sonar_organization}" ]; then
+  scanner_opts+=" -Dsonar.organization=${sonar_organization}"
+fi
+
 sonar_login=$(jq -r '.source.login // ""' < "${payload}")
 if [ -z "${sonar_login}" ]; then
   echo "error: source.login has not been specified."
