@@ -1,4 +1,7 @@
 ---
+
+# Using Travis CI to build a resource for Concourse CI seems a bit odd, I assume.
+
 dist: trusty
 sudo: required
 
@@ -12,14 +15,23 @@ services:
   - docker
 
 before_install:
-  - docker pull koalaman/shellcheck
+  - sudo apt-get -qq update
+  - sudo apt-get install -y jq
+  - docker pull dduportal/bats:0.4.0
+  - docker pull koalaman/shellcheck:latest
+  - docker pull mivok/markdownlint:0.4.0
 
 cache:
   directories:
     - '$HOME/.sonar/cache'
 
 script:
-  - docker run -v $(pwd)/assets:/assets -w="/assets" koalaman/shellcheck --shell=bash ./check ./in ./out ./common.sh
+  # First of all , we test a bunch of things to make sure that the resource works as expected.
+  - docker run -v $(pwd)/assets:/assets -w="/assets" koalaman/shellcheck:latest --shell=bash ./check ./in ./out ./common.sh
+  #- docker run -v $(pwd):/src -w="/src" mivok/markdownlint:0.4.0 ./README.md ./AUTHORS.md ./CHANGELOG.md
+  #- docker run -v $(pwd):/src -w="/src" dduportal/bats:0.4.0 ./test/
+  # Then we package everything in a Docker image.
+  - docker build -t cathive/concourse-sonarqube-resource .
 #  - sonar-scanner
 
 matrix:
