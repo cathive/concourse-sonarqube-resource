@@ -1,5 +1,6 @@
 {
     "recommendations": [
+        "DavidAnson.vscode-markdownlint",
         "EditorConfig.EditorConfig",
         "Pivotal.vscode-concourse",
         "timonwong.shellcheck"
