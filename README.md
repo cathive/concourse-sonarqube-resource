@@ -7,11 +7,14 @@ This resource works with [SonarCloud](https://sonarcloud.io/) and self-hosted in
 If you want to implement a real quality gate in your build pipeline, you might want to also use the [concourse-sonarqube-qualitygate-task](https://github.com/cathive/concourse-sonarqube-qualitygate-task) which can be used to break a build if certain quality goals (as reported by SonarQube) are not reached.
 
 ## Requirements
+
 * A running SonarQube instance (this resource was tested on v6.5–v6.7, but it should
   work with every version of SonarQube ≥ v5.3)
 
 ## Installation
+
 Add a new resource type to your Concourse CI pipeline:
+
 ```yaml
  resource_types:
  - name: sonar-runner
@@ -51,6 +54,7 @@ quality gate associated with a project are not met.
 ### out: Trigger SonarQube analysis
 
 #### Parameters
+
 * `project_path`: *Required* Path to the resource that shall be analyzed.
   If the path contains a file called "sonar-project.properties" it will be picked
   up during analysis.
@@ -80,6 +84,7 @@ quality gate associated with a project are not met.
 
 The action will place two JSON files into the resource's folder which are fetched from
 the SonarQube Web API:
+
 * qualitygate_project_status.json
   Quality gate status of the compute engine task that was triggered by the resource
   during the out action.
@@ -95,6 +100,7 @@ a project doesn't meet the requirements of the associated quality gate.
 
  ```yaml
 resource_types:
+
 - name: sonar-runner
   type: docker-image
   source:
@@ -102,6 +108,7 @@ resource_types:
     tag: latest # For reproducible builds use a specific tag and don't rely on "latest".
 
 resources:
+
 - name: example-sources-to-be-analyzed
   type: git
   source:
@@ -114,6 +121,7 @@ resources:
     project_key: com.example.my_project
 
 jobs:
+
 - name: build-and-analyze
   plan:
   - get: example-sources-to-be-analyzed
