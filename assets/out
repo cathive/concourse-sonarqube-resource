@@ -139,6 +139,18 @@ if [ -z "${scanner_type}" ] || [ "${scanner_type}" == "auto" ]; then
   fi
 fi
 
+# If any additional properties have been specified, we'll just append them to the
+# command line. We don't check for any duplicates that might have been created due to
+# the fact that some "basic" properties might have specified a second time as
+# "additional" property.
+additional_properties=$(jq -r '.params.additional_properties' < "${payload}")
+if [ ! -z "${additional_properties}" ]; then
+  read -r -a props_kv_arr <<< "$(jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "${additional_properties}")"
+  for prop_kv in "${props_kv_arr[@]}"; do
+    scanner_opts+=" -D${prop_kv}"
+  done
+fi
+
 cd "${project_path}"
 echo "Starting sonar-scanner (type: ${scanner_type})..."
 eval "${scanner_bin} ${scanner_opts}"

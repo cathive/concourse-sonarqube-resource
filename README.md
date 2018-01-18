@@ -75,6 +75,8 @@ quality gate associated with a project are not met.
   * `preview` - Currently not supported by this resource!
   * `issues` - Currently not supported by this resource!
 * `sources`: Comma-separated paths to directories containing source files.
+* `additional_properties`: Optional object/dictionary that may contain any additional properties
+  that one might want to pass when running the sonar-scanner.
 * `maven_settings_file`: Path to a Maven settings file that shall be used.
   Only used if the scanner_type during has been set to / determined to use Maven.
   If the resource itself has a maven_settings configuration, this key will override
@@ -98,7 +100,7 @@ the SonarQube Web API:
 The following example pipeline shows how to use the resource to break the build if
 a project doesn't meet the requirements of the associated quality gate.
 
- ```yaml
+```yaml
 resource_types:
 
 - name: sonar-runner
@@ -150,6 +152,9 @@ jobs:
   - put: code-analysis
     params:
       project_path: sonarqube-analysis-input
+      additional_properties:
+        # Will be passed as "-Dsonar.javascript.lcov.reportPaths="coverage/lcov.info" to the scanner.
+        sonar.javascript.lcov.reportPaths: coverage/lcov.info
 - name: qualitygate
   plan:
   - get: code-analysis
@@ -165,8 +170,8 @@ jobs:
           repository: cathive/concourse-sonarqube-qualitygate-task
           tag: latest # Use one of the versioned tags for reproducible builds!
       inputs:
-      - name: sonar-result
+      - name: code-analysis
       run:
         path: /sonarqube-qualitygate-check
-        dir: sonar-result
+        dir: code-analysis
 ```
