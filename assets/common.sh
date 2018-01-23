@@ -17,7 +17,7 @@ function read_properties {
 
 # Checks on a compute engine task
 # Params:
-# $1 - Username or Access token, a colon ans optional the password, e.g. "user:password" (required)
+# $1 - Username or Access token, a colon and optional the password, e.g. "user:password" (required)
 # $2 - SonarQube URL. Must end with a slash (required)
 # $3 - CE Task ID (required)
 function sq_ce_task {
@@ -26,9 +26,17 @@ function sq_ce_task {
 
 # Checks the quality gate status of a project
 # Params:
-# $1 - Username or Access token, a colon ans optional the password, e.g. "user:password" (required)
+# $1 - Username or Access token, a colon and optional the password, e.g. "user:password" (required)
 # $2 - SonarQube URL. Must end with a slash (required)
 # $3 - Analysis ID (required)
 function sq_qualitygates_project_status {
   curl -s -L -u "${1}" "${2}api/qualitygates/project_status?analysisId=${3}"
+}
+
+# Retrieves the version of a SonarQube server instance
+# Params:
+# $1 - Username or Access token, a colon and optional the password, e.g. "user:password" (required)
+# $2 - SonarQube URL. Must end with a slash (required)
+function sq_server_version {
+  curl -s -L -u "${1}" "${2}api/server/version"
 }

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.0.31] - 2018-01-23
+
+### Fixed
+
+- Support old SonarQube servers that don't report the server version in sonar-report.txt [(#11)(https://github.com/cathive/concourse-sonarqube-resource/issues/11)]
+
 ## [0.0.30] - 2018-01-18
 
 ### Added

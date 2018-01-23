@@ -158,6 +158,12 @@ eval "${scanner_bin} ${scanner_opts}"
 echo "Reading SonarQube scanner report (${scanner_report_file})..."
 if [ -f "${scanner_report_file}" ]; then
   eval "$(read_properties "${scanner_report_file}")"
+  if [ -z "${serverVersion:-}" ]; then
+    # Older versions of SonarQube don't store the serverVersion in
+    # sonar-report.txt. There is a REST API though, that can be used
+    # to fetch the version.
+    serverVersion="$(sq_server_version "${sonar_login}":"${sonar_password}" "${sonar_host_url}")"
+  fi
 else
   echo "error: SonarQube report could not be located."
   exit 1
