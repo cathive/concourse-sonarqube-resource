@@ -160,7 +160,7 @@ if [ -f "${scanner_report_file}" ]; then
   eval "$(read_properties "${scanner_report_file}")"
   if [ -z "${serverVersion:-}" ]; then
     # Older versions of SonarQube don't store the serverVersion in
-    # sonar-report.txt. There is a REST API though, that can be used
+    # report-task.txt. There is a REST API though, that can be used
     # to fetch the version.
     serverVersion="$(sq_server_version "${sonar_login}":"${sonar_password}" "${sonar_host_url}")"
   fi

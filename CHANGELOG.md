@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Support old SonarQube servers that don't report the server version in sonar-report.txt [(#11)(https://github.com/cathive/concourse-sonarqube-resource/issues/11)]
+- Support old SonarQube servers that don't report the server version in report-task.txt [(#11)(https://github.com/cathive/concourse-sonarqube-resource/issues/11)]
 
 ## [0.0.30] - 2018-01-18
 
