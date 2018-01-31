@@ -34,9 +34,11 @@ function sq_qualitygates_project_status {
 }
 
 # Retrieves the version of a SonarQube server instance
+# If the version cannot be determined due to an error, the string
+# "<unknown>" will be returned.
 # Params:
 # $1 - Username or Access token, a colon and optional the password, e.g. "user:password" (required)
 # $2 - SonarQube URL. Must end with a slash (required)
 function sq_server_version {
-  curl -s -L -u "${1}" "${2}api/server/version"
+  curl -s -L -u "${1}" "${2}api/server/version" || echo "<unknown>"
 }
