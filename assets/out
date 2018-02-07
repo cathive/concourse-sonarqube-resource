@@ -110,9 +110,14 @@ if [ ! -z "${sonar_project_version_file}" ]; then
   fi
 fi
 
-sonar_branch=$(jq -r '.params.branch // ""' < "${payload}")
-if [ ! -z "${sonar_branch}" ]; then
-  scanner_opts+=" -Dsonar.branch=\"${sonar_branch}\""
+sonar_branch_name=$(jq -r '.params.branch_name // ""' < "${payload}")
+if [ ! -z "${sonar_branch_name}" ]; then
+  scanner_opts+=" -Dsonar.branch.name=\"${sonar_branch_name}\""
+fi
+
+sonar_branch_target=$(jq -r '.params.branch_target // ""' < "${payload}")
+if [ ! -z "${sonar_branch_target}" ]; then
+  scanner_opts+=" -Dsonar.branch.target=\"${sonar_branch_target}\""
 fi
 
 sonar_sources=$(jq -r '.params.sources // [] | join(",")' < "${payload}")

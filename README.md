@@ -61,22 +61,38 @@ quality gate associated with a project are not met.
 * `project_path`: *Required* Path to the resource that shall be analyzed.
   If the path contains a file called "sonar-project.properties" it will be picked
   up during analysis.
+
 * `scanner_type`: Type of scanner to be used. Possible values are:
   * `auto` (default) Uses the maven-Scanner if a pom.xml is found in the directory
     specified by sources, cli otherwise.
   * `cli` Forces usage of the command line scanner, even if a Maven project object
     model (pom.xml) is found in the sources directory.
   * `maven` Forces usage of the Maven plugin to perform the scan.
+
 * `project_key`: Project key (default value is read from sonar-project.properties)
+
 * `project_name`: Project name (default value is read from sonar-project.properties)
+
 * `project_description`: Project description (default value is read from sonar-project.properties)
+
 * `project_version`: Project version (default value is read from sonar-project.properties)
-* `project_version_file`: File to be used to read the Project version. When this option has been specified, it has precedence over the project_version parameter.
-* `branch`: SCM branch. Two branches of the same project are considered to be different projects in SonarQube. Therefore, the default SonarQube behavior is to set the branch to an empty string.
+
+* `project_version_file`: File to be used to read the Project version.
+  When this option has been specified, it has precedence over the project_version parameter.
+
+* `branch_name`: Name of the branch.
+
+* `branch_target`: Name of the branch where you intend to merge your short-lived branch at the end of its life.
+  If left blank, this defaults to the master branch. It can also be used while initializing a long-lived
+  branch to sync the issues from a branch other than the Main Branch.
+
 * `sources`: A list of paths to directories containing source files.
+
 * `tests`: A list of paths to directories containing source files.
+
 * `additional_properties`: Optional object/dictionary that may contain any additional properties
   that one might want to pass when running the sonar-scanner.
+
 * `maven_settings_file`: Path to a Maven settings file that shall be used.
   Only used if the scanner_type during has been set to / determined to use Maven.
   If the resource itself has a maven_settings configuration, this key will override

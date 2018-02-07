@@ -17,14 +17,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Support for `params.tests`.
   [(#7)(https://github.com/cathive/concourse-sonarqube-resource/issues/7)]
 
+- Support for `params.branch_name` and `params.branch_target`.
+  Require the [Branch Plugin](https://docs.sonarqube.org/display/PLUG/Branch+Plugin) or
+  SonarCloud.
+
 ### Changed
 
 - `params.sources` must now be specified as list instead of comma-separated strings
 
 ### Removed
 
-- `params.analysis_mode` is no longer supported. (New SonarQube versions handle
-  short-lived branches in a different way)
+- `params.branch` and `params.analysis_mode` are no longer supported.
+  (New SonarQube versions handle short-lived branches in a different way)
+  Use `params.branch_name` and `params.branch_target` instead if you use the
+  Branch plugin.
 
 ## [0.0.32] - 2018-01-31
 
