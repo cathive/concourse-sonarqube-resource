@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - `params.sources` must now be specified as list instead of comma-separated strings
 
+### Removed
+
+- `params.analysis_mode` is no longer supported. (New SonarQube versions handle
+  short-lived branches in a different way)
+
 ## [0.0.32] - 2018-01-31
 
 ### Fixed

@@ -115,11 +115,6 @@ if [ ! -z "${sonar_branch}" ]; then
   scanner_opts+=" -Dsonar.branch=\"${sonar_branch}\""
 fi
 
-sonar_analysis_mode=$(jq -r '.params.analysis_mode // ""' < "${payload}")
-if [ ! -z "${sonar_analysis_mode}" ]; then
-  scanner_opts+=" -Dsonar.analysis.mode=\"${sonar_analysis_mode}\""
-fi
-
 sonar_sources=$(jq -r '.params.sources // [] | join(",")' < "${payload}")
 if [ ! -z "${sonar_sources}" ]; then
   scanner_opts+=" -Dsonar.sources=\"${sonar_sources}\""

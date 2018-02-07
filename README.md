@@ -73,10 +73,6 @@ quality gate associated with a project are not met.
 * `project_version`: Project version (default value is read from sonar-project.properties)
 * `project_version_file`: File to be used to read the Project version. When this option has been specified, it has precedence over the project_version parameter.
 * `branch`: SCM branch. Two branches of the same project are considered to be different projects in SonarQube. Therefore, the default SonarQube behavior is to set the branch to an empty string.
-* `analysis_mode`: One of
-  * `publish` - this is the default. It tells SonarQube to perform a full, store-it-in-the-database analysis.
-  * `preview` - Currently not supported by this resource!
-  * `issues` - Currently not supported by this resource!
 * `sources`: A list of paths to directories containing source files.
 * `tests`: A list of paths to directories containing source files.
 * `additional_properties`: Optional object/dictionary that may contain any additional properties
