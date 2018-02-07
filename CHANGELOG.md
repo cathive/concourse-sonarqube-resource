@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Support for `params.tests`. [(#7)(https://github.com/cathive/concourse-sonarqube-resource/issues/7)]
+
+### Changed
+
+- `params.sources` must now be specified as list instead of comma-separated strings
+
+
 ## [0.0.32] - 2018-01-31
 
 ### Fixed

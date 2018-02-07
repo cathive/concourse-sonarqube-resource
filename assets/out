@@ -120,9 +120,14 @@ if [ ! -z "${sonar_analysis_mode}" ]; then
   scanner_opts+=" -Dsonar.analysis.mode=${sonar_analysis_mode}"
 fi
 
-sonar_sources=$(jq -r '.params.sources // ""' < "${payload}")
+sonar_sources=$(jq -r '.params.sources // [] | join(",")' < "${payload}")
 if [ ! -z "${sonar_sources}" ]; then
   scanner_opts+=" -Dsonar.sources=${sonar_sources}"
+fi
+
+sonar_tests=$(jq -r '.params.tests // [] | join(",")' < "${payload}")
+if [ ! -z "${sonar_tests}" ]; then
+  scanner_opts+=" -Dsonar.tests=${sonar_tests}"
 fi
 
 scanner_type=$(jq -r '.params.scanner_type // ""' < "${payload}")

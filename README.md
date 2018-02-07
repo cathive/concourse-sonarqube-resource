@@ -77,7 +77,8 @@ quality gate associated with a project are not met.
   * `publish` - this is the default. It tells SonarQube to perform a full, store-it-in-the-database analysis.
   * `preview` - Currently not supported by this resource!
   * `issues` - Currently not supported by this resource!
-* `sources`: Comma-separated paths to directories containing source files.
+* `sources`: A list of paths to directories containing source files.
+* `tests`: A list of paths to directories containing source files.
 * `additional_properties`: Optional object/dictionary that may contain any additional properties
   that one might want to pass when running the sonar-scanner.
 * `maven_settings_file`: Path to a Maven settings file that shall be used.

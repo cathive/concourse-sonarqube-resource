@@ -2,7 +2,7 @@
     "params": {
       "project_path": "cli_project",
       "project_key": "com.example.cli_project",
-      "sources": "src",
+      "sources": [ "src1", "src2" ],
       "additional_properties": {
         "param.foo": "bar"
       }
