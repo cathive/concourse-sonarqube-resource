@@ -7,14 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Parameters that contain whitespace characters no longer fail the `out` action.
+  [(#6)(https://github.com/cathive/concourse-sonarqube-resource/issues/6)]
+
 ### Added
 
-- Support for `params.tests`. [(#7)(https://github.com/cathive/concourse-sonarqube-resource/issues/7)]
+- Support for `params.tests`.
+  [(#7)(https://github.com/cathive/concourse-sonarqube-resource/issues/7)]
 
 ### Changed
 
 - `params.sources` must now be specified as list instead of comma-separated strings
-
 
 ## [0.0.32] - 2018-01-31
 
