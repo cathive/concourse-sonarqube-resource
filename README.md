@@ -30,7 +30,7 @@ Add a new resource type to your Concourse CI pipeline:
 ## Source Configuration
 
 * `host_url`: *Required.* The address of the SonarQube instance,
-  e.g. "https://sonarcloud.io/" (when using SonarCloud). Must end with a slash. Also, make sure the Server base URL under Administration-> Configuration -> General Settings -> Server base URL of SonarQube instance is same as the sonarqube instance host url. 
+  e.g. "https://sonarcloud.io/" (when using SonarCloud). Must end with a slash. Also, make sure the Server base URL under Administration-> Configuration -> General Settings -> Server base URL of SonarQube instance is same as the sonarqube instance host url. This also must end with a slash. 
 
 * `organization`: The organization to be used when submitting stuff to a sonarqube
   instance. This field is *required* when using SonarCloud to perform the analysis
