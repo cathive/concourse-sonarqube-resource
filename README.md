@@ -168,6 +168,8 @@ jobs:
   - put: code-analysis
     params:
       project_path: sonarqube-analysis-input
+      # Assuming if one wants to use version not in sonar.properties but from a different file in root of the project named: version, we configure the version file path as below. 
+      project_version_file: sonarqube-analysis-input/version
       additional_properties:
         # Will be passed as "-Dsonar.javascript.lcov.reportPaths="coverage/lcov.info" to the scanner.
         sonar.javascript.lcov.reportPaths: coverage/lcov.info
