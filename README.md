@@ -36,8 +36,8 @@ Add a new resource type to your Concourse CI pipeline:
   instance. This field is *required* when using SonarCloud to perform the analysis
   of your code.
 
-* `login`: *Required.* The login or authentication token of a SonarQube user with Execute Analysis
-  permission.
+* `login`: The login or authentication token of a SonarQube user with Execute Analysis
+  permission. Can be left out if SonarQube instance does not require any authentication.
 
 * `password`: The password that goes with the sonar.login username. This should be left blank if an
   authentication token is being used.

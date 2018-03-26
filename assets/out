@@ -54,10 +54,7 @@ if [ ! -z "${sonar_organization}" ]; then
 fi
 
 sonar_login=$(jq -r '.source.login // ""' < "${payload}")
-if [ -z "${sonar_login}" ]; then
-  echo "error: source.login has not been specified."
-  exit 1
-else
+if [ ! -z "${sonar_login}" ]; then
   scanner_opts+=" -Dsonar.login=\"${sonar_login}\""
 fi
 
@@ -150,10 +147,10 @@ fi
 # "additional" property.
 additional_properties=$(jq -r '.params.additional_properties' < "${payload}")
 if [ ! -z "${additional_properties}" ]; then
-  read -r -a props_kv_arr <<< "$(jq -r 'to_entries|map("\(.key)=\"\(.value|tostring)\"")|.[]' <<< "${additional_properties}")"
-  for prop_kv in "${props_kv_arr[@]}"; do
-    scanner_opts+=" -D${prop_kv}"
-  done
+  while read -r name value; do
+      prop_kv="$name=\"$value\""
+      scanner_opts+=" -D${prop_kv}"
+  done < <(jq -r 'to_entries[] | "\(.key) \(.value)"' <<< "${additional_properties}")
 fi
 
 cd "${project_path}"
