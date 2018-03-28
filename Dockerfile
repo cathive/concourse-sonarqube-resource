@@ -5,11 +5,11 @@ RUN /bin/shellcheck --shell=bash check in out *.sh
 
 FROM debian:jessie as builder
 RUN apt-get -y update && apt-get -y install curl unzip
-ARG SONAR_SCANNER_DOWNLOAD_URL="https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.3.778-linux.zip"
-RUN curl -s -L "${SONAR_SCANNER_DOWNLOAD_URL}" > "/tmp/sonar-scanner-cli-3.0.3.778-linux.zip" \
-&& unzip -qq "/tmp/sonar-scanner-cli-3.0.3.778-linux.zip" -d "/data" \
-&& mv "/data/sonar-scanner-3.0.3.778-linux" "/data/sonar-scanner" \
-&& rm -f "/tmp/sonar-scanner-cli-3.0.3.778-linux.zip"
+ARG SONAR_SCANNER_DOWNLOAD_URL="https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.1.0.1141-linux.zip"
+RUN curl -s -L "${SONAR_SCANNER_DOWNLOAD_URL}" > "/tmp/sonar-scanner-cli-3.1.0.1141-linux.zip" \
+&& unzip -qq "/tmp/sonar-scanner-cli-3.1.0.1141-linux.zip" -d "/data" \
+&& mv "/data/sonar-scanner-3.1.0.1141-linux" "/data/sonar-scanner" \
+&& rm -f "/tmp/sonar-scanner-cli-3.1.0.1141-linux.zip"
 ARG MAVEN_DOWNLOAD_URL="http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.zip"
 RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-3.5.2-bin.zip" \
 && unzip -qq "/tmp/apache-maven-3.5.2-bin.zip" -d "/data" \
@@ -19,6 +19,11 @@ RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-3.5.2-bin.zip" \
 FROM openjdk:8u151-alpine
 RUN apk -f -q update \
 && apk -f -q add bash curl gawk git jq nodejs
+
+# https://github.com/concourse/concourse/issues/2042
+RUN unlink  $JAVA_HOME/jre/lib/security/cacerts && \
+cp /etc/ssl/certs/java/cacerts $JAVA_HOME/jre/lib/security/cacerts
+
 COPY --from=builder "/data/sonar-scanner" "/opt/sonar-scanner"
 RUN rm -Rf "/opt/sonar-scanner/jre" \
 && ln -sf "/usr" "/opt/sonar-scanner/jre" \
