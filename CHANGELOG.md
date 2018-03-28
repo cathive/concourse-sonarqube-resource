@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2018-03-28
+
+### Added
+
+- Workaround for buggy certificate propagations in Alpine OpenJDK images.
+  [(#16)(https://github.com/cathive/concourse-sonarqube-resource/issues/16)]
+
+
 ## [0.2.0] - 2018-02-07
 
 ### Fixed
