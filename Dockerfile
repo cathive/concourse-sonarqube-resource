@@ -22,7 +22,7 @@ RUN apk -f -q update \
 
 # https://github.com/concourse/concourse/issues/2042
 RUN unlink  $JAVA_HOME/jre/lib/security/cacerts && \
-cp /etc/ssl/certs/java/cacerts $JAVA_HOME/jre/lib/security/cacerts
+cp "/etc/ssl/certs/java/cacerts" "${JAVA_HOME}/jre/lib/security/cacerts"
 
 COPY --from=builder "/data/sonar-scanner" "/opt/sonar-scanner"
 RUN rm -Rf "/opt/sonar-scanner/jre" \
