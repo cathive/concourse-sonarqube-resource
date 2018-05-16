@@ -2,6 +2,7 @@
 * Benjamin P. Jung <headcr4sh@gmail.com>
 
 ## Contributors
+* Pontus Arfwedson <pontus.arfwedson@netlight.com>
 * Rune Engseth <rune.engseth@tine.no>
 
 ## Third party components
