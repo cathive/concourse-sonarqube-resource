@@ -8,7 +8,7 @@ If you want to implement a real quality gate in your build pipeline, you might w
 
 ## Requirements
 
-* A running SonarQube instance (this resource was tested on v6.5–v6.7, but it should
+* A running SonarQube instance (this resource was tested on v6.5–v7.1, but it should
   work with every version of SonarQube ≥ v5.3)
 * The base URL of your SonarQube server has to be configured correctly! Otherwise
   the resource will be unable to fetch analysis results when invoking it's `in`
@@ -78,7 +78,7 @@ quality gate associated with a project are not met.
 * `project_version`: Project version (default value is read from sonar-project.properties)
 
 * `project_version_file`: File to be used to read the Project version.
-  When this option has been specified, it has precedence over the project_version parameter.
+  When this option has been specified, it has precedence over the `project_version` parameter.
 
 * `branch_name`: Name of the branch.
 
