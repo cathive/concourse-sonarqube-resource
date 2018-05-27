@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- `sonar.branch.name` can now be auto-detected if `params.autodetect_branch_name` has
+  been set to `true`.
+  [(#3)(https://github.com/cathive/concourse-sonarqube-resource/issues/3)]
+
 ### Changed
 
 - Update sonar-scanner-cli to v3.2.0
@@ -25,7 +31,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Workaround for buggy certificate propagations in Alpine OpenJDK images.
   [(#16)(https://github.com/cathive/concourse-sonarqube-resource/issues/16)]
-
 
 ## [0.2.0] - 2018-02-07
 

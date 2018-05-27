@@ -80,11 +80,17 @@ quality gate associated with a project are not met.
 * `project_version_file`: File to be used to read the Project version.
   When this option has been specified, it has precedence over the `project_version` parameter.
 
-* `branch_name`: Name of the branch.
+* `autodetect_branch_name`: Try to figure out the branch automatically.
+  This works if the `project_path` contains recognized SCM metadata from a supported
+  revision control system. (Currently: only Git is supported!)
+
+* `branch_name`: Name of the branch. Overrides `autodetect_branch_name` if it has been set.
 
 * `branch_target`: Name of the branch where you intend to merge your short-lived branch at the end of its life.
   If left blank, this defaults to the master branch. It can also be used while initializing a long-lived
   branch to sync the issues from a branch other than the Main Branch.
+  (See [Branch Plugin documentation](https://docs.sonarqube.org/display/PLUG/Branch+Plugin) for further
+  details)
 
 * `sources`: A list of paths to directories containing source files.
 
