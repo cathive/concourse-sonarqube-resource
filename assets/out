@@ -133,7 +133,7 @@ scanner_report_file="./.scannerwork/report-task.txt"
 if [ -z "${scanner_type}" ] || [ "${scanner_type}" == "auto" ]; then
   if [ -f "${project_path}/pom.xml" ]; then
     scanner_type="maven"
-    scanner_bin="mvn -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar"
+    scanner_bin="mvn -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:sonar"
     # shellcheck disable=SC2016
     scanner_report_file="$(mvn -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)/sonar/report-task.txt"
   else
