@@ -35,8 +35,8 @@ RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get \
 
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
-LABEL maintainer="headcr4sh@gmail.com" \
-      version="0.3.1"
+LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
+      version="0.4.0"
 
 COPY ./assets/* /opt/resource/
 
