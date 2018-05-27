@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function error() {
     JOB="${0}"              # job name
     LASTLINE="${1}"         # line of error occurrence
