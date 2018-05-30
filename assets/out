@@ -152,11 +152,7 @@ scanner_report_file="./.scannerwork/report-task.txt"
 if [[ -z "${scanner_type}" ]] || [[ "${scanner_type}" == "auto" ]]; then
   if [[ -f "${project_path}/pom.xml" ]]; then
     scanner_type="maven"
-    if [[ -x "${project_path}/mvnw" ]]; then
-      mvn="${project_path}/mvnw"
-    else
-      mvn="mvn"
-    fi
+    mvn="mvn"
     if [[ "${DEBUG}" == "true" ]]; then
       mvn+=" -X"
     fi

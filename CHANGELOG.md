@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2018-05-30
+
+### Removed
+
+- The idea of using a project-local maven wrapper instance seemed nice but
+  was not really usable / stable in practice. Therefore the feature had to
+  be removed.
+
 ## [0.5.1] - 2018-05-30
 
 ### Fixed
