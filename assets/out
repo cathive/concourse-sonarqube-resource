@@ -153,7 +153,7 @@ if [[ -z "${scanner_type}" ]] || [[ "${scanner_type}" == "auto" ]]; then
   if [[ -f "${project_path}/pom.xml" ]]; then
     scanner_type="maven"
     if [[ -x "${project_path}/mvnw" ]]; then
-      mvn="./mvnw"
+      mvn="${project_path}/mvnw"
     else
       mvn="mvn"
     fi
