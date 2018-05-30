@@ -168,7 +168,7 @@ fi
 # command line. We don't check for any duplicates that might have been created due to
 # the fact that some "basic" properties might have specified a second time as
 # "additional" property.
-additional_properties=$(jq -r '.params.additional_properties' < "${payload}")
+additional_properties=$(jq -r '.params.additional_properties // ""' < "${payload}")
 if [[ ! -z "${additional_properties}" ]]; then
   while read -r name value; do
     prop_kv="$name=\"$value\""
