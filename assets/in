@@ -12,7 +12,7 @@ source "${root}/common.sh"
 
 dest="${1}"
 
-if [ -z "${dest}" ]; then
+if [[ -z "${dest}" ]]; then
   echo "usage: ${0} <path/to/destination>"
   exit 1
 fi
@@ -20,14 +20,17 @@ fi
 payload=$(mktemp "${TMPDIR}/sonarqube-resource-out.XXXXXX")
 cat > "${payload}" <&0
 
+DEBUG="$(jq -r '.source.__debug // "false"' < "${payload}")"
+enable_debugging "${DEBUG}"
+
 sonar_host_url=$(jq -r '.source.host_url // ""' < "${payload}")
-if [ -z "${sonar_host_url}" ]; then
+if [[ -z "${sonar_host_url}" ]]; then
   echo "host_url param has not been specified."
   exit 1
 fi
 
 sonar_login=$(jq -r '.source.login // ""' < "${payload}")
-if [ -z "${sonar_login}" ]; then
+if [[ -z "${sonar_login}" ]]; then
   echo "sonar_login param has not been specified."
   exit 1
 fi
@@ -35,7 +38,7 @@ fi
 sonar_password=$(jq -r '.source.password // ""' < "${payload}")
 
 ce_task_id=$(jq -r '.version.ce_task_id // ""' < "${payload}")
-if [ -z "${ce_task_id}" ]; then
+if [[ -z "${ce_task_id}" ]]; then
   echo "version to fetch cannot be determined: ce_task_id not set?"
   exit 1
 fi
@@ -47,16 +50,16 @@ ce_task_status="PENDING"
 until [ "${ce_task_status}" != "PENDING" ] && [ "${ce_task_status}" != "IN_PROGRESS" ]; do
   sq_ce_task "${sonar_login}:${sonar_password}" "${sonar_host_url}" "${ce_task_id}" > "${ce_task_info}"
   ce_task_status=$(jq -r '.task.status // ""' < "${ce_task_info}")
-  if [ "${ce_task_status}" != "PENDING" ] && [ "${ce_task_status}" != "IN_PROGRESS" ]; then
+  if [[ "${ce_task_status}" != "PENDING" ]] && [[ "${ce_task_status}" != "IN_PROGRESS" ]]; then
     echo "Waiting for compute engine result (sleep: 5s)..."
     sleep 5 # Poll SonarQube compute engine task every 5 seconds.
   fi
 done
 
 analysis_id=""
-if [ "${ce_task_status}" == "SUCCESS" ]; then
+if [[ "${ce_task_status}" == "SUCCESS" ]]; then
   analysis_id=$(jq -r '.task.analysisId // ""' < "${ce_task_info}")
-  if [ -z "${analysis_id}" ]; then
+  if [[ -z "${analysis_id}" ]]; then
     echo "error: No analysis ID could be fetched from compute engine task result"
     exit 1
   fi

@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Anonymous analysis without username/password or access token should now be possible.
+  [(#13)(https://github.com/cathive/concourse-sonarqube-resource/issues/13)]
+
+### Added
+
+- A new configuration parameter (`source.__debug`) has been added that can be used
+  to debug the resource itself when developing new features or fixing bugs.
+  (This flag is *not* ment to be used in production environments, though!)
+
+- The unit test framework has been enhanced and it should now be possible to write
+  some real proper unit tests using the "bats" framework.
+
+- If the scanner type has been set to `maven` (or if it has been automatically
+  determined by the existence of a pom.xml file), the resource will now use the
+  installed maven wrapper (if there is an executable `mvww` file in the project's
+  root folder).
+
+### Changed
+
+- Starting with this release, the shell scripts will use BASH's double brackets
+  syntax for all if-checks, because it's generally less error-prone and and offers
+  fewer surprises when dealing with nasty things such as uninitialized variables.
+
 ## [0.4.0] - 2018-05-27
 
 ### Added

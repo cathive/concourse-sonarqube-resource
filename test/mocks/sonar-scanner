@@ -1,2 +1,9 @@
 #!/usr/bin/env bash
+if [[ ! -f "${SONAR_SCANNER_REPORT_FILE_MOCK}" ]]; then
+  echo "!! ERROR DURING INVOCATION OF sonar-scanner MOCK FUNCTION !!"
+  echo "The variable SONAR_SCANNER_REPORT_FILE_MOCK points to a non-existent file location or" >&2
+  echo "the file at the specified location cannot be read:" >&2
+  echo "--> \"${SONAR_SCANNER_REPORT_FILE_MOCK}\"" >&2
+  exit 1
+fi
 cat "${SONAR_SCANNER_REPORT_FILE_MOCK}" > "${SONAR_SCANNER_REPORT_FILE}"

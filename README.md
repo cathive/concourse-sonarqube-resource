@@ -46,6 +46,12 @@ Add a new resource type to your Concourse CI pipeline:
   Only used if the scanner_type during the out phase has been set to / determined to use
   Maven.
 
+* `__debug`: This flag is used to debug any problems that might occur when using the resource
+  itself. It enables extra debug output on the console and sets the `-x` flag during shell
+  execution. It is usually not a good idea to set this flag to `true` in a production environment,
+  because it might leak passwords and access key credentials to the console where it might
+  be accessed by unauthorized / anonymous users.
+
 ## Behavior
 
 The resource implements all three actions (check, in and out).
