@@ -139,10 +139,15 @@ resource_types:
 
 resources:
 
-- name: example-sources-to-be-analyzed
+- name: sources
   type: git
   source:
     uri: https://github.com/example/example.git
+
+- name: artifact
+  type: s3
+  # ... configuration ommited
+
 - name: code-analysis
   type: sonar-runner
   source:
@@ -152,9 +157,16 @@ resources:
 
 jobs:
 
+# The build job performs fetches stuff from the "sources" resource
+# and executes a task that builds and tests everyhing. Once compilation,
+# test execution and <whatever> has been performed, we copy the whole
+# working directory into the output folder "sonarqube-analysis-input"
+# and push the package that has been created by the "build" task to the
+# artifact resource and utilize the sonarqube-resource to perform static
+# code analysis.
 - name: build-and-analyze
   plan:
-  - get: example-sources-to-be-analyzed
+  - get: sources
     trigger: true
   - task: build
     config:
@@ -164,31 +176,40 @@ jobs:
         source:
           repository: debian
           tag: 'jessie'
-        inputs:
-        - name: example-sources
-        outputs:
-        # Hint: For some (most?) languages, the sonar-runner needs more than just the
-        # sources to perform a full analysis. Line coverage reports, unit test reports,
-        # Java class files and mutation test results should also be present.
-        # Therefore, you'll have to make sure that your build script provides the sources
-        # and the compilation/test in your Concourse CI build plan.
-        # (And that is the reason, why we need the following output)
-        - name: sonarqube-analysis-input
-         run:
-           path: build.sh
-           dir: example-sources
-  - put: code-analysis
-    params:
-      project_path: sonarqube-analysis-input
-      additional_properties:
-        # Will be passed as "-Dsonar.javascript.lcov.reportPaths="coverage/lcov.info" to the scanner.
-        sonar.javascript.lcov.reportPaths: coverage/lcov.info
+      inputs:
+      - name: sources
+      outputs:
+      # Hint: The sonar-runner needs more than just the
+      # sources to perform a full analysis. Line coverage reports, unit test reports,
+      # Java class files and mutation test results should also be present.
+      # Therefore, you'll have to make sure that your build script provides the sources
+      # and the compilation/test results in your Concourse CI build plan.
+      # (And that is the reason, why we need the following output)
+      - name: sonarqube-analysis-input
+      run:
+        path: build.sh
+        dir: sources
+  - aggregate:
+    - put: code-analysis
+      params:
+        project_path: sonarqube-analysis-input
+        additional_properties:
+          # Will be passed as "-Dsonar.javascript.lcov.reportPaths="coverage/lcov.info" to the scanner.
+          sonar.javascript.lcov.reportPaths: coverage/lcov.info
+    - put: artifact
+
+# The qualitygate task breaks the build if the analysis result from SonarQube
+# indicates that any of our quality metrics have not been met.
 - name: qualitygate
   plan:
-  - get: code-analysis
-    passed:
-    - build-and-analyze
-    trigger: true
+  - aggregate:
+    - get: artifact
+      passed:
+      - build-and-analyze
+    - get: code-analysis
+      passed:
+      - build-and-analyze
+      trigger: true
   - task: check-sonarqube-quality-gate
     config:
       platform: linux
@@ -202,4 +223,12 @@ jobs:
       run:
         path: /sonarqube-qualitygate-check
         dir: code-analysis
+
+# We deploy only artifacts that have made it through our quality gate!
+- name: deploy
+  plan:
+  - get: artifact
+    passed:
+    - qualitygate
+
 ```
