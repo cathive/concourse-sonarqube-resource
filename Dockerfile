@@ -11,7 +11,7 @@ RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-3.5.3-bin.zip" \
 && mv "/data/apache-maven-3.5.3" "/data/apache-maven" \
 && rm -f "/tmp/apache-maven-3.5.3-bin.zip"
 
-FROM openjdk:8-jdk
+FROM openjdk:8-jdk-alpine3.7
 RUN apk -f -q update \
 && apk -f -q add bash curl gawk git jq nodejs
 
@@ -43,5 +43,3 @@ LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
       org.concourse-ci.resource-homepage="https://github.com/marek-urban/concourse-sonarqube-resource"
 
 COPY ./assets/* /opt/resource/
-
-
