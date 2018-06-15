@@ -159,10 +159,10 @@ if [[ -z "${scanner_type}" ]] || [[ "${scanner_type}" == "auto" ]]; then
     scanner_bin="${mvn} -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:sonar"
     # shellcheck disable=SC2016
 	if [[ ! -z "${maven_settings_file}" ]]; then
-		echo "option_1"
-		scanner_report_file="$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec --settings ${maven_settings_file} )/sonar/report-task.txt" 
+		echo "option: use custom maven settings file"
+		scanner_report_file="$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec --settings ${project_path}/${maven_settings_file} )/sonar/report-task.txt" 
     else
-		echo "option_2"
+		echo "option: dont custom maven settings file"
 		scanner_report_file="$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec )/sonar/report-task.txt" 
 	fi
   else
