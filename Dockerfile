@@ -36,7 +36,11 @@ RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get \
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
+<<<<<<< HEAD
       version="0.6.0.1" \
+=======
+      version="0.6.0.2" \
+>>>>>>> 8f9d98396fd54b45e0ec478865aeb1f30cfd315b
       org.concourse-ci.target-version="3.13.0" \
       org.concourse-ci.resource-id="sonarqube" \
       org.concourse-ci.resource-name="SonarQube Static Code Analysis" \
