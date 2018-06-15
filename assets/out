@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Version: 0.6.0.5"
+echo "Debugged and modified by Marek Urban"
+
 set -e
 
 exec 3>&1 # make stdout available as fd 3 for the result
@@ -67,16 +70,20 @@ if [[ ! -z "${sonar_password}" ]]; then
 fi
 
 maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < "${payload}")
-if [[ ! -z "${maven_settings_file}" ]] && [[ -f "${maven_settings_file}" ]]; then
-  scanner_opts+=" -s \"${maven_settings_file}\""
+maven_settings=$(jq -r '.source.maven_settings // ""' < "${payload}")
+
+if [[ ! -z "${maven_settings_file}" ]] && [[ ! -z "${maven_settings}" ]]; then
+	echo "Found two settings, prioritizing ${maven_settings_file} over ${maven_settings}"
+	scanner_opts+=" -s \"${project_path}/${maven_settings_file}\""
 else
-  maven_settings=$(jq -r '.source.maven_settings // ""' < "${payload}")
-  if [[ ! -z "${maven_settings}" ]]; then
-    maven_settings_file=$(mktemp "${TMPDIR}/sonarqube-resource-maven-settings.xml.XXXXXX")
-    echo "${maven_settings}" > "${maven_settings_file}"
-    scanner_opts+=" -s \"${maven_settings_file}\""
-  fi
-  unset maven_settings
+	if [[ ! -z "${maven_settings}" ]]; then
+		echo "Found resource settings: ${maven_settings}"
+		scanner_opts+=" -s \"${project_path}/${maven_settings}\""
+	fi
+	if [[ ! -z "${maven_settings_file}" ]]; then
+		echo "Found resource settings: ${maven_settings_file}"
+		scanner_opts+=" -s \"${project_path}/${maven_settings_file}\""
+	fi
 fi
 
 sonar_project_key=$(jq -r '.params.project_key // ""' < "${payload}")
