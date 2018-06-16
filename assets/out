@@ -1,8 +1,5 @@
 #!/bin/bash
 
-echo "Version: 0.6.0.5"
-echo "Debugged and modified by Marek Urban"
-
 set -e
 
 exec 3>&1 # make stdout available as fd 3 for the result
@@ -31,6 +28,9 @@ cat > "${payload}" <&0
 
 DEBUG="$(jq -r '.source.__debug // "false"' < "${payload}")"
 enable_debugging "${DEBUG}"
+
+echo "Version: 0.6.0.6"
+echo "Debugged and modified by Marek Urban"
 
 echo "Preparing SonarQube scanner..."
 
@@ -73,16 +73,16 @@ maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < "${payload}")
 maven_settings=$(jq -r '.source.maven_settings // ""' < "${payload}")
 
 if [[ ! -z "${maven_settings_file}" ]] && [[ ! -z "${maven_settings}" ]]; then
-	echo "Found two settings, prioritizing ${maven_settings_file} over ${maven_settings}"
-	scanner_opts+=" -s \"${project_path}/${maven_settings_file}\""
+	echo "Found two settings, prioritizing ${maven_settings_file} instead of ${maven_settings} !"
+	scanner_opts+=" -s \"${maven_settings_file}\""
 else
 	if [[ ! -z "${maven_settings}" ]]; then
 		echo "Found resource settings: ${maven_settings}"
-		scanner_opts+=" -s \"${project_path}/${maven_settings}\""
+		scanner_opts+=" -s \"${maven_settings}\""
 	fi
 	if [[ ! -z "${maven_settings_file}" ]]; then
 		echo "Found resource settings: ${maven_settings_file}"
-		scanner_opts+=" -s \"${project_path}/${maven_settings_file}\""
+		scanner_opts+=" -s \"${maven_settings_file}\""
 	fi
 fi
 
