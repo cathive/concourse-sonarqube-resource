@@ -30,7 +30,7 @@ DEBUG="$(jq -r '.source.__debug // "false"' < "${payload}")"
 COPYM2="$(jq -r '.source.copy_m2 // "false"' < "${payload}")"
 enable_debugging "${DEBUG}"
 
-echo "Version: 0.6.0.6"
+echo "Version: 0.6.0.7"
 echo "Debugged and modified by Marek Urban"
 
 echo "Preparing SonarQube scanner..."
