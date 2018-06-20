@@ -27,6 +27,7 @@ payload=$(mktemp "${TMPDIR}/sonarqube-resource-out.XXXXXX")
 cat > "${payload}" <&0
 
 DEBUG="$(jq -r '.source.__debug // "false"' < "${payload}")"
+COPYM2="$(jq -r '.source.copy_m2 // "false"' < "${payload}")"
 enable_debugging "${DEBUG}"
 
 echo "Version: 0.6.0.6"
@@ -151,6 +152,11 @@ fi
 sonar_tests=$(jq -r '.params.tests // [] | join(",")' < "${payload}")
 if [[ ! -z "${sonar_tests}" ]]; then
   scanner_opts+=" -Dsonar.tests=\"${sonar_tests}\""
+fi
+
+echo "Copying .m2 folder to /root/.m2/"
+if [[ "${COPYM2}" == "true" ]]; then
+  cp -rf ${project_path}/../.m2/* /root/.m2/
 fi
 
 scanner_type=$(jq -r '.params.scanner_type // ""' < "${payload}")
