@@ -27,7 +27,7 @@ payload=$(mktemp "${TMPDIR}/sonarqube-resource-out.XXXXXX")
 cat > "${payload}" <&0
 
 DEBUG="$(jq -r '.source.__debug // "false"' < "${payload}")"
-COPYM2="$(jq -r '.source.copy_m2 // "false"' < "${payload}")"
+COPYM2="$(jq -r '.params.copy_m2 // "false"' < "${payload}")"
 enable_debugging "${DEBUG}"
 
 echo "Version: 0.6.0.7"
