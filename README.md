@@ -111,6 +111,7 @@ quality gate associated with a project are not met.
   it's value.
  
 * `copy_m2`: true / false
+
   Copies .m2 folder from project path directory into /root/.m2/ of docker-image before analyze.
 
 ### in: Fetch result of SonarQube analysis
