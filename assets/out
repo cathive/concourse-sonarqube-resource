@@ -159,7 +159,7 @@ if [[ "${COPYM2}" == "true" ]]; then
   echo "List of folders included in project:"
   ls -al ../
   echo "Copying .m2 folder to /root/.m2/"
-  cp -rf ${project_path}/.m2/* /root/.m2/
+  cp -rf ${project_path}/../.m2/* /root/.m2/
 fi
 
 scanner_type=$(jq -r '.params.scanner_type // ""' < "${payload}")
