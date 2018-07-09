@@ -11,7 +11,7 @@ RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-3.5.3-bin.zip" \
 && mv "/data/apache-maven-3.5.3" "/data/apache-maven" \
 && rm -f "/tmp/apache-maven-3.5.3-bin.zip"
 
-FROM openjdk:8u151-alpine
+FROM openjdk:8-jdk-alpine3.7
 RUN apk -f -q update \
 && apk -f -q add bash curl gawk git jq nodejs
 
@@ -36,12 +36,10 @@ RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get \
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
-      version="0.6.0" \
+      version="0.6.0.7" \
       org.concourse-ci.target-version="3.13.0" \
       org.concourse-ci.resource-id="sonarqube" \
       org.concourse-ci.resource-name="SonarQube Static Code Analysis" \
-      org.concourse-ci.resource-homepage="https://github.com/cathive/concourse-sonarqube-resource"
+      org.concourse-ci.resource-homepage="https://github.com/marek-urban/concourse-sonarqube-resource"
 
 COPY ./assets/* /opt/resource/
-
-

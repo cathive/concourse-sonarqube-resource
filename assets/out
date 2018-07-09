@@ -27,7 +27,11 @@ payload=$(mktemp "${TMPDIR}/sonarqube-resource-out.XXXXXX")
 cat > "${payload}" <&0
 
 DEBUG="$(jq -r '.source.__debug // "false"' < "${payload}")"
+COPYM2="$(jq -r '.params.copy_m2 // "false"' < "${payload}")"
 enable_debugging "${DEBUG}"
+
+echo "Version: 0.6.0.8"
+echo "Debugged and modified by Marek Urban"
 
 echo "Preparing SonarQube scanner..."
 
@@ -67,16 +71,20 @@ if [[ ! -z "${sonar_password}" ]]; then
 fi
 
 maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < "${payload}")
-if [[ ! -z "${maven_settings_file}" ]] && [[ -f "${maven_settings_file}" ]]; then
-  scanner_opts+=" -s \"${maven_settings_file}\""
+maven_settings=$(jq -r '.source.maven_settings // ""' < "${payload}")
+
+if [[ ! -z "${maven_settings_file}" ]] && [[ ! -z "${maven_settings}" ]]; then
+	echo "Found two settings, prioritizing ${maven_settings_file} instead of ${maven_settings} !"
+	scanner_opts+=" -s \"${maven_settings_file}\""
 else
-  maven_settings=$(jq -r '.source.maven_settings // ""' < "${payload}")
-  if [[ ! -z "${maven_settings}" ]]; then
-    maven_settings_file=$(mktemp "${TMPDIR}/sonarqube-resource-maven-settings.xml.XXXXXX")
-    echo "${maven_settings}" > "${maven_settings_file}"
-    scanner_opts+=" -s \"${maven_settings_file}\""
-  fi
-  unset maven_settings
+	if [[ ! -z "${maven_settings}" ]]; then
+		echo "Found resource settings: ${maven_settings}"
+		scanner_opts+=" -s \"${maven_settings}\""
+	fi
+	if [[ ! -z "${maven_settings_file}" ]]; then
+		echo "Found resource settings: ${maven_settings_file}"
+		scanner_opts+=" -s \"${maven_settings_file}\""
+	fi
 fi
 
 sonar_project_key=$(jq -r '.params.project_key // ""' < "${payload}")
@@ -146,6 +154,14 @@ if [[ ! -z "${sonar_tests}" ]]; then
   scanner_opts+=" -Dsonar.tests=\"${sonar_tests}\""
 fi
 
+if [[ "${COPYM2}" == "true" ]]; then
+  echo "Copy maven .m2 repository value set to true!"
+  echo "List of folders included in project:"
+  ls -al ../
+  echo "Copying .m2 folder to /root/.m2/"
+  cp -rf ${project_path}/../.m2/* /root/.m2/
+fi
+
 scanner_type=$(jq -r '.params.scanner_type // ""' < "${payload}")
 scanner_bin="sonar-scanner"
 scanner_report_file="./.scannerwork/report-task.txt"
@@ -158,7 +174,13 @@ if [[ -z "${scanner_type}" ]] || [[ "${scanner_type}" == "auto" ]]; then
     fi
     scanner_bin="${mvn} -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:sonar"
     # shellcheck disable=SC2016
-    scanner_report_file="$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)/sonar/report-task.txt"
+	if [[ ! -z "${maven_settings_file}" ]]; then
+		echo "option: use custom maven settings file"
+		scanner_report_file="$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec --settings ${project_path}/${maven_settings_file} )/sonar/report-task.txt" 
+    else
+		echo "option: dont custom maven settings file"
+		scanner_report_file="$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec )/sonar/report-task.txt" 
+	fi
   else
     scanner_type="cli"
   fi

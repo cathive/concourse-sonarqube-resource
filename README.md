@@ -109,6 +109,10 @@ quality gate associated with a project are not met.
   Only used if the scanner_type during has been set to / determined to use Maven.
   If the resource itself has a maven_settings configuration, this key will override
   it's value.
+ 
+* `copy_m2`: true / false
+
+  Copies .m2 folder from project path directory into /root/.m2/ of docker-image before analyze.
 
 ### in: Fetch result of SonarQube analysis
 
