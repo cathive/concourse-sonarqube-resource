@@ -66,17 +66,26 @@ if [[ ! -z "${sonar_password}" ]]; then
   scanner_opts+=" -Dsonar.password=\"${sonar_password}\""
 fi
 
-maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < "${payload}")
-if [[ ! -z "${maven_settings_file}" ]] && [[ -f "${maven_settings_file}" ]]; then
-  scanner_opts+=" -s \"${maven_settings_file}\""
-else
-  maven_settings=$(jq -r '.source.maven_settings // ""' < "${payload}")
-  if [[ ! -z "${maven_settings}" ]]; then
-    maven_settings_file=$(mktemp "${TMPDIR}/sonarqube-resource-maven-settings.xml.XXXXXX")
-    echo "${maven_settings}" > "${maven_settings_file}"
+# Try to determine Maven settings configuration.
+# If they have been defined inline, they take precedence over a possibly specified
+# maven settings file.
+maven_settings=$(jq -r '.source.maven_settings // ""' < "${payload}")
+if [[ ! -z "${maven_settings}" ]]; then
+  maven_settings_file=$(mktemp "${TMPDIR}/sonarqube-resource-maven-settings.xml.XXXXXX")
+  echo "${maven_settings}" > "${maven_settings_file}"
+  unset maven_settings
+elif [[ ! -z "${maven_settings_file}" ]]; then
+  maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < "${payload}")
+fi
+
+if [[ ! -z "${maven_settings_file}" ]]; then
+  if [[ ! -f "${maven_settings_file}" ]]; then
+    echo "error: Maven settings file not found: \"${maven_settings_file}\"."
+    exit 1
+  else
+    echo "Using Maven settings file: \"${maven_settings_file}\"..."
     scanner_opts+=" -s \"${maven_settings_file}\""
   fi
-  unset maven_settings
 fi
 
 sonar_project_key=$(jq -r '.params.project_key // ""' < "${payload}")
@@ -158,7 +167,10 @@ if [[ -z "${scanner_type}" ]] || [[ "${scanner_type}" == "auto" ]]; then
     fi
     scanner_bin="${mvn} -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:sonar"
     # shellcheck disable=SC2016
+	if [[ ! -z "${maven_settings_file}" ]]; then
+    mvn+=" -s ${maven_settings_file}"
     scanner_report_file="$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)/sonar/report-task.txt"
+	fi
   else
     scanner_type="cli"
   fi
