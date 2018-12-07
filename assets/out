@@ -199,7 +199,14 @@ if [[ -f "${scanner_report_file}" ]]; then
     # Older versions of SonarQube don't store the serverVersion in
     # report-task.txt. There is a REST API though, that can be used
     # to fetch the version.
-    serverVersion="$(sq_server_version "${sonar_login}":"${sonar_password}" "${sonar_host_url}")"
+    sonar_token=""
+    if [[ ! -z "${sonar_login}" ]] && [[ "${sonar_login}" != "" ]]; then
+      sonar_token="${sonar_login}"
+      if [[ ! -z "${sonar_password}" ]] && [[ "${sonar_password}" != "" ]]; then
+        sonar_token+=":${sonar_password}"
+      fi
+    fi
+    serverVersion="$(sq_server_version "${sonar_token}" "${sonar_host_url}")"
   fi
 else
   echo "error: SonarQube report could not be located."

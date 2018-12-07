@@ -30,12 +30,15 @@ if [[ -z "${sonar_host_url}" ]]; then
 fi
 
 sonar_login=$(jq -r '.source.login // ""' < "${payload}")
-if [[ -z "${sonar_login}" ]]; then
-  echo "sonar_login param has not been specified."
-  exit 1
-fi
 
 sonar_password=$(jq -r '.source.password // ""' < "${payload}")
+
+if [[ ! -z "${sonar_login}" ]] && [[ "${sonar_login}" != "" ]]; then
+  sonar_token="${sonar_login}"
+  if [[ ! -z "${sonar_password}" ]] && [[ "${sonar_password}" != "" ]]; then
+    sonar_token+=":${sonar_password}"
+  fi
+fi
 
 ce_task_id=$(jq -r '.version.ce_task_id // ""' < "${payload}")
 if [[ -z "${ce_task_id}" ]]; then
@@ -48,7 +51,7 @@ cd "${dest}"
 ce_task_info="./ce_task.json"
 ce_task_status="PENDING"
 until [ "${ce_task_status}" != "PENDING" ] && [ "${ce_task_status}" != "IN_PROGRESS" ]; do
-  sq_ce_task "${sonar_login}:${sonar_password}" "${sonar_host_url}" "${ce_task_id}" > "${ce_task_info}"
+  sq_ce_task "${sonar_token}" "${sonar_host_url}" "${ce_task_id}" > "${ce_task_info}"
   ce_task_status=$(jq -r '.task.status // ""' < "${ce_task_info}")
   if [[ "${ce_task_status}" != "PENDING" ]] && [[ "${ce_task_status}" != "IN_PROGRESS" ]]; then
     echo "Waiting for compute engine result (sleep: 5s)..."
@@ -66,7 +69,7 @@ if [[ "${ce_task_status}" == "SUCCESS" ]]; then
 fi
 
 project_status="./qualitygate_project_status.json"
-sq_qualitygates_project_status "${sonar_login}:${sonar_password}" "${sonar_host_url}" "${analysis_id}" > "${project_status}"
+sq_qualitygates_project_status "${sonar_token}" "${sonar_host_url}" "${analysis_id}" > "${project_status}"
 
 project_status=$(jq -r '.projectStatus.status // ""' < "${project_status}")
 

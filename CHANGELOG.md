@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   ([#19](https://github.com/cathive/concourse-sonarqube-resource/issues/19))
 - Docker builds should no longer fail because of corrupted sonar-scanner
   zip archive. ([#26](https://github.com/cathive/concourse-sonarqube-resource/issues/26))
+- Anonymous access to SonarQube servers that don't require authentication
+  should now be possible. ([#25](https://github.com/cathive/concourse-sonarqube-resource/issues/25))
 
 ### Added
 
