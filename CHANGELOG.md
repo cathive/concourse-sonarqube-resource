@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Custom maven settings are used correctly when perfoming SonarQube analysis. Thanks to [Marek Urban](https://github.com/marek-urban) for the provided fix.
+  ([#19](https://github.com/cathive/concourse-sonarqube-resource/issues/19))
+- Docker builds should no longer fail because of corrupted sonar-scanner
+  zip archive. ([#26](https://github.com/cathive/concourse-sonarqube-resource/issues/26))
+
+### Added
+
+- The integrity of the bundled Maven installation and the sonar-scanner
+  distribution is now being checked agains sha512 checksums to ensure the contents of the downloads has not been altered.
+
+### Updated
+
+- The bundled Maven installation has been updated to v3.6.0.
+- Then bundled sonar-maven-plugin has been updated to v3.5.0.1254.
+
 ## [0.6.0] - 2018-05-30
 
 ### Removed
@@ -27,7 +46,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Anonymous analysis without username/password or access token should now be possible.
-  [(#13)(https://github.com/cathive/concourse-sonarqube-resource/issues/13)]
+  ([#13](https://github.com/cathive/concourse-sonarqube-resource/issues/13))
 
 ### Added
 
@@ -55,7 +74,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - `sonar.branch.name` can now be auto-detected if `params.autodetect_branch_name` has
   been set to `true`.
-  [(#3)(https://github.com/cathive/concourse-sonarqube-resource/issues/3)]
+  ([#3](https://github.com/cathive/concourse-sonarqube-resource/issues/3))
 
 ### Changed
 
@@ -67,29 +86,29 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Multiple additional parameters work now as supposed to.
-  [(#14)(https://github.com/cathive/concourse-sonarqube-resource/issues/14)]
+  ([#14](https://github.com/cathive/concourse-sonarqube-resource/issues/14))
 
 ## [0.3.0] - 2018-03-28
 
 ### Added
 
 - Workaround for buggy certificate propagations in Alpine OpenJDK images.
-  [(#16)(https://github.com/cathive/concourse-sonarqube-resource/issues/16)]
+  ([#16](https://github.com/cathive/concourse-sonarqube-resource/issues/16))
 
 ## [0.2.0] - 2018-02-07
 
 ### Fixed
 
 - Parameters that contain whitespace characters no longer fail the `out` action.
-  [(#6)(https://github.com/cathive/concourse-sonarqube-resource/issues/6)]
+  ([#6](https://github.com/cathive/concourse-sonarqube-resource/issues/6))
 
 ### Added
 
 - Support for `params.tests`.
-  [(#7)(https://github.com/cathive/concourse-sonarqube-resource/issues/7)]
+  ([#7](https://github.com/cathive/concourse-sonarqube-resource/issues/7))
 
 - Support for `params.branch_name` and `params.branch_target`.
-  Require the [Branch Plugin](https://docs.sonarqube.org/display/PLUG/Branch+Plugin) or
+  Requires the [Branch Plugin](https://docs.sonarqube.org/display/PLUG/Branch+Plugin) or
   SonarCloud.
 
 ### Changed
@@ -107,13 +126,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Support old SonarQube servers that don't report the server version in report-task.txt (Just report "unknown" as server version) [(#11)(https://github.com/cathive/concourse-sonarqube-resource/issues/11)]
+- Support old SonarQube servers that don't report the server version in report-task.txt (Just report "unknown" as server version) ([#11](https://github.com/cathive/concourse-sonarqube-resource/issues/11))
 
 ## [0.0.31] - 2018-01-23
 
 ### Fixed
 
-- Support old SonarQube servers that don't report the server version in report-task.txt (under certain conditions, this fix will not work though) [(#11)(https://github.com/cathive/concourse-sonarqube-resource/issues/11)]
+- Support old SonarQube servers that don't report the server version in report-task.txt (under certain conditions, this fix will not work though) ([#11](https://github.com/cathive/concourse-sonarqube-resource/issues/11))
 
 ## [0.0.30] - 2018-01-18
 
@@ -124,10 +143,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Updated the documentation to make clear how a quality gate can be used to break the build.
-  [(#9)](https://github.com/cathive/concourse-sonarqube-resource/issues/9)
+  ([#9](https://github.com/cathive/concourse-sonarqube-resource/issues/9))
 
 ## [0.0.20] - 2018-01-04
 
 ### Added
 
-- Support for SonarQube/SonarCloud organizations. [(#8)](https://github.com/cathive/concourse-sonarqube-resource/issues/8)
+- Support for SonarQube/SonarCloud organizations. ([#8](https://github.com/cathive/concourse-sonarqube-resource/issues/8))
