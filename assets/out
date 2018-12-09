@@ -156,24 +156,37 @@ if [[ ! -z "${sonar_tests}" ]]; then
 fi
 
 scanner_type=$(jq -r '.params.scanner_type // ""' < "${payload}")
-scanner_bin="sonar-scanner"
-scanner_report_file="./.scannerwork/report-task.txt"
+
+
+# If no scanner type has been specified, we'll try to figure it out on our own.
+# (E.g. if pom.xml exists in the root directory, we are probalby dealing with a
+# Maven project,...)
 if [[ -z "${scanner_type}" ]] || [[ "${scanner_type}" == "auto" ]]; then
   if [[ -f "${project_path}/pom.xml" ]]; then
     scanner_type="maven"
-    mvn="mvn"
-    if [[ "${DEBUG}" == "true" ]]; then
-      mvn+=" -X"
-    fi
-    scanner_bin="${mvn} -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:sonar"
-    # shellcheck disable=SC2016
-	if [[ ! -z "${maven_settings_file}" ]]; then
-    mvn+=" -s ${maven_settings_file}"
-    scanner_report_file="$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)/sonar/report-task.txt"
-	fi
   else
     scanner_type="cli"
   fi
+fi
+
+# We now build the command line for the sonar-scanner.
+# It depends upon the scanner type how the command line is being constructed.
+if [[ "${scanner_type}" == "cli" ]]; then
+  scanner_bin="sonar-scanner"
+  scanner_report_file="./.scannerwork/report-task.txt"
+elif [[ "${scanner_type}" == "maven" ]]; then
+  mvn="mvn"
+  if [[ "${DEBUG}" == "true" ]]; then
+    mvn+=" -X"
+  fi
+  if [[ ! -z "${maven_settings_file}" ]]; then
+    mvn+=" -s ${maven_settings_file}"
+	fi
+  scanner_bin="${mvn} -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:sonar"
+  # shellcheck disable=SC2016
+  maven_project_build_directory=$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)
+  scanner_report_file="${maven_project_build_directory}/sonar/report-task.txt"
+  unset maven_project_build_directory
 fi
 
 # If any additional properties have been specified, we'll just append them to the
