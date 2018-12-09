@@ -182,7 +182,7 @@ elif [[ "${scanner_type}" == "maven" ]]; then
   if [[ ! -z "${maven_settings_file}" ]]; then
     mvn+=" -s ${maven_settings_file}"
 	fi
-  scanner_bin="${mvn} -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:sonar"
+  scanner_bin="${mvn} -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.5.0.1254:sonar"
   # shellcheck disable=SC2016
   maven_project_build_directory=$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)
   scanner_report_file="${maven_project_build_directory}/sonar/report-task.txt"

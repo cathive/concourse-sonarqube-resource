@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - scanner-report.txt could not be found if `scanner_type` was set to `maven` ([#24](https://github.com/cathive/concourse-sonarqube-resource/issues/24))
+- Version 0.7.0 contained a bug where the bundled sonar-maven-plugin was *not* updated
+  to version v3.5.0.1254 as originally announced. This version fixes this issue and
+  makes sure that the desired version of he soncar-maven-plugin is being used.
 
 ## [0.7.0] - 2018-12-07
 
@@ -30,7 +33,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Updated
 
 - The bundled Maven installation has been updated to v3.6.0.
-- Then bundled sonar-maven-plugin has been updated to v3.5.0.1254.
+- The bundled sonar-maven-plugin has been updated to v3.5.0.1254.
 
 ## [0.6.0] - 2018-05-30
 
