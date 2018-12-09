@@ -22,6 +22,17 @@ function enable_debugging {
   fi
 }
 
+# Adds a trailing slash to the specified base URL if it has not
+# already been added before and returns the sanitized URL.
+# $1 URL to be sanitized
+function sanitize_base_url {
+  url="${1}"
+  if [[ "${url:${#url}-1:1}" != "/" ]]; then
+    url+="/"
+  fi
+  echo "${url}"
+}
+
 # Reads a properties file and returns a list of variable assignments
 # that can be used to re-use these properties in a shell scripting environment.
 function read_properties {

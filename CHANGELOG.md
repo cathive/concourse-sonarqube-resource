@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.7.2] - 2018-12-09
+
+### Added
+
+- If the specified URL of the SonarQube server instance
+  doesn't end in a slash, the missing slash will be appended
+  automatically. ([#20](https://github.com/cathive/concourse-sonarqube-resource/issues/20))
+
 ## [0.7.1] - 2018-12-09
 
 ### Fixed

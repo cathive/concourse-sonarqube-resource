@@ -47,9 +47,10 @@ sonar_host_url=$(jq -r '.source.host_url // ""' < "${payload}")
 if [[ -z "${sonar_host_url}" ]]; then
   echo "error: source.host_url has not been specified."
   exit 1
-else
-  scanner_opts+=" -Dsonar.host.url=${sonar_host_url}"
 fi
+sonar_host_url=$(sanitize_base_url "${sonar_host_url}")
+scanner_opts+=" -Dsonar.host.url=${sonar_host_url}"
+
 
 sonar_organization=$(jq -r '.source.organization // ""' < "${payload}")
 if [[ ! -z "${sonar_organization}" ]]; then

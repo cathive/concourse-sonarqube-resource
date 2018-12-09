@@ -28,6 +28,7 @@ if [[ -z "${sonar_host_url}" ]]; then
   echo "host_url param has not been specified."
   exit 1
 fi
+sonar_host_url=$(sanitize_base_url "${sonar_host_url}")
 
 sonar_login=$(jq -r '.source.login // ""' < "${payload}")
 
