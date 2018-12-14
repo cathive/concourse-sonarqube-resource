@@ -105,6 +105,9 @@ quality gate associated with a project are not met.
 * `additional_properties`: Optional object/dictionary that may contain any additional properties
   that one might want to pass when running the sonar-scanner.
 
+* `additional_properties_file`: Optional path to a file containing properties
+  that should be passed to the sonar-scanner.
+
 * `maven_settings_file`: Path to a Maven settings file that shall be used.
   Only used if the scanner_type during has been set to / determined to use Maven.
   If the resource itself has a maven_settings configuration, this key will override
