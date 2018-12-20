@@ -36,7 +36,11 @@ function sanitize_base_url {
 # Reads a properties file and returns a list of variable assignments
 # that can be used to re-use these properties in a shell scripting environment.
 function read_properties {
-  awk -f "${root:?}/readproperties.awk" < "${1}"
+  if [[ "$2" == "shell" ]]; then
+    awk -f "${root:?}/readproperties.awk" -v sv=1  < "${1}"
+  else
+    awk -f "${root:?}/readproperties.awk" -v sv=0  < "${1}"
+  fi
 }
 
 # Checks on a compute engine task
