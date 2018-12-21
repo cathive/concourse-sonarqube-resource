@@ -183,7 +183,20 @@ elif [[ "${scanner_type}" == "maven" ]]; then
   if [[ ! -z "${maven_settings_file}" ]]; then
     mvn+=" -s ${maven_settings_file}"
 	fi
-  scanner_bin="${mvn} -q org.sonarsource.scanner.maven:sonar-maven-plugin:3.5.0.1254:sonar"
+
+  scanner_bin="${mvn}"
+  if [[ "${DEBUG}" != "true" ]]; then
+    scanner_bin="${mvn} -q"
+  fi
+
+  sonar_maven_plugin_version=$(jq -r '.params.sonar_maven_plugin_version // ""' < "${payload}")
+  if [[ ! -z "${sonar_maven_plugin_version}" ]]; then
+    scanner_bin="${scanner_bin} org.sonarsource.scanner.maven:sonar-maven-plugin:${sonar_maven_plugin_version}:sonar"
+  else
+    # Default using the latest version of sonar-maven-plugin
+    scanner_bin="${scanner_bin} sonar:sonar"
+  fi
+
   # shellcheck disable=SC2016
   maven_project_build_directory=$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)
   scanner_report_file="${maven_project_build_directory}/sonar/report-task.txt"

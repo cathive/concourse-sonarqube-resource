@@ -4,7 +4,7 @@ RUN apt-get -y update && apt-get -y install curl unzip
 ARG SONAR_SCANNER_DOWNLOAD_URL="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip"
 RUN curl -s -L "${SONAR_SCANNER_DOWNLOAD_URL}" > "/tmp/sonar-scanner-cli-3.2.0.1227-linux.zip"
 RUN echo "17b5a39b2790c42d6894c8b56b866a4c7591f0fcf83d54aa46b7a3dd61e05c5030c99ea074b9d4338abe30387a71de302e4fda4b843e6e404f0c53c62f142a3b  /tmp/sonar-scanner-cli-3.2.0.1227-linux.zip" | sha512sum -c
-RUN unzip -qq "/tmp/sonar-scanner-cli-3.2.0.1227-linux.zip" -d "/data" 
+RUN unzip -qq "/tmp/sonar-scanner-cli-3.2.0.1227-linux.zip" -d "/data"
 RUN mv "/data/sonar-scanner-3.2.0.1227-linux" "/data/sonar-scanner"
 RUN rm -f "/tmp/sonar-scanner-cli-3.2.0.1227-linux.zip"
 

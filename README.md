@@ -113,6 +113,8 @@ quality gate associated with a project are not met.
   If the resource itself has a maven_settings configuration, this key will override
   it's value.
 
+* `sonar_maven_plugin_version`: sonar-maven-plugin version (default is empty and using the latest version)
+
 ### in: Fetch result of SonarQube analysis
 
 The action will place two JSON files into the resource's folder which are fetched from
