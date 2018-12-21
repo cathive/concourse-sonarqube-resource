@@ -33,6 +33,10 @@ RUN ln -sf "/opt/apache-maven/bin/mvn" "/usr/local/bin/mvn" \
 && ln -sf "/opt/apache-maven/bin/mvnDebug" "/usr/local/bin/mvnDebug"
 ENV M2_HOME="/opt/apache-maven"
 
+RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get \
+-DrepoUrl="https://repo.maven.apache.org/maven2/" \
+-Dartifact="org.sonarsource.scanner.maven:sonar-maven-plugin:3.5.0.1254:jar"
+
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
