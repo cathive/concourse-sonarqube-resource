@@ -30,7 +30,9 @@ BEGIN {
         v= "" v $0;
     }
     # Make sure the name is a legal shell variable name
-    gsub(/[^A-Za-z0-9_]/,"_",n);
+    if (sv==1) {
+        gsub(/[^A-Za-z0-9_]/,"_",n);
+    }
     # Remove newlines from the value.
     gsub(/[\n\r]/,"",v);
     print n "=\"" v "\"";

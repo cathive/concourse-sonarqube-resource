@@ -202,13 +202,21 @@ if [[ ! -z "${additional_properties}" ]]; then
   done < <(jq -r 'to_entries[] | "\(.key) \(.value)"' <<< "${additional_properties}")
 fi
 
+additional_properties_file=$(jq -r '.params.additional_properties_file // ""' < "${payload}")
+if [[ ! -z "${additional_properties_file}" ]]; then
+  props=$(read_properties "${additional_properties_file}")
+  while read -r p; do
+    scanner_opts+=" -D${p}"
+  done <<< "${props}"
+fi
+
 cd "${project_path}"
 echo "Starting sonar-scanner (type: ${scanner_type})..."
 eval "${scanner_bin} ${scanner_opts}"
 
 echo "Reading SonarQube scanner report (${scanner_report_file})..."
 if [[ -f "${scanner_report_file}" ]]; then
-  eval "$(read_properties "${scanner_report_file}")"
+  eval "$(read_properties "${scanner_report_file}" "shell")"
   if [[ -z "${serverVersion:-}" ]]; then
     # Older versions of SonarQube don't store the serverVersion in
     # report-task.txt. There is a REST API though, that can be used
