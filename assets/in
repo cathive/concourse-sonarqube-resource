@@ -35,9 +35,9 @@ sonar_login=$(jq -r '.source.login // ""' < "${payload}")
 sonar_password=$(jq -r '.source.password // ""' < "${payload}")
 
 if [[ ! -z "${sonar_login}" ]] && [[ "${sonar_login}" != "" ]]; then
-  sonar_token="${sonar_login}"
+  sonar_token="${sonar_login}:"
   if [[ ! -z "${sonar_password}" ]] && [[ "${sonar_password}" != "" ]]; then
-    sonar_token+=":${sonar_password}"
+    sonar_token+="${sonar_password}"
   fi
 fi
 
