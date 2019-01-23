@@ -50,13 +50,19 @@ fi
 cd "${dest}"
 
 ce_task_info="./ce_task.json"
+ce_error="./ce_error"
 ce_task_status="PENDING"
 ce_task_error=""
-until [ "${ce_task_status}" != "PENDING" ] && [ "${ce_task_status}" != "IN_PROGRESS" ] && [ "${ce_task_status}" != "" ]; do
-  sq_ce_task "${sonar_token}" "${sonar_host_url}" "${ce_task_id}" > "${ce_task_info}"
+attempt=0
+max_attempts=2
+
+until [ "${ce_task_status}" != "PENDING" ] && [ "${ce_task_status}" != "IN_PROGRESS" ] && [ -n "${ce_task_status}" ]; do
+  attempt=$(( attempt + 1 ))
+  set +e
+  sq_ce_task "${sonar_token}" "${sonar_host_url}" "${ce_task_id}" > "${ce_task_info}" 2>"${ce_error}" || { ce_task_error=$(<"${ce_error}"); }
+  set -e
   ce_task_status=$(jq -r '.task.status // ""' < "${ce_task_info}")
-  ce_task_error=$(jq -r '.errors[0].msg // ""' < "${ce_task_info}")
-  if [[ "${ce_task_error}" != "" ]]; then
+  if [[ $attempt -gt $max_attempts ]] && [[ -z "${ce_task_status}" ]] ; then
     jq -n "{
       version: { ce_task_id: \"${ce_task_id}\"},
       metadata: [
@@ -65,8 +71,7 @@ until [ "${ce_task_status}" != "PENDING" ] && [ "${ce_task_status}" != "IN_PROGR
     }" >&3
     exit 1
   fi
-  ce_task_error=$(jq -r '.errors[0].msg // ""' < "${ce_task_info}")
-  if [[ "${ce_task_status}" != "PENDING" ]] && [[ "${ce_task_status}" != "IN_PROGRESS" ]] && [[ "${ce_task_status}" != "" ]]; then
+  if [[ "${ce_task_status}" != "PENDING" ]] && [[ "${ce_task_status}" != "IN_PROGRESS" ]]; then
     echo "Waiting for compute engine result (sleep: 5s)..."
     sleep 5 # Poll SonarQube compute engine task every 5 seconds.
   fi
