@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2018-01-25
+
+### Added
+
+- Error handling when fetching the compute engine status has been improved.
+  Thanks to [Rekha Mittal](https://github.com/rekhamitt) for the provided
+  patch. ([#33](https://github.com/cathive/concourse-sonarqube-resource/issues/33))
+
+### Updated
+
+- The bundled sonar-scanner-cli has been updated to v3.3.0.1492.
+- The bundled sonar-maven-plugin has been updated to v3.6.0.1398.
+
+### Fixed
+
+- Fix issues when an auth-token (instead of username + password) is being used
+  for authentication/authorization. Thanks to [Febin Rejoe](https://github.com/febinrejoe)
+  for the provided fix. ([#31](https://github.com/cathive/concourse-sonarqube-resource/issues/31))
+
 ## [0.7.2] - 2018-12-09
 
 ### Added
