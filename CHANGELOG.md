@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Error handling when fetching the compute engine status has been improved.
   Thanks to [Rekha Mittal](https://github.com/rekhamitt) for the provided
   patch. ([#33](https://github.com/cathive/concourse-sonarqube-resource/issues/33))
+- A new flag (`additional_properties_file`) can be used to instrument the
+  sonar-scanner. Thanks to [Hort Gutmanm](https://github.com/zerok) for the
+  provided patch.
 
 ### Updated
 
