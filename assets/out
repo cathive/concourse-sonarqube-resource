@@ -75,7 +75,7 @@ if [[ ! -z "${maven_settings}" ]]; then
   maven_settings_file=$(mktemp "${TMPDIR}/sonarqube-resource-maven-settings.xml.XXXXXX")
   echo "${maven_settings}" > "${maven_settings_file}"
   unset maven_settings
-elif [[ ! -z "${maven_settings_file}" ]]; then
+else
   maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < "${payload}")
 fi
 

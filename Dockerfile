@@ -55,7 +55,7 @@ RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get \
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
-      version="0.8.0" \
+      version="0.8.1" \
       maven.version="{MAVEN_VERSION}" \
       sonar-scanner.cli.version="${SONAR_SCANNER_CLI_VERSION}" \
       sonar-scanner.maven-plugin.version="${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}" \

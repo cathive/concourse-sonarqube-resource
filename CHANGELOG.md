@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.8.0] - 2018-01-25
+## [0.8.1] - 2019-01-29
+
+### Fixed
+
+- `params.maven_settings_file` should no longer be ignored.
+  ([#36](https://github.com/cathive/concourse-sonarqube-resource/issues/36))
+
+## [0.8.0] - 2019-01-25
 
 ### Added
 
@@ -42,7 +49,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - scanner-report.txt could not be found if `scanner_type` was set to `maven` ([#24](https://github.com/cathive/concourse-sonarqube-resource/issues/24))
 - Version 0.7.0 contained a bug where the bundled sonar-maven-plugin was *not* updated
   to version v3.5.0.1254 as originally announced. This version fixes this issue and
-  makes sure that the desired version of he soncar-maven-plugin is being used.
+  makes sure that the desired version of he sonar-maven-plugin is being used.
 
 ## [0.7.0] - 2018-12-07
 
