@@ -8,13 +8,13 @@ image_resource:
     tag: latest
 
 inputs:
-- name: src
+  - name: src
   
 
 run:
   path: sh
   args:
-  - -exc
-  - |
-    gawk --lint=fatal -f ./readproperties.awk < /dev/null
+    - -exc
+    - |
+      gawk --lint=fatal -f ./readproperties.awk < /dev/null
   dir: src/assets

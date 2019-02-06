@@ -1,10 +1,10 @@
 {
-    "recommendations": [
-        "davidanson.vscode-markdownlint",
-        "editorconfig.editorconfig",
-        "jetmartin.bats",
-        "luggage66.awk",
-        "pivotal.vscode-concourse",
-        "timonwong.shellcheck"
-    ]
+  "recommendations": [
+    "davidanson.vscode-markdownlint",
+    "editorconfig.editorconfig",
+    "jetmartin.bats",
+    "luggage66.awk",
+    "pivotal.vscode-concourse",
+    "timonwong.shellcheck"
+  ]
 }

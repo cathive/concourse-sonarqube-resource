@@ -14,7 +14,8 @@ inputs:
 run:
   path: mdl
   args:
-  - ./README.md
-  - ./AUTHORS.md
-  - ./CHANGELOG.md
+    - ./README.md
+    - ./AUTHORS.md
+    - ./CHANGELOG.md
+    - ./CODE_OF_CONDUCT.md
   dir: src

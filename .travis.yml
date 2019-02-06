@@ -32,7 +32,7 @@ script:
   #- docker run -v $(pwd):/src -w="/src" dduportal/bats:0.4.0 ./test/
   # Then we package everything in a Docker image.
   - docker build -t cathive/concourse-sonarqube-resource .
-#  - sonar-scanner
+  #- sonar-scanner
 
 matrix:
   fast_finish: true

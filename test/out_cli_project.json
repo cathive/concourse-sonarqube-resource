@@ -1,14 +1,17 @@
 {
-    "params": {
-      "project_path": "cli_project",
-      "project_key": "com.example.cli_project",
-      "sources": [ "src1", "src2" ],
-      "additional_properties": {
-        "param.foo": "bar"
-      }
-    },
-    "source": {
-      "host_url": "https://sonar.example.com/",
-      "login": "$$ACCESS_TOKEN$$"
+  "params": {
+    "project_path": "cli_project",
+    "project_key": "com.example.cli_project",
+    "sources": [
+      "src1",
+      "src2"
+    ],
+    "additional_properties": {
+      "param.foo": "bar"
     }
+  },
+  "source": {
+    "host_url": "https://sonar.example.com/",
+    "login": "$$ACCESS_TOKEN$$"
   }
+}

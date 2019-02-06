@@ -13,8 +13,12 @@ source "${root}/common.sh"
 dest="${1}"
 
 if [[ -z "${dest}" ]]; then
-  echo "usage: ${0} <path/to/destination>"
-  exit 1
+	echo "usage: ${0} <path/to/destination>"
+	exit 1
+fi
+if [[ ! -d "${dest}" ]]; then
+	echo "error: Destination path (${dest}) does not exist or is not a directory."
+	exit 1
 fi
 
 payload=$(mktemp "${TMPDIR}/sonarqube-resource-out.XXXXXX")
@@ -25,8 +29,8 @@ enable_debugging "${DEBUG}"
 
 sonar_host_url=$(jq -r '.source.host_url // ""' < "${payload}")
 if [[ -z "${sonar_host_url}" ]]; then
-  echo "host_url param has not been specified."
-  exit 1
+	echo "host_url param has not been specified."
+	exit 1
 fi
 sonar_host_url=$(sanitize_base_url "${sonar_host_url}")
 
@@ -35,16 +39,16 @@ sonar_login=$(jq -r '.source.login // ""' < "${payload}")
 sonar_password=$(jq -r '.source.password // ""' < "${payload}")
 
 if [[ ! -z "${sonar_login}" ]] && [[ "${sonar_login}" != "" ]]; then
-  sonar_token="${sonar_login}:"
-  if [[ ! -z "${sonar_password}" ]] && [[ "${sonar_password}" != "" ]]; then
-    sonar_token+="${sonar_password}"
-  fi
+	sonar_token="${sonar_login}:"
+	if [[ ! -z "${sonar_password}" ]] && [[ "${sonar_password}" != "" ]]; then
+		sonar_token+="${sonar_password}"
+	fi
 fi
 
 ce_task_id=$(jq -r '.version.ce_task_id // ""' < "${payload}")
 if [[ -z "${ce_task_id}" ]]; then
-  echo "version to fetch cannot be determined: ce_task_id not set?"
-  exit 1
+	echo "version to fetch cannot be determined: ce_task_id not set?"
+	exit 1
 fi
 
 cd "${dest}"
@@ -56,34 +60,34 @@ ce_task_error=""
 attempt=0
 max_attempts=2
 
-until [ "${ce_task_status}" != "PENDING" ] && [ "${ce_task_status}" != "IN_PROGRESS" ] && [ -n "${ce_task_status}" ]; do
-  attempt=$(( attempt + 1 ))
-  set +e
-  sq_ce_task "${sonar_token}" "${sonar_host_url}" "${ce_task_id}" > "${ce_task_info}" 2>"${ce_error}" || { ce_task_error=$(<"${ce_error}"); }
-  set -e
-  ce_task_status=$(jq -r '.task.status // ""' < "${ce_task_info}")
-  if [[ $attempt -gt $max_attempts ]] && [[ -z "${ce_task_status}" ]] ; then
-    jq -n "{
-      version: { ce_task_id: \"${ce_task_id}\"},
-      metadata: [
-          { name: \"ce_task_status\", value: \"error: ${ce_task_error}\" }
-      ]
-    }" >&3
-    exit 1
-  fi
-  if [[ "${ce_task_status}" != "PENDING" ]] && [[ "${ce_task_status}" != "IN_PROGRESS" ]]; then
-    echo "Waiting for compute engine result (sleep: 5s)..."
-    sleep 5 # Poll SonarQube compute engine task every 5 seconds.
-  fi
+until [[ "${ce_task_status}" != "PENDING" ]] && [[ "${ce_task_status}" != "IN_PROGRESS" ]] && [[ -n "${ce_task_status}" ]]; do
+	attempt=$(( attempt + 1 ))
+	set +e
+	sq_ce_task "${sonar_token}" "${sonar_host_url}" "${ce_task_id}" > "${ce_task_info}" 2>"${ce_error}" || { ce_task_error=$(<"${ce_error}"); }
+	set -e
+	ce_task_status=$(jq -r '.task.status // ""' < "${ce_task_info}")
+	if [[ ${attempt} -gt ${max_attempts} ]] && [[ -z "${ce_task_status}" ]] ; then
+		jq -n "{
+			version: { ce_task_id: \"${ce_task_id}\"},
+			metadata: [
+				{ name: \"ce_task_status\", value: \"error: ${ce_task_error}\" }
+			]
+		}" >&3
+		exit 1
+	fi
+	if [[ "${ce_task_status}" != "PENDING" ]] && [[ "${ce_task_status}" != "IN_PROGRESS" ]]; then
+		echo "Waiting for compute engine result (sleep: 5s)..."
+		sleep 5 # Poll SonarQube compute engine task every 5 seconds.
+	fi
 done
 
 analysis_id=""
 if [[ "${ce_task_status}" == "SUCCESS" ]]; then
-  analysis_id=$(jq -r '.task.analysisId // ""' < "${ce_task_info}")
-  if [[ -z "${analysis_id}" ]]; then
-    echo "error: No analysis ID could be fetched from compute engine task result"
-    exit 1
-  fi
+	analysis_id=$(jq -r '.task.analysisId // ""' < "${ce_task_info}")
+	if [[ -z "${analysis_id}" ]]; then
+		echo "error: No analysis ID could be fetched from compute engine task result"
+		exit 1
+	fi
 fi
 
 project_status="./qualitygate_project_status.json"
@@ -92,9 +96,9 @@ sq_qualitygates_project_status "${sonar_token}" "${sonar_host_url}" "${analysis_
 project_status=$(jq -r '.projectStatus.status // ""' < "${project_status}")
 
 jq -n "{
-  version: { ce_task_id: \"${ce_task_id}\"},
-  metadata: [
-      { name: \"ce_task_status\", value: \"${ce_task_status}\" },
-      { name: \"project_status\", value: \"${project_status}\" }
-  ]
+	version: { ce_task_id: \"${ce_task_id}\"},
+	metadata: [
+		{ name: \"ce_task_status\", value: \"${ce_task_status}\" },
+		{ name: \"project_status\", value: \"${project_status}\" }
+	]
 }" >&3

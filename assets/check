@@ -18,9 +18,9 @@ enable_debugging "${DEBUG}"
 
 latest_version=$(jq -r '.version.ce_task_id // ""' < "${payload}")
 if [[ ! -z "${latest_version}" ]]; then
-  jq -n "[
-    { ce_task_id: \"${latest_version}\"}
-  ]" >&3
+	jq -n "[
+		{ ce_task_id: \"${latest_version}\"}
+	]" >&3
 else
-  jq -n "[]" >&3
+	jq -n "[]" >&3
 fi

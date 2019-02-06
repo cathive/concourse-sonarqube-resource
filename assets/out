@@ -13,12 +13,12 @@ source "${root}/common.sh"
 source="${1}"
 
 if [[ -z "${source}" ]]; then
-  echo "usage: $0 <path/to/source>"
-  exit 1
+	echo "usage: $0 <path/to/source>"
+	exit 1
 fi
 if [[ ! -d "${source}" ]]; then
-  echo "error: Source path (${source}) does not exist or is not a directory."
-  exit 1
+	echo "error: Source path (${source}) does not exist or is not a directory."
+	exit 1
 fi
 
 cd "${source}"
@@ -35,18 +35,18 @@ scanner_opts=""
 
 project_path=$(jq -r '.params.project_path // ""' < "${payload}")
 if [[ -z "${project_path}" ]]; then
-  echo "error: params.project_path has not been specified."
-  exit 1
+	echo "error: params.project_path has not been specified."
+	exit 1
 fi
 if [[ ! -d "${project_path}" ]]; then
-  echo "error: Project path (${project_path}) not found or not a directory."
-  exit 1
+	echo "error: Project path (${project_path}) not found or not a directory."
+	exit 1
 fi
 
 sonar_host_url=$(jq -r '.source.host_url // ""' < "${payload}")
 if [[ -z "${sonar_host_url}" ]]; then
-  echo "error: source.host_url has not been specified."
-  exit 1
+	echo "error: source.host_url has not been specified."
+	exit 1
 fi
 sonar_host_url=$(sanitize_base_url "${sonar_host_url}")
 scanner_opts+=" -Dsonar.host.url=${sonar_host_url}"
@@ -54,17 +54,17 @@ scanner_opts+=" -Dsonar.host.url=${sonar_host_url}"
 
 sonar_organization=$(jq -r '.source.organization // ""' < "${payload}")
 if [[ ! -z "${sonar_organization}" ]]; then
-  scanner_opts+=" -Dsonar.organization=\"${sonar_organization}\""
+	scanner_opts+=" -Dsonar.organization=\"${sonar_organization}\""
 fi
 
 sonar_login=$(jq -r '.source.login // ""' < "${payload}")
 if [[ ! -z "${sonar_login}" ]]; then
-  scanner_opts+=" -Dsonar.login=\"${sonar_login}\""
+	scanner_opts+=" -Dsonar.login=\"${sonar_login}\""
 fi
 
 sonar_password=$(jq -r '.source.password // ""' < "${payload}")
 if [[ ! -z "${sonar_password}" ]]; then
-  scanner_opts+=" -Dsonar.password=\"${sonar_password}\""
+	scanner_opts+=" -Dsonar.password=\"${sonar_password}\""
 fi
 
 # Try to determine Maven settings configuration.
@@ -72,88 +72,88 @@ fi
 # maven settings file.
 maven_settings=$(jq -r '.source.maven_settings // ""' < "${payload}")
 if [[ ! -z "${maven_settings}" ]]; then
-  maven_settings_file=$(mktemp "${TMPDIR}/sonarqube-resource-maven-settings.xml.XXXXXX")
-  echo "${maven_settings}" > "${maven_settings_file}"
-  unset maven_settings
+	maven_settings_file=$(mktemp "${TMPDIR}/sonarqube-resource-maven-settings.xml.XXXXXX")
+	echo "${maven_settings}" > "${maven_settings_file}"
+	unset maven_settings
 else
-  maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < "${payload}")
+	maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < "${payload}")
 fi
 
 if [[ ! -z "${maven_settings_file}" ]]; then
-  if [[ ! -f "${maven_settings_file}" ]]; then
-    echo "error: Maven settings file not found: \"${maven_settings_file}\"."
-    exit 1
-  else
-    echo "Using Maven settings file: \"${maven_settings_file}\"..."
-    scanner_opts+=" -s \"${maven_settings_file}\""
-  fi
+	if [[ ! -f "${maven_settings_file}" ]]; then
+		echo "error: Maven settings file not found: \"${maven_settings_file}\"."
+		exit 1
+	else
+		echo "Using Maven settings file: \"${maven_settings_file}\"..."
+		scanner_opts+=" -s \"${maven_settings_file}\""
+	fi
 fi
 
 sonar_project_key=$(jq -r '.params.project_key // ""' < "${payload}")
 if [[ ! -z "${sonar_project_key}" ]]; then
-  scanner_opts+=" -Dsonar.projectKey=\"${sonar_project_key}\""
+	scanner_opts+=" -Dsonar.projectKey=\"${sonar_project_key}\""
 fi
 
 sonar_project_name=$(jq -r '.params.project_name // ""' < "${payload}")
 if [[ ! -z "${sonar_project_name}" ]]; then
-  scanner_opts+=" -Dsonar.projectName=\"${sonar_project_name}\""
+	scanner_opts+=" -Dsonar.projectName=\"${sonar_project_name}\""
 fi
 
 sonar_project_description=$(jq -r '.params.project_description // ""' < "${payload}")
 if [[ ! -z "${sonar_project_description}" ]]; then
-  scanner_opts+=" -Dsonar.projectDescription=\"${sonar_project_description}\""
+	scanner_opts+=" -Dsonar.projectDescription=\"${sonar_project_description}\""
 fi
 
 sonar_project_version=$(jq -r '.params.project_version // ""' < "${payload}")
 if [[ ! -z "${sonar_project_version}" ]]; then
-  scanner_opts+=" -Dsonar.projectVersion=\"${sonar_project_version}\""
+	scanner_opts+=" -Dsonar.projectVersion=\"${sonar_project_version}\""
 fi
 
 sonar_project_version_file=$(jq -r '.params.project_version_file // ""' < "${payload}")
 if [[ ! -z "${sonar_project_version_file}" ]]; then
-  if [[ ! -f "${sonar_project_version_file}" ]]; then
-    echo "error: Version file not found: ${sonar_project_version_file}"
-    exit 1
-  else
-    sonar_project_version=$(cat "${sonar_project_version_file}")
-    scanner_opts+=" -Dsonar.projectVersion=\"${sonar_project_version}\""
-  fi
+	if [[ ! -f "${sonar_project_version_file}" ]]; then
+		echo "error: Version file not found: ${sonar_project_version_file}"
+		exit 1
+	else
+		sonar_project_version=$(cat "${sonar_project_version_file}")
+		scanner_opts+=" -Dsonar.projectVersion=\"${sonar_project_version}\""
+	fi
 fi
 
 sonar_branch_name=$(jq -r '.params.branch_name // ""' < "${payload}")
 if [[ -z "${sonar_branch_name}" ]]; then
-  # If the branch name has NOT been specified, we'll check if autodetect_branch_name
-  # has been set to true and try to figure figure the branch out by using installed
-  # SCM tools.
-  autodetect_branch_name=$(jq -r '.params.autodetect_branch_name // "false"')
-  if [[ "${autodetect_branch_name}" == "true" ]]; then
-    echo "Trying to detect branch name automatically..."
-    if [[ -d "${project_path}/.git" ]]; then
-      sonar_branch_name=$(git --git-dir="${project_path}/.git" rev-parse --abbrev-ref HEAD)
-    fi
-    echo "Auto-detected branch name: \"${sonar_branch_name:-<nil>}\""
-  fi
+	# If the branch name has NOT been specified, we'll check if autodetect_branch_name
+	# has been set to true and try to figure figure the branch out by using installed
+	# SCM tools.
+	autodetect_branch_name=$(jq -r '.params.autodetect_branch_name // "false"')
+	if [[ "${autodetect_branch_name}" == "true" ]]; then
+		echo "Trying to detect branch name automatically..."
+		if [[ -d "${project_path}/.git" ]]; then
+			sonar_branch_name=$(git --git-dir="${project_path}/.git" rev-parse --abbrev-ref HEAD)
+		fi
+		echo "Auto-detected branch name: \"${sonar_branch_name:-<nil>}\""
+	fi
 fi
 # So... if the branch name has been either specified manually or we have been able
 # to figure it out automatically using our SCM tools, we can pass sonar.branch.name
 # to the sonar-scanner. Yay!!
 if [[ ! -z "${sonar_branch_name}" ]]; then
-  scanner_opts+=" -Dsonar.branch.name=\"${sonar_branch_name}\""
+	scanner_opts+=" -Dsonar.branch.name=\"${sonar_branch_name}\""
 fi
 
 sonar_branch_target=$(jq -r '.params.branch_target // ""' < "${payload}")
 if [[ ! -z "${sonar_branch_target}" ]]; then
-  scanner_opts+=" -Dsonar.branch.target=\"${sonar_branch_target}\""
+	scanner_opts+=" -Dsonar.branch.target=\"${sonar_branch_target}\""
 fi
 
 sonar_sources=$(jq -r '.params.sources // [] | join(",")' < "${payload}")
 if [[ ! -z "${sonar_sources}" ]]; then
-  scanner_opts+=" -Dsonar.sources=\"${sonar_sources}\""
+	scanner_opts+=" -Dsonar.sources=\"${sonar_sources}\""
 fi
 
 sonar_tests=$(jq -r '.params.tests // [] | join(",")' < "${payload}")
 if [[ ! -z "${sonar_tests}" ]]; then
-  scanner_opts+=" -Dsonar.tests=\"${sonar_tests}\""
+	scanner_opts+=" -Dsonar.tests=\"${sonar_tests}\""
 fi
 
 scanner_type=$(jq -r '.params.scanner_type // ""' < "${payload}")
@@ -163,44 +163,44 @@ scanner_type=$(jq -r '.params.scanner_type // ""' < "${payload}")
 # (E.g. if pom.xml exists in the root directory, we are probalby dealing with a
 # Maven project,...)
 if [[ -z "${scanner_type}" ]] || [[ "${scanner_type}" == "auto" ]]; then
-  if [[ -f "${project_path}/pom.xml" ]]; then
-    scanner_type="maven"
-  else
-    scanner_type="cli"
-  fi
+	if [[ -f "${project_path}/pom.xml" ]]; then
+		scanner_type="maven"
+	 else
+		scanner_type="cli"
+	fi
 fi
 
 # We now build the command line for the sonar-scanner.
 # It depends upon the scanner type how the command line is being constructed.
 if [[ "${scanner_type}" == "cli" ]]; then
-  scanner_bin="sonar-scanner"
-  scanner_report_file="./.scannerwork/report-task.txt"
+	scanner_bin="sonar-scanner"
+	scanner_report_file="./.scannerwork/report-task.txt"
 elif [[ "${scanner_type}" == "maven" ]]; then
-  mvn="mvn"
-  if [[ "${DEBUG}" == "true" ]]; then
-    mvn+=" -X"
-  fi
-  if [[ ! -z "${maven_settings_file}" ]]; then
-    mvn+=" -s ${maven_settings_file}"
+	mvn="mvn"
+	if [[ "${DEBUG}" == "true" ]]; then
+		mvn+=" -X"
+	fi
+	if [[ ! -z "${maven_settings_file}" ]]; then
+		mvn+=" -s ${maven_settings_file}"
 	fi
 
-  scanner_bin="${mvn}"
-  if [[ "${DEBUG}" != "true" ]]; then
-    scanner_bin="${mvn} -q"
-  fi
+	scanner_bin="${mvn}"
+	if [[ "${DEBUG}" != "true" ]]; then
+		scanner_bin="${mvn} -q"
+	fi
 
-  sonar_maven_plugin_version=$(jq -r '.params.sonar_maven_plugin_version // ""' < "${payload}")
-  if [[ ! -z "${sonar_maven_plugin_version}" ]]; then
-    scanner_bin="${scanner_bin} org.sonarsource.scanner.maven:sonar-maven-plugin:${sonar_maven_plugin_version}:sonar"
-  else
-    # Default using the latest version of sonar-maven-plugin
-    scanner_bin="${scanner_bin} sonar:sonar"
-  fi
+	sonar_maven_plugin_version=$(jq -r '.params.sonar_maven_plugin_version // ""' < "${payload}")
+	if [[ ! -z "${sonar_maven_plugin_version}" ]]; then
+		scanner_bin="${scanner_bin} org.sonarsource.scanner.maven:sonar-maven-plugin:${sonar_maven_plugin_version}:sonar"
+	else
+		# Default using the latest version of sonar-maven-plugin
+		scanner_bin="${scanner_bin} sonar:sonar"
+	fi
 
-  # shellcheck disable=SC2016
-  maven_project_build_directory=$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)
-  scanner_report_file="${maven_project_build_directory}/sonar/report-task.txt"
-  unset maven_project_build_directory
+	# shellcheck disable=SC2016
+	maven_project_build_directory=$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)
+	scanner_report_file="${maven_project_build_directory}/sonar/report-task.txt"
+	unset maven_project_build_directory
 fi
 
 # If any additional properties have been specified, we'll just append them to the
@@ -209,18 +209,18 @@ fi
 # "additional" property.
 additional_properties=$(jq -r '.params.additional_properties // ""' < "${payload}")
 if [[ ! -z "${additional_properties}" ]]; then
-  while read -r name value; do
-    prop_kv="$name=\"$value\""
-    scanner_opts+=" -D${prop_kv}"
-  done < <(jq -r 'to_entries[] | "\(.key) \(.value)"' <<< "${additional_properties}")
+	while read -r name value; do
+		prop_kv="$name=\"$value\""
+		scanner_opts+=" -D${prop_kv}"
+	done < <(jq -r 'to_entries[] | "\(.key) \(.value)"' <<< "${additional_properties}")
 fi
 
 additional_properties_file=$(jq -r '.params.additional_properties_file // ""' < "${payload}")
 if [[ ! -z "${additional_properties_file}" ]]; then
-  props=$(read_properties "${additional_properties_file}")
-  while read -r p; do
-    scanner_opts+=" -D${p}"
-  done <<< "${props}"
+	props=$(read_properties "${additional_properties_file}")
+	while read -r p; do
+		scanner_opts+=" -D${p}"
+	done <<< "${props}"
 fi
 
 cd "${project_path}"
@@ -229,33 +229,33 @@ eval "${scanner_bin} ${scanner_opts}"
 
 echo "Reading SonarQube scanner report (${scanner_report_file})..."
 if [[ -f "${scanner_report_file}" ]]; then
-  eval "$(read_properties "${scanner_report_file}" "shell")"
-  if [[ -z "${serverVersion:-}" ]]; then
-    # Older versions of SonarQube don't store the serverVersion in
-    # report-task.txt. There is a REST API though, that can be used
-    # to fetch the version.
-    sonar_token=""
-    if [[ ! -z "${sonar_login}" ]] && [[ "${sonar_login}" != "" ]]; then
-      sonar_token="${sonar_login}"
-      if [[ ! -z "${sonar_password}" ]] && [[ "${sonar_password}" != "" ]]; then
-        sonar_token+=":${sonar_password}"
-      fi
-    fi
-    serverVersion="$(sq_server_version "${sonar_token}" "${sonar_host_url}")"
-  fi
+	eval "$(read_properties "${scanner_report_file}" "shell")"
+	if [[ -z "${serverVersion:-}" ]]; then
+		# Older versions of SonarQube don't store the serverVersion in
+		# report-task.txt. There is a REST API though, that can be used
+		# to fetch the version.
+		sonar_token=""
+		if [[ ! -z "${sonar_login}" ]] && [[ "${sonar_login}" != "" ]]; then
+			sonar_token="${sonar_login}"
+			if [[ ! -z "${sonar_password}" ]] && [[ "${sonar_password}" != "" ]]; then
+				sonar_token+=":${sonar_password}"
+			fi
+		fi
+		serverVersion="$(sq_server_version "${sonar_token}" "${sonar_host_url}")"
+	fi
 else
-  echo "error: SonarQube report could not be located."
-  exit 1
+	echo "error: SonarQube report could not be located."
+	exit 1
 fi
 
 jq -n "{
-  version: {ce_task_id: \"${ceTaskId:?}\"},
-  metadata: [
-    { name: \"project_key\", value: \"${projectKey:?}\" },
-    { name: \"server_url\", value: \"${serverUrl:?}\" },
-    { name: \"server_version\", value: \"${serverVersion:?}\" },
-    { name: \"dashboard_url\", value: \"${dashboardUrl:?}\" },
-    { name: \"ce_task_url\", value: \"${ceTaskUrl:?}\" },
-    { name: \"scanner_type\", value: \"${scanner_type}\" }
-  ]
+	version: {ce_task_id: \"${ceTaskId:?}\"},
+	metadata: [
+		{ name: \"project_key\", value: \"${projectKey:?}\" },
+		{ name: \"server_url\", value: \"${serverUrl:?}\" },
+		{ name: \"server_version\", value: \"${serverVersion:?}\" },
+		{ name: \"dashboard_url\", value: \"${dashboardUrl:?}\" },
+		{ name: \"ce_task_url\", value: \"${ceTaskUrl:?}\" },
+		{ name: \"scanner_type\", value: \"${scanner_type}\" }
+	]
 }" >&3

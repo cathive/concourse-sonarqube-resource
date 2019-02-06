@@ -8,7 +8,7 @@ image_resource:
     tag: "0.4.0"
 
 inputs:
-- name: src
+  - name: src
   
 params:
   TERM: xterm-256color
@@ -16,5 +16,5 @@ params:
 run:
   path: bats
   args:
-  - ./test/
+    - ./test/
   dir: src

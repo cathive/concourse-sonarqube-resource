@@ -14,9 +14,9 @@ inputs:
 run:
   path: shellcheck
   args:
-  - --shell=bash
-  - ./check
-  - ./in
-  - ./out
-  - ./common.sh
+    - --shell=bash
+    - ./check
+    - ./in
+    - ./out
+    - ./common.sh
   dir: src/assets
