@@ -94,6 +94,17 @@ if [[ ! -z "${sonar_project_key}" ]]; then
 	scanner_opts+=" -Dsonar.projectKey=\"${sonar_project_key}\""
 fi
 
+sonar_project_key_file=$(jq -r '.params.project_key_file // ""' < "${payload}")
+if [[ ! -z "${sonar_project_key_file}" ]]; then
+	if [[ ! -f "${sonar_project_key_file}" ]]; then
+		echo "error: Project key file not found: ${sonar_project_key_file}"
+		exit 1
+	else
+		sonar_project_key=$(cat "${sonar_project_key_file}")
+		scanner_opts+=" -Dsonar.projectKey=\"${sonar_project_key}\""
+	fi
+fi
+
 sonar_project_name=$(jq -r '.params.project_name // ""' < "${payload}")
 if [[ ! -z "${sonar_project_name}" ]]; then
 	scanner_opts+=" -Dsonar.projectName=\"${sonar_project_name}\""
