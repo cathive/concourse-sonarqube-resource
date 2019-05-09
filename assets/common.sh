@@ -137,9 +137,9 @@ function parse_quality_gates {
         if [ $(echo "${ignore_warns}" | jq '. | length') -gt 0 ]; then
             check_passed "${ignore_warns}" "${qg_status_path}" "WARN"
         else
-            echo "quality gate check failed.\n=========="
-            cat $qg_status_path
-            echo "=========="
+            printf "quality gate check failed. \n=========="
+            cat $qg_status_path | jq
+            printf "\n=========="
             exit -1
         fi
     fi
@@ -153,9 +153,9 @@ function parse_quality_gates {
         if [ $(echo "${ignore_errors}" | jq '. | length') -gt 0 ]; then
             check_passed "${ignore_errors}" "${qg_status_path}" "ERROR"
         else
-            echo "quality gate check failed.\n=========="
-            cat $qg_status_path
-            echo "=========="
+            printf "quality gate check failed.\n=========="
+            cat $qg_status_path | jq
+            printf "\n=========="
             exit -1
         fi
     fi
