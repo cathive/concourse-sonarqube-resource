@@ -93,6 +93,11 @@ fi
 project_status="./qualitygate_project_status.json"
 sq_qualitygates_project_status "${sonar_token}" "${sonar_host_url}" "${analysis_id}" > "${project_status}"
 
+quality_gate=$(jq -r '.params.quality_gate // ""' < "${payload}")
+if [[ -n "${quality_gate}" ]]; then
+	parse_quality_gates "${quality_gate}" "${project_status}"
+fi
+
 project_status=$(jq -r '.projectStatus.status // ""' < "${project_status}")
 
 jq -n "{

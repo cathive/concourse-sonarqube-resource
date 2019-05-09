@@ -120,6 +120,20 @@ quality gate associated with a project are not met.
 The action will place two JSON files into the resource's folder which are fetched from
 the SonarQube Web API:
 
+#### Parameters
+
+* `quality_gate`: *Optional* *JSON* Enable quality_gate checker and control `get` step success/failure.
+  * `ignore_all_warn`: *bool* Ignore all `WARN` metrics and let `get` step success
+  * `ignore_all_error`: *bool* Ignore all `ERROR` metrics and let `get` step success
+  * `ignore_warns`: *array* A list of metric keys for `WARN` metric to ignore while quality_gate checking.
+  * `ignore_errors`: *array* A list of metric keys for `ERROR` metric to ignore while quality_gate checking.
+
+Note: for `ignore_warns`/`ignore_errors`, possible value could be found through 
+* `https://<your-sonar_host>/quality_gates/show/<quality_gate_id>`
+* `https://<your-sonar_host>/api/qualitygates/show?id=<quality_gate_id>`
+
+### Outputs
+
 * qualitygate_project_status.json
   Quality gate status of the compute engine task that was triggered by the resource
   during the out action.
@@ -201,6 +215,10 @@ jobs:
         additional_properties:
           # Will be passed as "-Dsonar.javascript.lcov.reportPaths="coverage/lcov.info" to the scanner.
           sonar.javascript.lcov.reportPaths: coverage/lcov.info
+      get_params:
+        quality_gate:
+          ignore_errors: ['new_coverage', 'violations']
+          ignore_warns: ['new_duplicated_lines_density', 'violations']
     - put: artifact
 
 # The qualitygate task breaks the build if the analysis result from SonarQube
