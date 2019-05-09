@@ -138,7 +138,7 @@ function parse_quality_gates {
             check_passed "${ignore_warns}" "${qg_status_path}" "WARN"
         else
             printf "quality gate check failed. \n=========="
-            cat $qg_status_path | jq
+            jq -r '.' < $qg_status_path
             printf "\n=========="
             exit -1
         fi
@@ -154,7 +154,7 @@ function parse_quality_gates {
             check_passed "${ignore_errors}" "${qg_status_path}" "ERROR"
         else
             printf "quality gate check failed.\n=========="
-            cat $qg_status_path | jq
+            jq -r '.' < $qg_status_path
             printf "\n=========="
             exit -1
         fi
