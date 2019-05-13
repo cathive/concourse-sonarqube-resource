@@ -91,3 +91,72 @@ function sq_server_version {
 	cmd="curl ${flags} ${url}"
 	${cmd}
 }
+
+# Checking if error/warn conditions already ignored in params
+# $1 ignore_items: ignored conditions
+# $2 qg_status_path: quality_gate status file
+# $3 condition_status: WARN or ERROR
+function check_passed {
+    local ignore_items="$1"
+    local qg_status_path="$2"
+    local condition_status="$3"
+
+    echo "Checking for $condition_status..."
+
+    jq --arg stat "$condition_status" -rc \
+    '.projectStatus.conditions[] | select(.status | contains($stat))' < "${qg_status_path}" |\
+    while IFS='' read -r item; do
+        status=$(echo "$item" | jq .status)
+        metricKey=$(echo "$item" | jq .metricKey)
+        if [[ $ignore_items != *"${metricKey}"* ]]; then
+            echo "$metricKey in $status and don't exist in 'ignore_errors'."
+            exit 1
+        fi
+    done
+}
+
+# Parse and check if this task failed by configuration
+# $1 qg_settings: user configuration about quality_gate
+# $2 qg_status_path: quality_gate status file
+function parse_quality_gates {
+    local qg_settings="$1"
+    local qg_status_path="$2"
+
+    echo "Start parseing quality_gates..."
+    project_status=$(jq -r '.projectStatus.status // ""' < "$qg_status_path")
+    if [[ "$project_status" == "OK" ]]; then
+        return 0
+    fi
+
+    if [[ "$project_status" == "WARN" ]]; then
+        ignore_all_warn=$(echo "${qg_settings}" | jq -r '.ignore_all_warn // false')
+        if [[ "$ignore_all_warn" == "true" ]]; then
+            return 0
+        fi
+        ignore_warns=$(echo "${qg_settings}" | jq -r '.ignore_warns // ""')
+        if [[ $(echo "${ignore_warns}" | jq '. | length') -gt 0 ]]; then
+            check_passed "${ignore_warns}" "${qg_status_path}" "WARN"
+        else
+            printf "quality gate check failed. \n=========="
+            jq -r "." < "$qg_status_path"
+            printf "\n=========="
+            exit 1
+        fi
+    fi
+
+    if [[ "$project_status" == "ERROR" ]]; then
+        ignore_all_error=$(echo "${qg_settings}" | jq -r '.ignore_all_error // false')
+        if [[ "$ignore_all_error" == "ERROR" ]]; then
+            return 0
+        fi
+        ignore_errors=$(echo "${qg_settings}" | jq -r '.ignore_errors // ""')
+        if [[ $(echo "${ignore_errors}" | jq '. | length') -gt 0 ]]; then
+            check_passed "${ignore_errors}" "${qg_status_path}" "ERROR"
+        else
+            printf "quality gate check failed.\n=========="
+            jq -r "." < "$qg_status_path"
+            printf "\n=========="
+            exit 1
+        fi
+    fi
+}
