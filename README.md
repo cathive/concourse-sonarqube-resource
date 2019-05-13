@@ -77,6 +77,9 @@ quality gate associated with a project are not met.
 
 * `project_key`: Project key (default value is read from sonar-project.properties)
 
+* `project_key_file`: File to be used to read the Project key.
+  When this option has been specified, it has precedence over the `project_key` parameter.
+
 * `project_name`: Project name (default value is read from sonar-project.properties)
 
 * `project_description`: Project description (default value is read from sonar-project.properties)
