@@ -211,7 +211,7 @@ jobs:
       run:
         path: build.sh
         dir: sources
-  - aggregate:
+  - in_parallel:
     - put: code-analysis
       params:
         project_path: sonarqube-analysis-input
@@ -228,7 +228,7 @@ jobs:
 # indicates that any of our quality metrics have not been met.
 - name: qualitygate
   plan:
-  - aggregate:
+  - in_parallel:
     - get: artifact
       passed:
       - build-and-analyze
