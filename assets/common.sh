@@ -160,3 +160,44 @@ function parse_quality_gates {
         fi
     fi
 }
+
+# return "0" if $1 contains $2
+# return "1" if $1 not contains $2
+function contains {
+    [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]] && echo "0" || echo "1"
+}
+
+# Convert wildcards to comma-separated paths
+# $1 param_key: sonar parameter key
+# $2 wildcards: potential wildcard string
+function wildcardConvert {
+    SUPPORT_PARAMS=(
+        sonar.sources
+        sonar.tests
+        sonar.jacoco.reportPaths
+    )
+    param_key=$1
+    wildcards=$2
+
+    # check if $wildcards is a wildcard string
+    if [ "$wildcards" == "${wildcards//[\[\]|.? +*]/}" ] ; then
+        echo "$wildcards";
+        exit 0;
+    fi
+
+    # if not support to convert, just return original $wildcards
+    if [ "$( contains "${SUPPORT_PARAMS[*]}" "$param_key" )" -ne "0" ]; then
+        echo "$wildcards";
+        exit 0;
+    fi
+
+    convert_res=""
+    IFS=',';
+    for wildcard in $wildcards; do
+        for w in $wildcard; do
+            convert_res+="$w,"
+        done
+    done; unset IFS;
+
+    echo "${convert_res}" | sed 's/,$//g'
+}

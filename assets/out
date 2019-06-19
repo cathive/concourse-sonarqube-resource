@@ -159,11 +159,13 @@ fi
 
 sonar_sources=$(jq -r '.params.sources // [] | join(",")' < "${payload}")
 if [[ ! -z "${sonar_sources}" ]]; then
+	sonar_sources=$(wildcardConvert "sonar.sources" "${sonar_sources}")
 	scanner_opts+=" -Dsonar.sources=\"${sonar_sources}\""
 fi
 
 sonar_tests=$(jq -r '.params.tests // [] | join(",")' < "${payload}")
 if [[ ! -z "${sonar_tests}" ]]; then
+	sonar_tests=$(wildcardConvert "sonar.tests" "${sonar_tests}")
 	scanner_opts+=" -Dsonar.tests=\"${sonar_tests}\""
 fi
 
@@ -221,6 +223,7 @@ fi
 additional_properties=$(jq -r '.params.additional_properties // ""' < "${payload}")
 if [[ ! -z "${additional_properties}" ]]; then
 	while read -r name value; do
+		value=$(wildcardConvert "${name}" "${value}")
 		prop_kv="$name=\"$value\""
 		scanner_opts+=" -D${prop_kv}"
 	done < <(jq -r 'to_entries[] | "\(.key) \(.value)"' <<< "${additional_properties}")
