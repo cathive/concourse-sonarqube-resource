@@ -53,17 +53,17 @@ scanner_opts+=" -Dsonar.host.url=${sonar_host_url}"
 
 
 sonar_organization=$(jq -r '.source.organization // ""' < "${payload}")
-if [[ ! -z "${sonar_organization}" ]]; then
+if [[ -n "${sonar_organization}" ]]; then
 	scanner_opts+=" -Dsonar.organization=\"${sonar_organization}\""
 fi
 
 sonar_login=$(jq -r '.source.login // ""' < "${payload}")
-if [[ ! -z "${sonar_login}" ]]; then
+if [[ -n "${sonar_login}" ]]; then
 	scanner_opts+=" -Dsonar.login=\"${sonar_login}\""
 fi
 
 sonar_password=$(jq -r '.source.password // ""' < "${payload}")
-if [[ ! -z "${sonar_password}" ]]; then
+if [[ -n "${sonar_password}" ]]; then
 	scanner_opts+=" -Dsonar.password=\"${sonar_password}\""
 fi
 
@@ -71,7 +71,7 @@ fi
 # If they have been defined inline, they take precedence over a possibly specified
 # maven settings file.
 maven_settings=$(jq -r '.source.maven_settings // ""' < "${payload}")
-if [[ ! -z "${maven_settings}" ]]; then
+if [[ -n "${maven_settings}" ]]; then
 	maven_settings_file=$(mktemp "${TMPDIR}/sonarqube-resource-maven-settings.xml.XXXXXX")
 	echo "${maven_settings}" > "${maven_settings_file}"
 	unset maven_settings
@@ -79,7 +79,7 @@ else
 	maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < "${payload}")
 fi
 
-if [[ ! -z "${maven_settings_file}" ]]; then
+if [[ -n "${maven_settings_file}" ]]; then
 	if [[ ! -f "${maven_settings_file}" ]]; then
 		echo "error: Maven settings file not found: \"${maven_settings_file}\"."
 		exit 1
@@ -90,12 +90,12 @@ if [[ ! -z "${maven_settings_file}" ]]; then
 fi
 
 sonar_project_key=$(jq -r '.params.project_key // ""' < "${payload}")
-if [[ ! -z "${sonar_project_key}" ]]; then
+if [[ -n "${sonar_project_key}" ]]; then
 	scanner_opts+=" -Dsonar.projectKey=\"${sonar_project_key}\""
 fi
 
 sonar_project_key_file=$(jq -r '.params.project_key_file // ""' < "${payload}")
-if [[ ! -z "${sonar_project_key_file}" ]]; then
+if [[ -n "${sonar_project_key_file}" ]]; then
 	if [[ ! -f "${sonar_project_key_file}" ]]; then
 		echo "error: Project key file not found: ${sonar_project_key_file}"
 		exit 1
@@ -106,22 +106,22 @@ if [[ ! -z "${sonar_project_key_file}" ]]; then
 fi
 
 sonar_project_name=$(jq -r '.params.project_name // ""' < "${payload}")
-if [[ ! -z "${sonar_project_name}" ]]; then
+if [[ -n "${sonar_project_name}" ]]; then
 	scanner_opts+=" -Dsonar.projectName=\"${sonar_project_name}\""
 fi
 
 sonar_project_description=$(jq -r '.params.project_description // ""' < "${payload}")
-if [[ ! -z "${sonar_project_description}" ]]; then
+if [[ -n "${sonar_project_description}" ]]; then
 	scanner_opts+=" -Dsonar.projectDescription=\"${sonar_project_description}\""
 fi
 
 sonar_project_version=$(jq -r '.params.project_version // ""' < "${payload}")
-if [[ ! -z "${sonar_project_version}" ]]; then
+if [[ -n "${sonar_project_version}" ]]; then
 	scanner_opts+=" -Dsonar.projectVersion=\"${sonar_project_version}\""
 fi
 
 sonar_project_version_file=$(jq -r '.params.project_version_file // ""' < "${payload}")
-if [[ ! -z "${sonar_project_version_file}" ]]; then
+if [[ -n "${sonar_project_version_file}" ]]; then
 	if [[ ! -f "${sonar_project_version_file}" ]]; then
 		echo "error: Version file not found: ${sonar_project_version_file}"
 		exit 1
@@ -148,22 +148,30 @@ fi
 # So... if the branch name has been either specified manually or we have been able
 # to figure it out automatically using our SCM tools, we can pass sonar.branch.name
 # to the sonar-scanner. Yay!!
-if [[ ! -z "${sonar_branch_name}" ]]; then
+if [[ -n "${sonar_branch_name}" ]]; then
 	scanner_opts+=" -Dsonar.branch.name=\"${sonar_branch_name}\""
 fi
 
 sonar_branch_target=$(jq -r '.params.branch_target // ""' < "${payload}")
-if [[ ! -z "${sonar_branch_target}" ]]; then
+if [[ -n "${sonar_branch_target}" ]]; then
 	scanner_opts+=" -Dsonar.branch.target=\"${sonar_branch_target}\""
 fi
 
 sonar_sources=$(jq -r '.params.sources // [] | join(",")' < "${payload}")
-if [[ ! -z "${sonar_sources}" ]]; then
+if [[ -n "${sonar_sources}" ]]; then
+	if ! sonar_sources=$(wildcard_convert "sonar.sources" "${sonar_sources}" "${project_path}"); then
+		echo "error: while setting params.sources, $sonar_sources."
+		exit 1
+	fi
 	scanner_opts+=" -Dsonar.sources=\"${sonar_sources}\""
 fi
 
 sonar_tests=$(jq -r '.params.tests // [] | join(",")' < "${payload}")
-if [[ ! -z "${sonar_tests}" ]]; then
+if [[ -n "${sonar_tests}" ]]; then
+	if ! sonar_tests=$(wildcard_convert "sonar.tests" "${sonar_tests}" "${project_path}"); then
+		echo "error: while setting params.tests, $sonar_tests."
+		exit 1
+	fi
 	scanner_opts+=" -Dsonar.tests=\"${sonar_tests}\""
 fi
 
@@ -191,7 +199,7 @@ elif [[ "${scanner_type}" == "maven" ]]; then
 	if [[ "${DEBUG}" == "true" ]]; then
 		mvn+=" -X"
 	fi
-	if [[ ! -z "${maven_settings_file}" ]]; then
+	if [[ -n "${maven_settings_file}" ]]; then
 		mvn+=" -s ${maven_settings_file}"
 	fi
 
@@ -201,7 +209,7 @@ elif [[ "${scanner_type}" == "maven" ]]; then
 	fi
 
 	sonar_maven_plugin_version=$(jq -r '.params.sonar_maven_plugin_version // ""' < "${payload}")
-	if [[ ! -z "${sonar_maven_plugin_version}" ]]; then
+	if [[ -n "${sonar_maven_plugin_version}" ]]; then
 		scanner_bin="${scanner_bin} org.sonarsource.scanner.maven:sonar-maven-plugin:${sonar_maven_plugin_version}:sonar"
 	else
 		# Default using the latest version of sonar-maven-plugin
@@ -219,15 +227,19 @@ fi
 # the fact that some "basic" properties might have specified a second time as
 # "additional" property.
 additional_properties=$(jq -r '.params.additional_properties // ""' < "${payload}")
-if [[ ! -z "${additional_properties}" ]]; then
+if [[ -n "${additional_properties}" ]]; then
 	while read -r name value; do
+		if ! value=$(wildcard_convert "${name}" "${value}" "${project_path}"); then
+			echo "error: while setting additional_properties.$name, $value."
+			exit 1
+		fi
 		prop_kv="$name=\"$value\""
 		scanner_opts+=" -D${prop_kv}"
 	done < <(jq -r 'to_entries[] | "\(.key) \(.value)"' <<< "${additional_properties}")
 fi
 
 additional_properties_file=$(jq -r '.params.additional_properties_file // ""' < "${payload}")
-if [[ ! -z "${additional_properties_file}" ]]; then
+if [[ -n "${additional_properties_file}" ]]; then
 	props=$(read_properties "${additional_properties_file}")
 	while read -r p; do
 		scanner_opts+=" -D${p}"
@@ -246,9 +258,9 @@ if [[ -f "${scanner_report_file}" ]]; then
 		# report-task.txt. There is a REST API though, that can be used
 		# to fetch the version.
 		sonar_token=""
-		if [[ ! -z "${sonar_login}" ]] && [[ "${sonar_login}" != "" ]]; then
+		if [[ -n "${sonar_login}" ]] && [[ "${sonar_login}" != "" ]]; then
 			sonar_token="${sonar_login}"
-			if [[ ! -z "${sonar_password}" ]] && [[ "${sonar_password}" != "" ]]; then
+			if [[ -n "${sonar_password}" ]] && [[ "${sonar_password}" != "" ]]; then
 				sonar_token+=":${sonar_password}"
 			fi
 		fi

@@ -51,7 +51,7 @@ function read_properties {
 # $3 - CE Task ID (required)
 function sq_ce_task {
 	flags="-s -L"
-	if [[ ! -z "${1}" ]] && [[ "${1}" != "" ]]; then
+	if [[ -n "${1}" ]] && [[ "${1}" != "" ]]; then
 		flags+=" -u ${1}"
 	fi
 	url="${2}api/ce/task?id=${3}&additionalField=stacktrace,scannerContext"
@@ -67,7 +67,7 @@ function sq_ce_task {
 # $3 - Analysis ID (required)
 function sq_qualitygates_project_status {
 	flags="-s -L"
-	if [[ ! -z "${1}" ]] && [[ "${1}" != "" ]]; then
+	if [[ -n "${1}" ]] && [[ "${1}" != "" ]]; then
 		flags+=" -u ${1}"
 	fi
 	url="${2}api/qualitygates/project_status?analysisId=${3}"
@@ -84,7 +84,7 @@ function sq_qualitygates_project_status {
 # $2 - SonarQube URL. Must end with a slash (required)
 function sq_server_version {
 	flags="-s -L"
-	if [[ ! -z "${1}" ]] && [[ "${1}" != "" ]]; then
+	if [[ -n "${1}" ]] && [[ "${1}" != "" ]]; then
 		flags+=" -u ${1}"
 	fi
 	url="${2}api/server/version"
@@ -159,4 +159,67 @@ function parse_quality_gates {
             exit 1
         fi
     fi
+}
+
+# return "0" if $1 contains $2
+# return "1" if $1 not contains $2
+function contains {
+    [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]] && echo "0" || echo "1"
+}
+
+# return "0" if $1 is exist
+# return "1" if $1 not exist
+function wildcard_exists {
+    local wildcards="$1"
+
+    for f in $wildcards; do
+        ## Check if the glob gets expanded to existing files.
+        ## If not, f here will be exactly the pattern above
+        ## and the exists test will evaluate to false.
+        [ -e "$f" ] && echo "0" || echo "1"
+        ## This is all we needed to know, so we can break after the first iteration
+        break
+    done
+}
+
+# Convert wildcards to comma-separated paths
+# $1 param_key: sonar parameter key
+# $2 wildcards: potential wildcard string
+# $3 project_path: params.project_path
+function wildcard_convert {
+    SUPPORT_PARAMS=(
+        sonar.sources
+        sonar.tests
+        sonar.jacoco.reportPaths
+    )
+    local param_key="$1"
+    local wildcards="$2"
+    local project_path="$3"
+
+    # check if $wildcards is a wildcard string
+    if [ "$wildcards" == "${wildcards//[\[\]|.? +*]/}" ] ; then
+        echo "$wildcards";
+        return 0;
+    fi
+
+    # check if request $param_key is supported
+    if [ "$( contains "${SUPPORT_PARAMS[*]}" "$param_key" )" -ne "0" ]; then
+        echo "$wildcards";
+        return 0;
+    fi
+
+    convert_res=""
+    IFS=',';
+    for wildcard in $wildcards; do
+        for w in ${project_path}/$wildcard; do
+            if [ "$( wildcard_exists "$w" )" -ne "0" ]; then
+                echo "path [$w] not found under $(pwd)"
+                return 1;
+            fi
+            # remove prefix "${project_path}/" since following step contains "cd $project_path/"
+            convert_res+="${w/#${project_path}\/},"
+        done
+    done; unset IFS;
+
+    echo "${convert_res/%,/}"
 }

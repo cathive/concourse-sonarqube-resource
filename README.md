@@ -118,6 +118,14 @@ quality gate associated with a project are not met.
 
 * `sonar_maven_plugin_version`: sonar-maven-plugin version (default is empty and using the latest version)
 
+#### Wildcards Support
+
+Support convert wildcards to comma-separated paths.
+
+* `sources`
+* `tests`
+* `sonar.jacoco.reportPaths` in `additional_properties`
+
 ### in: Fetch result of SonarQube analysis
 
 The action will place two JSON files into the resource's folder which are fetched from
