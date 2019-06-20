@@ -169,7 +169,7 @@ function contains {
 
 # return "0" if $1 is exist
 # return "1" if $1 not exist
-function wildcardExists {
+function wildcard_exists {
     local wildcards="$1"
 
     for f in $wildcards; do
@@ -186,7 +186,7 @@ function wildcardExists {
 # $1 param_key: sonar parameter key
 # $2 wildcards: potential wildcard string
 # $3 project_path: params.project_path
-function wildcardConvert {
+function wildcard_convert {
     SUPPORT_PARAMS=(
         sonar.sources
         sonar.tests
@@ -212,7 +212,7 @@ function wildcardConvert {
     IFS=',';
     for wildcard in $wildcards; do
         for w in ${project_path}/$wildcard; do
-            if [ "$( wildcardExists "$w" )" -ne "0" ]; then
+            if [ "$( wildcard_exists "$w" )" -ne "0" ]; then
                 echo "path [$w] not found under $(pwd)"
                 return 1;
             fi
