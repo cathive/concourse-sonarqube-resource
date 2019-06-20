@@ -51,7 +51,7 @@ function read_properties {
 # $3 - CE Task ID (required)
 function sq_ce_task {
 	flags="-s -L"
-	if [[ ! -z "${1}" ]] && [[ "${1}" != "" ]]; then
+	if [[ -n "${1}" ]] && [[ "${1}" != "" ]]; then
 		flags+=" -u ${1}"
 	fi
 	url="${2}api/ce/task?id=${3}&additionalField=stacktrace,scannerContext"
@@ -67,7 +67,7 @@ function sq_ce_task {
 # $3 - Analysis ID (required)
 function sq_qualitygates_project_status {
 	flags="-s -L"
-	if [[ ! -z "${1}" ]] && [[ "${1}" != "" ]]; then
+	if [[ -n "${1}" ]] && [[ "${1}" != "" ]]; then
 		flags+=" -u ${1}"
 	fi
 	url="${2}api/qualitygates/project_status?analysisId=${3}"
@@ -84,7 +84,7 @@ function sq_qualitygates_project_status {
 # $2 - SonarQube URL. Must end with a slash (required)
 function sq_server_version {
 	flags="-s -L"
-	if [[ ! -z "${1}" ]] && [[ "${1}" != "" ]]; then
+	if [[ -n "${1}" ]] && [[ "${1}" != "" ]]; then
 		flags+=" -u ${1}"
 	fi
 	url="${2}api/server/version"
@@ -167,6 +167,21 @@ function contains {
     [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]] && echo "0" || echo "1"
 }
 
+# return "0" if $1 is exist
+# return "1" if $1 not exist
+function wildcardExists {
+    local wildcards="$1"
+
+    for f in $wildcards; do
+        ## Check if the glob gets expanded to existing files.
+        ## If not, f here will be exactly the pattern above
+        ## and the exists test will evaluate to false.
+        [ -e "$f" ] && echo "0" || echo "1"
+        ## This is all we needed to know, so we can break after the first iteration
+        break
+    done
+}
+
 # Convert wildcards to comma-separated paths
 # $1 param_key: sonar parameter key
 # $2 wildcards: potential wildcard string
@@ -176,28 +191,32 @@ function wildcardConvert {
         sonar.tests
         sonar.jacoco.reportPaths
     )
-    param_key=$1
-    wildcards=$2
+    local param_key="$1"
+    local wildcards="$2"
 
     # check if $wildcards is a wildcard string
     if [ "$wildcards" == "${wildcards//[\[\]|.? +*]/}" ] ; then
         echo "$wildcards";
-        exit 0;
+        return 0;
     fi
 
-    # if not support to convert, just return original $wildcards
+    # check if request $param_key is supported
     if [ "$( contains "${SUPPORT_PARAMS[*]}" "$param_key" )" -ne "0" ]; then
         echo "$wildcards";
-        exit 0;
+        return 0;
     fi
 
     convert_res=""
     IFS=',';
     for wildcard in $wildcards; do
         for w in $wildcard; do
+            if [ "$( wildcardExists "$w" )" -ne "0" ]; then
+                echo "path [$w] not exit"
+                return 1;
+            fi
             convert_res+="$w,"
         done
     done; unset IFS;
 
-    echo "${convert_res}" | sed 's/,$//g'
+    echo "${convert_res/%,/}"
 }
