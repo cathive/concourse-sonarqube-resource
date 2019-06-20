@@ -211,7 +211,7 @@ function wildcardConvert {
     for wildcard in $wildcards; do
         for w in $wildcard; do
             if [ "$( wildcardExists "$w" )" -ne "0" ]; then
-                echo "path [$w] not exit"
+                echo "path [$w] not found under $(pwd)"
                 return 1;
             fi
             convert_res+="$w,"

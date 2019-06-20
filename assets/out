@@ -160,7 +160,7 @@ fi
 sonar_sources=$(jq -r '.params.sources // [] | join(",")' < "${payload}")
 if [[ -n "${sonar_sources}" ]]; then
 	if ! sonar_sources=$(wildcardConvert "sonar.sources" "${sonar_sources}"); then
-		echo "error: $sonar_tests."
+		echo "error: while setting params.sources, $sonar_sources."
 		exit 1
 	fi
 	scanner_opts+=" -Dsonar.sources=\"${sonar_sources}\""
@@ -169,7 +169,7 @@ fi
 sonar_tests=$(jq -r '.params.tests // [] | join(",")' < "${payload}")
 if [[ -n "${sonar_tests}" ]]; then
 	if ! sonar_tests=$(wildcardConvert "sonar.tests" "${sonar_tests}"); then
-		echo "error: $sonar_tests."
+		echo "error: while setting params.tests, $sonar_tests."
 		exit 1
 	fi
 	scanner_opts+=" -Dsonar.tests=\"${sonar_tests}\""
@@ -230,7 +230,7 @@ additional_properties=$(jq -r '.params.additional_properties // ""' < "${payload
 if [[ -n "${additional_properties}" ]]; then
 	while read -r name value; do
 		if ! value=$(wildcardConvert "${name}" "${value}"); then
-			echo "error: $value."
+			echo "error: while setting additional_properties.$name, $value."
 			exit 1
 		fi
 		prop_kv="$name=\"$value\""
