@@ -185,6 +185,7 @@ function wildcardExists {
 # Convert wildcards to comma-separated paths
 # $1 param_key: sonar parameter key
 # $2 wildcards: potential wildcard string
+# $3 project_path: params.project_path
 function wildcardConvert {
     SUPPORT_PARAMS=(
         sonar.sources
@@ -193,6 +194,7 @@ function wildcardConvert {
     )
     local param_key="$1"
     local wildcards="$2"
+    local project_path="$3"
 
     # check if $wildcards is a wildcard string
     if [ "$wildcards" == "${wildcards//[\[\]|.? +*]/}" ] ; then
@@ -209,12 +211,13 @@ function wildcardConvert {
     convert_res=""
     IFS=',';
     for wildcard in $wildcards; do
-        for w in $wildcard; do
+        for w in ${project_path}/$wildcard; do
             if [ "$( wildcardExists "$w" )" -ne "0" ]; then
                 echo "path [$w] not found under $(pwd)"
                 return 1;
             fi
-            convert_res+="$w,"
+            # remove prefix "${project_path}/" since following step contains "cd $project_path/"
+            convert_res+="${w/#${project_path}\/},"
         done
     done; unset IFS;
 
