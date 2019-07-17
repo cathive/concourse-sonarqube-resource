@@ -98,7 +98,10 @@ if [[ -n "${quality_gate}" ]]; then
 	parse_quality_gates "${quality_gate}" "${project_status}"
 fi
 
+metadata=$(metadata_from_conditions $project_status)
 project_status=$(jq -r '.projectStatus.status // ""' < "${project_status}")
+
+
 
 jq -n "{
 	version: { ce_task_id: \"${ce_task_id}\"},
@@ -106,4 +109,4 @@ jq -n "{
 		{ name: \"ce_task_status\", value: \"${ce_task_status}\" },
 		{ name: \"project_status\", value: \"${project_status}\" }
 	]
-}" >&3
+}" | jq --argjson m "$metadata" -r '.metadata += $m' >&3
