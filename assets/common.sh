@@ -213,8 +213,8 @@ function wildcard_convert {
     for wildcard in $wildcards; do
         for w in ${project_path}/$wildcard; do
             if [ "$( wildcard_exists "$w" )" -ne "0" ]; then
-                echo "path [$w] not found under $(pwd)"
-                return 1;
+                # Warning about path not exist, instead of fail/block the build.
+                echo "Warning: path [$w] not exit under $(pwd)" >&2
             fi
             # remove prefix "${project_path}/" since following step contains "cd $project_path/"
             convert_res+="${w/#${project_path}\/},"
