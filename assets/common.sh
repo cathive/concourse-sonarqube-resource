@@ -230,6 +230,6 @@ function wildcard_convert {
 function metadata_from_conditions {
     local qg_status_path="$1"
 
-    conditions=$(jq -r ".projectStatus.conditions // []" < $qg_status_path)    
-    echo $conditions | jq -r 'map({"name": .metricKey, "value": .actualValue})'
+    conditions=$(jq -r ".projectStatus.conditions // []" < "$qg_status_path")
+    echo "$conditions" | jq -r 'map({"name": .metricKey, "value": .actualValue})'
 }
