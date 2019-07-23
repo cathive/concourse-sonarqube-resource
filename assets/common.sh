@@ -223,3 +223,13 @@ function wildcard_convert {
 
     echo "${convert_res/%,/}"
 }
+
+
+# Generate metadata from conditions
+# $1 qg_status_path: quality_gate status file
+function metadata_from_conditions {
+    local qg_status_path="$1"
+
+    conditions=$(jq -r ".projectStatus.conditions // []" < "$qg_status_path")
+    echo "$conditions" | jq -r 'map({"name": .metricKey, "value": .actualValue})'
+}
