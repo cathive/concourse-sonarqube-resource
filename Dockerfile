@@ -1,8 +1,10 @@
 # ======================
 # Global build arguments
 # ======================
-ARG MAVEN_VERSION="3.6.0"
-ARG SONAR_SCANNER_CLI_VERSION="3.3.0.1492"
+ARG MAVEN_VERSION="3.6.1"
+ARG MAVEN_SHA512_CHECKSUM="51169366d7269ed316bad013d9cbfebe3a4ef1fda393ac4982d6dbc9af2d5cc359ee12838b8041cb998f236486e988b9c05372f4fdb29a96c1139f63c991e90e"
+ARG SONAR_SCANNER_CLI_VERSION="4.0.0.1744"
+ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="d65f83ea8f33c6f1b687cfe9db95567012dae97d2935ca2014814b364d2f87f81a1e5ab13dcd5ea5b7fda57f3b2d620a2bd862fb2d87c918c8e2f6f6ff2eca29"
 ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.6.0.1398"
 
 # =================================================
@@ -11,17 +13,19 @@ ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.6.0.1398"
 FROM debian:jessie as builder
 RUN apt-get -y update && apt-get -y install curl unzip
 ARG MAVEN_VERSION
+ARG MAVEN_SHA512_CHECKSUM
 ARG SONAR_SCANNER_CLI_VERSION
+ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM
 ARG SONAR_SCANNER_DOWNLOAD_URL="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip"
 RUN curl -s -L "${SONAR_SCANNER_DOWNLOAD_URL}" > "/tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip"
-RUN echo "8e74b8ffc4239fbd81efe221b6c48d02a379507fd1e9d5371645d0cd779a68fae404af8a8ca74a035515ede8c0f139c0f230bfd6182b8415dad373be35e67550  /tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip" | sha512sum -c
+RUN echo "${SONAR_SCANNER_CLI_SHA512_CHECKSUM}  /tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip" | sha512sum -c
 RUN unzip -qq "/tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip" -d "/data"
 RUN mv "/data/sonar-scanner-${SONAR_SCANNER_CLI_VERSION}-linux" "/data/sonar-scanner"
 RUN rm -f "/tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip"
 
 ARG MAVEN_DOWNLOAD_URL="http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.zip"
 RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
-RUN echo "7d14ab2b713880538974aa361b987231473fbbed20e83586d542c691ace1139026f232bd46fdcce5e8887f528ab1c3fbfc1b2adec90518b6941235952d3868e9  /tmp/apache-maven-${MAVEN_VERSION}-bin.zip" | sha512sum -c
+RUN echo "${MAVEN_SHA512_CHECKSUM}  /tmp/apache-maven-${MAVEN_VERSION}-bin.zip" | sha512sum -c
 RUN unzip -qq "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip" -d "/data"
 RUN mv "/data/apache-maven-${MAVEN_VERSION}" "/data/apache-maven"
 RUN rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
