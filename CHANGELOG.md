@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2019-07-26
+
+### Added
+
+- New optional `out` step parameter: `project_key_file`.
+  Thanks to [Guillaume Pouilloux](https://github.com/gpouilloux) for the patch.
+- New optional `in` step parameter: `quality_gate`
+  Thanks to [Ming Xu](https://github.com/SimonXming) for the patch.
+- Support for Wildcard path arguments.
+  Thanks to [Ming Xu](https://github.com/SimonXming) for the patch.
+- The output now contains additional metadata about quality gate status conditions
+  Thanks to [Ye Yang](https://github.com/mgsolid) for the patch.
+
+### Updated
+
+- The bundled sonar-scanner-cli has been updated to v4.0.0.1744.
+- The bundled Maven command line has been updated to v3.6.1.
+
 ## [0.8.1] - 2019-01-29
 
 ### Fixed
@@ -20,7 +38,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   Thanks to [Rekha Mittal](https://github.com/rekhamitt) for the provided
   patch. ([#33](https://github.com/cathive/concourse-sonarqube-resource/issues/33))
 - A new flag (`additional_properties_file`) can be used to instrument the
-  sonar-scanner. Thanks to [Hort Gutmanm](https://github.com/zerok) for the
+  sonar-scanner. Thanks to [Horst Gutmanm](https://github.com/zerok) for the
   provided patch.
 
 ### Updated

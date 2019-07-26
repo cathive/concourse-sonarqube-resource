@@ -7,12 +7,14 @@
 ## Contributors
 
 * Febin Rejoe &lt;FM046667@cerner.net&gt;
+* Guillaume Pouilloux &lt;gpouilloux@idmog.com&gt;
 * Horst Gutmann &lt;zerok@zerokspot.com&gt;
 * Marek Urban
 * Ming Xu &lt;mingx@vmware.com&gt;
 * Pontus Arfwedson &lt;pontus.arfwedson@netlight.com&gt;
 * Rekha Mittal &lt;rekha.mittal@calculi.com&gt;
 * Rune Engseth &lt;rune.engseth@tine.no&gt;
+* Ye Yang &lt;yangye@vmware.com&gt;
 
 ## Third party components
 
