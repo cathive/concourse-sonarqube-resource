@@ -190,7 +190,6 @@ function wildcard_convert {
     SUPPORT_PARAMS=(
         sonar.sources
         sonar.tests
-        sonar.jacoco.reportPaths
     )
     local param_key="$1"
     local wildcards="$2"
@@ -203,9 +202,11 @@ function wildcard_convert {
     fi
 
     # check if request $param_key is supported
-    if [ "$( contains "${SUPPORT_PARAMS[*]}" "$param_key" )" -ne "0" ]; then
-        echo "$wildcards";
-        return 0;
+    if [[ "$param_key" != *".reportPaths" ]]; then
+        if [ "$( contains "${SUPPORT_PARAMS[*]}" "$param_key" )" -ne "0" ]; then
+            echo "$wildcards";
+            return 0;
+        fi
     fi
 
     convert_res=""
@@ -214,7 +215,7 @@ function wildcard_convert {
         for w in ${project_path}/$wildcard; do
             if [ "$( wildcard_exists "$w" )" -ne "0" ]; then
                 # Warning about path not exist, instead of fail/block the build.
-                echo "Warning: path [$w] not exit under $(pwd)" >&2
+                echo "Warning: path [$w] does not exist under $(pwd)" >&2
             fi
             # remove prefix "${project_path}/" since following step contains "cd $project_path/"
             convert_res+="${w/#${project_path}\/},"
