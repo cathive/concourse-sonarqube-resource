@@ -57,7 +57,7 @@ Add a new resource type to your Concourse CI pipeline:
 The resource implements all three actions (check, in and out).
 The analysis is triggered by the out action and check/in will be used to wait for
 the result of the analysis and pull in the project status. Tasks can use this
-information to break the build (if desired) if any of the criterias of the
+information to break the build (if desired) if any of the criteria of the
 quality gate associated with a project are not met.
 
 ### out: Trigger SonarQube analysis
@@ -124,7 +124,7 @@ Support convert wildcards to comma-separated paths.
 
 * `sources`
 * `tests`
-* `sonar.jacoco.reportPaths` in `additional_properties`
+* Any key with the suffix `.reportPaths` in `additional_properties`
 
 ### in: Fetch result of SonarQube analysis
 
@@ -183,7 +183,6 @@ resources:
   source:
     host_url: https://sonarqube.example.com/
     login: ((sonarqube-auth-token))
-    project_key: com.example.my_project
 
 jobs:
 
@@ -223,6 +222,9 @@ jobs:
     - put: code-analysis
       params:
         project_path: sonarqube-analysis-input
+        project_key: com.example.my_project
+        sources: ["."]
+        tests: ["."]
         additional_properties:
           # Will be passed as "-Dsonar.javascript.lcov.reportPaths="coverage/lcov.info" to the scanner.
           sonar.javascript.lcov.reportPaths: coverage/lcov.info

@@ -15,6 +15,7 @@
 * Rekha Mittal &lt;rekha.mittal@calculi.com&gt;
 * Rune Engseth &lt;rune.engseth@tine.no&gt;
 * Ye Yang &lt;yangye@vmware.com&gt;
+* Greg Carter &lt;greg_carter@comcast.com&gt;
 
 ## Third party components
 
