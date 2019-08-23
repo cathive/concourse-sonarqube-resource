@@ -7,6 +7,7 @@
 ## Contributors
 
 * Febin Rejoe &lt;FM046667@cerner.net&gt;
+* Greg Carter &lt;greg_carter@comcast.com&gt;
 * Guillaume Pouilloux &lt;gpouilloux@idmog.com&gt;
 * Horst Gutmann &lt;zerok@zerokspot.com&gt;
 * Marek Urban
@@ -15,7 +16,6 @@
 * Rekha Mittal &lt;rekha.mittal@calculi.com&gt;
 * Rune Engseth &lt;rune.engseth@tine.no&gt;
 * Ye Yang &lt;yangye@vmware.com&gt;
-* Greg Carter &lt;greg_carter@comcast.com&gt;
 
 ## Third party components
 
