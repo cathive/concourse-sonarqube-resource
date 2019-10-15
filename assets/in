@@ -90,16 +90,16 @@ if [[ "${ce_task_status}" == "SUCCESS" ]]; then
 	fi
 fi
 
-project_status="./qualitygate_project_status.json"
-sq_qualitygates_project_status "${sonar_token}" "${sonar_host_url}" "${analysis_id}" > "${project_status}"
+project_status_file="./qualitygate_project_status.json"
+sq_qualitygates_project_status "${sonar_token}" "${sonar_host_url}" "${analysis_id}" > "${project_status_file}"
 
 quality_gate=$(jq -r '.params.quality_gate // ""' < "${payload}")
 if [[ -n "${quality_gate}" ]]; then
-	parse_quality_gates "${quality_gate}" "${project_status}"
+	parse_quality_gates "${quality_gate}" "${project_status_file}"
 fi
 
-metadata=$(metadata_from_conditions $project_status)
-project_status=$(jq -r '.projectStatus.status // ""' < "${project_status}")
+metadata=$(metadata_from_conditions $project_status_file)
+project_status=$(jq -r '.projectStatus.status // ""' < "${project_status_file}")
 
 
 
