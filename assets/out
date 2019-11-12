@@ -160,15 +160,15 @@ fi
 decorate_pr=$(jq -r '.params.decorate_pr // ""' < "${payload}")
 if [[ -n "${decorate_pr}" ]]; then
 	if [ -f "${project_path}/.git/resource/metadata.json" ]; then
-		pr_id=$( jq -r '.pr' ${project_path}/.git/resource/version.json )
-		branch_name=$( jq -r '.[] | select (.name == "head_name") | .value' ${project_path}/.git/resource/metadata.json )
+		pr_id=$( jq -r '.pr' "${project_path}/.git/resource/version.json" )
+		branch_name=$( jq -r '.[] | select (.name == "head_name") | .value' "${project_path}/.git/resource/metadata.json" )
 	else
 		pr_id=$(git config --get pullrequest.id)
 		branch_name=$(git config --get pullrequest.branch)
 	fi
 
-	scanner_opts+=" -Dsonar.pullrequest.key=\"${pr_id}\" -Dsonar.pullrequest.branch=${branch_name}"
-	echo "Decorating PR: \"${pr_id}\" for branch ${branch_name}"
+	scanner_opts+=" -Dsonar.pullrequest.key=${pr_id} -Dsonar.pullrequest.branch=${branch_name}"
+	echo "Decorating PR: ${pr_id} for branch ${branch_name}"
 fi
 
 sonar_sources=$(jq -r '.params.sources // [] | join(",")' < "${payload}")
