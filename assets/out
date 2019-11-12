@@ -136,7 +136,7 @@ if [[ -z "${sonar_branch_name}" ]]; then
 	# If the branch name has NOT been specified, we'll check if autodetect_branch_name
 	# has been set to true and try to figure figure the branch out by using installed
 	# SCM tools.
-	autodetect_branch_name=$(jq -r '.params.autodetect_branch_name // "false"')
+	autodetect_branch_name=$(jq -r '.params.autodetect_branch_name // "false"' < "${payload}")
 	if [[ "${autodetect_branch_name}" == "true" ]]; then
 		echo "Trying to detect branch name automatically..."
 		if [[ -d "${project_path}/.git" ]]; then
