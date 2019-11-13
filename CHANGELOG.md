@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2019-11-13
+
+Thanks to [Fernando Torres](https://github.com/fftorres) for all the fixes and
+enhancements that went into this release!
+
+### Added
+
+- Add support for Pull Request decorations.
+
+### Fixed
+
+- Fixed an issue when parsing the project status after analysis. ([#44](https://github.com/cathive/concourse-sonarqube-resource/issues/44))
+- Fixed behavior of the defunct `autodetect_branch_name` flag.
+
 ## [0.9.1] - 2019-08-23
 
 ### Added
