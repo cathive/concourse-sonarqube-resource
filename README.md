@@ -101,6 +101,11 @@ quality gate associated with a project are not met.
   (See [Branch Plugin documentation](https://docs.sonarqube.org/display/PLUG/Branch+Plugin) for further
   details)
 
+* `decorate_pr`: If set to `true` it will try to fetch the pull request id and the head branch name from
+the pull request resource. It works for `telia-oss/github-pr-resource` and `jtarchie/github-pullrequest-resource`. It will enable `sonar.pullrequest.key` and `sonar.pullrequest.branch` flags when performing your analysis.
+  
+  >_In order to use this feature you must be using `SonarCloud` or `SonarQube Developer` edition._
+
 * `sources`: A list of paths to directories containing source files.
 
 * `tests`: A list of paths to directories containing source files.
