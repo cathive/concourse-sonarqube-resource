@@ -140,7 +140,7 @@ if [[ -z "${sonar_branch_name}" ]]; then
 	if [[ "${autodetect_branch_name}" == "true" ]]; then
 		echo "Trying to detect branch name automatically..."
 		if [[ -d "${project_path}/.git" ]]; then
-			sonar_branch_name=$(git --git-dir="${project_path}/.git" rev-parse --abbrev-ref HEAD)
+			sonar_branch_name=$(git --git-dir="${project_path}/.git" name-rev --name-only HEAD)
 		fi
 		echo "Auto-detected branch name: \"${sonar_branch_name:-<nil>}\""
 	fi
