@@ -1,8 +1,8 @@
 # ======================
 # Global build arguments
 # ======================
-ARG MAVEN_VERSION="3.6.1"
-ARG MAVEN_SHA512_CHECKSUM="51169366d7269ed316bad013d9cbfebe3a4ef1fda393ac4982d6dbc9af2d5cc359ee12838b8041cb998f236486e988b9c05372f4fdb29a96c1139f63c991e90e"
+ARG MAVEN_VERSION="3.6.3"
+ARG MAVEN_SHA512_CHECKSUM="1c095ed556eda06c6d82fdf52200bc4f3437a1bab42387e801d6f4c56e833fb82b16e8bf0aab95c9708de7bfb55ec27f653a7cf0f491acebc541af234eded94d"
 ARG SONAR_SCANNER_CLI_VERSION="4.0.0.1744"
 ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="d65f83ea8f33c6f1b687cfe9db95567012dae97d2935ca2014814b364d2f87f81a1e5ab13dcd5ea5b7fda57f3b2d620a2bd862fb2d87c918c8e2f6f6ff2eca29"
 ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.6.0.1398"
@@ -33,13 +33,14 @@ RUN rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 # ===========
 # Final image
 # ===========
-FROM openjdk:8u151-alpine
-RUN apk -f -q update \
-&& apk -f -q add bash curl gawk git jq nodejs
+FROM openjdk:13.0.1-slim
+RUN apt-get -y update \
+&& apt-get -y install bash curl gawk git jq nodejs
 
+# TODO How should we do this with Slim?
 # https://github.com/concourse/concourse/issues/2042
-RUN unlink  $JAVA_HOME/jre/lib/security/cacerts && \
-cp "/etc/ssl/certs/java/cacerts" "${JAVA_HOME}/jre/lib/security/cacerts"
+#RUN unlink  $JAVA_HOME/lib/security/cacerts && \
+#cp "/etc/ssl/certs/java/cacerts" "${JAVA_HOME}/lib/security/cacerts"
 
 COPY --from=builder "/data/sonar-scanner" "/opt/sonar-scanner"
 RUN rm -Rf "/opt/sonar-scanner/jre" \
@@ -59,11 +60,11 @@ RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get \
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
-      version="0.10.0" \
+      version="0.11.0" \
       maven.version="{MAVEN_VERSION}" \
       sonar-scanner.cli.version="${SONAR_SCANNER_CLI_VERSION}" \
       sonar-scanner.maven-plugin.version="${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}" \
-      org.concourse-ci.target-version="5.7.0" \
+      org.concourse-ci.target-version="5.8.0" \
       org.concourse-ci.resource-id="sonarqube" \
       org.concourse-ci.resource-name="SonarQube Static Code Analysis" \
       org.concourse-ci.resource-homepage="https://github.com/cathive/concourse-sonarqube-resource"

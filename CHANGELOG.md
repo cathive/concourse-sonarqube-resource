@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Updated
+
+- Base container image has been updated to `openjdk:13.0.1-slim`
+- The bundled Maven command line has been updated to v3.6.3.
+
 ## [0.10.0] - 2019-11-13
 
 Thanks to [Fernando Torres](https://github.com/fftorres) for all the fixes and
