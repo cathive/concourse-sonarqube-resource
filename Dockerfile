@@ -3,8 +3,8 @@
 # ======================
 ARG MAVEN_VERSION="3.6.3"
 ARG MAVEN_SHA512_CHECKSUM="1c095ed556eda06c6d82fdf52200bc4f3437a1bab42387e801d6f4c56e833fb82b16e8bf0aab95c9708de7bfb55ec27f653a7cf0f491acebc541af234eded94d"
-ARG SONAR_SCANNER_CLI_VERSION="4.0.0.1744"
-ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="d65f83ea8f33c6f1b687cfe9db95567012dae97d2935ca2014814b364d2f87f81a1e5ab13dcd5ea5b7fda57f3b2d620a2bd862fb2d87c918c8e2f6f6ff2eca29"
+ARG SONAR_SCANNER_CLI_VERSION="4.2.0.1873"
+ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="c70e8b4b5fed0708cff1f671dbaaefeff3d6feb07b8cb3d926286d5bb1285a295d79ef3075c3202ac29c6e2b4dad198dbb7558f7e4301ee26115866202e304fe"
 ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.6.0.1398"
 
 # =================================================
@@ -56,6 +56,9 @@ ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION
 RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get \
 -DrepoUrl="https://repo.maven.apache.org/maven2/" \
 -Dartifact="org.sonarsource.scanner.maven:sonar-maven-plugin:${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}:jar"
+
+RUN sed -i -e 's/use_embedded_jre=true//' /usr/local/bin/sonar-scanner \
+&& ln -s "/opt/sonar-scanner/lib/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}.jar" "/usr/local/lib/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}.jar"
 
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
