@@ -7,16 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Added
-
-- A container structure test has been added to the repository to make sure that
-  the resource won't break as easily when updates are being made under the hood.
-  ([#48](https://github.com/cathive/concourse-sonarqube-resource/issues/48))
-
 ### Updated
 
 - Base container image has been updated to `openjdk:13.0.1-slim`
+- The bundled sonar-scanner-cli has been updated to v4.2.0.1873.
 - The bundled Maven command line has been updated to v3.6.3.
+- The bundled sonar-maven-plugin has been updated to v3.7.0.1746.
 
 ### Fixed
 
@@ -24,6 +20,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   resource without proper notice. This breaks existing build pipelines that rely
   upon tsc's existence and therefore TypeScript has been re-added to the image
   and is now properly being version-managed. ([#48](https://github.com/cathive/concourse-sonarqube-resource/issues/48))
+
+### Improved
+
+- A container structure test has been added to the repository to make sure that
+  the resource won't break as easily when updates are being made under the hood.
+  ([#48](https://github.com/cathive/concourse-sonarqube-resource/issues/48))
 
 ## [0.10.0] - 2019-11-13
 
