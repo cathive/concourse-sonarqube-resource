@@ -37,6 +37,10 @@ FROM openjdk:13.0.1-slim
 RUN apt-get -y update \
 && apt-get -y install bash curl gawk git jq nodejs
 
+RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" \
+&& ln -sf "${JAVA_HOME}/bin/javac" "/usr/local/bin/javac" \
+&& ln -sf "${JAVA_HOME}/bin/jar" "/usr/local/bin/jar"
+
 # TODO How should we do this with Slim?
 # https://github.com/concourse/concourse/issues/2042
 #RUN unlink  $JAVA_HOME/lib/security/cacerts && \

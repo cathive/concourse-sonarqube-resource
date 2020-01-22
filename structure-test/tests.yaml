@@ -1,0 +1,30 @@
+schemaVersion: '2.0.0'
+
+metadataTest:
+  env:
+  - key: 'JAVA_HOME'
+    value: '/usr/java/openjdk-13'
+  - key: 'M2_HOME'
+    value: '/opt/apache-maven'
+
+fileExistenceTests:
+- name: 'Java Runtime must be installed'
+  path: '/usr/local/bin/java'
+  shouldExist: true
+  isExecutableBy: 'owner'
+- name: 'Maven must be installed'
+  path: '/usr/local/bin/mvn'
+  shouldExist: true
+  isExecutableBy: 'owner'
+
+commandTests:
+- name: '"java" executable works'
+  command: 'java'
+  args:
+  - '-version'
+  exitCode: 0
+- name: '"mvn" executable works'
+  command: 'mvn'
+  args:
+  - '-version'
+  exitCode: 0
