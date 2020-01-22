@@ -35,7 +35,10 @@ RUN rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 # ===========
 FROM openjdk:13.0.1-slim
 RUN apt-get -y update \
-&& apt-get -y install bash curl gawk git jq nodejs
+&& apt-get -y install bash curl gawk git jq nodejs npm
+
+ARG TYPESCRIPT_VERSION="3.7.5"
+RUN npm install -g typescript@${TYPESCRIPT_VERSION}
 
 RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" \
 && ln -sf "${JAVA_HOME}/bin/javac" "/usr/local/bin/javac" \
@@ -68,6 +71,7 @@ LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
       maven.version="{MAVEN_VERSION}" \
       sonar-scanner.cli.version="${SONAR_SCANNER_CLI_VERSION}" \
       sonar-scanner.maven-plugin.version="${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}" \
+      typescript.version=${TYPESCRIPT_VERSION} \
       org.concourse-ci.target-version="5.8.0" \
       org.concourse-ci.resource-id="sonarqube" \
       org.concourse-ci.resource-name="SonarQube Static Code Analysis" \

@@ -16,6 +16,10 @@ fileExistenceTests:
   path: '/usr/local/bin/mvn'
   shouldExist: true
   isExecutableBy: 'owner'
+- name: 'TypeScript compiler must be installed'
+  path: '/usr/local/bin/tsc'
+  shouldExist: true
+  isExecutableBy: 'owner'
 
 commandTests:
 - name: '"java" executable works'
@@ -25,6 +29,11 @@ commandTests:
   exitCode: 0
 - name: '"mvn" executable works'
   command: 'mvn'
+  args:
+  - '-version'
+  exitCode: 0
+- name: '"tsc" executable works'
+  command: 'tsc'
   args:
   - '-version'
   exitCode: 0
