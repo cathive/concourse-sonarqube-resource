@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - A container structure test has been added to the repository to make sure that
   the resource won't break as easily when updates are being made under the hood.
-  ([#48](https://github.com/cathive/concourse-sonarqube-resource/issues/48))
+  ([#48](https://github.com/cathive/concourse-sonarqube-resource/issues/48), [#49](https://github.com/cathive/concourse-sonarqube-resource/issues/49))
 
 ## [0.10.0] - 2019-11-13
 
