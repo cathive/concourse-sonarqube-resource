@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- A container structure test has been added to the repository to make sure that
+  the resource won't break as easily when updates are being made under the hood.
+
 ### Updated
 
 - Base container image has been updated to `openjdk:13.0.1-slim`
