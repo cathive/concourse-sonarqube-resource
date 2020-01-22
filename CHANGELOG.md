@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- The TypeScript (`tsc` command line) has been removed in a prior version of the
+- The TypeScript (`tsc`) command line has been removed in a prior version of the
   resource without proper notice. This breaks existing build pipelines that rely
   upon tsc's existence and therefore TypeScript has been re-added to the image
   and is now properly being version-managed. ([#48](https://github.com/cathive/concourse-sonarqube-resource/issues/48))
