@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.11.0] - 2020-01-22
+## [0.11.1] - 2020-01-24
+
+### Fixed
+
+- Base container image has been downgraded to `openjdk:11.0.6-slim`
+  SonarQube scanners as of now only support Java 8 and Java 11
+  according to the [documentation](https://docs.sonarqube.org/latest/requirements/requirements/).
+  Some plugins don't support newer Java runtimes which breaks all
+  functionality of this resource.
+
+## [0.11.0] - 2020-01-22 [YANKED]
 
 ### Updated
 
