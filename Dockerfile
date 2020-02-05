@@ -51,7 +51,7 @@ RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" \
 
 COPY --from=builder "/data/sonar-scanner" "/opt/sonar-scanner"
 RUN rm -Rf "/opt/sonar-scanner/jre" \
-&& ln -sf "/usr" "/opt/sonar-scanner/jre" \
+&& ln -sf "${JAVA_HOME}" "/opt/sonar-scanner/jre" \
 && ln -sf "/opt/sonar-scanner/bin/sonar-scanner" "/usr/local/bin/sonar-scanner" \
 && ln -sf "/opt/sonar-scanner/bin/sonar-scanner-debug" "/usr/local/bin/sonar-scanner-debug"
 COPY --from=builder "/data/apache-maven" "/opt/apache-maven"
@@ -67,7 +67,7 @@ RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get \
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
-      version="0.11.1" \
+      version="0.11.2" \
       maven.version="{MAVEN_VERSION}" \
       sonar-scanner.cli.version="${SONAR_SCANNER_CLI_VERSION}" \
       sonar-scanner.maven-plugin.version="${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}" \

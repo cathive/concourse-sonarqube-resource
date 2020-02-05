@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.11.1] - 2020-01-24
+## [0.11.2] - 2020-02-05
+
+### Fixed
+
+- JAVA_HOME was not correctly linked and rendered the `cli` variant of the sonar-scanner
+  unusable. [#50](https://github.com/cathive/concourse-sonarqube-resource/issues/50) 
+
+## [0.11.1] - 2020-01-24 [YANKED]
 
 ### Fixed
 

@@ -32,6 +32,11 @@ fileExistenceTests:
   path: '/opt/resource/out'
   shouldExist: true
   isExecutableBy: 'owner'
+- name: 'sonar-scanner JRE must be fully functional'
+  path:  '/opt/sonar-scanner/jre/bin/java'
+  shouldExist: true
+  isExecutableBy: 'owner'
+  
 
 commandTests:
 - name: '"java" executable works'
