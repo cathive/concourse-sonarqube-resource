@@ -3,9 +3,11 @@ schemaVersion: '2.0.0'
 metadataTest:
   env:
   - key: 'JAVA_HOME'
-    value: '/usr/java/openjdk-13'
+    value: '/usr/java/openjdk-11'
   - key: 'M2_HOME'
     value: '/opt/apache-maven'
+  - key: 'NODE_PATH'
+    value: '/usr/local/lib/node_modules'
 
 fileExistenceTests:
 - name: 'Java Runtime must be installed'
@@ -36,7 +38,7 @@ fileExistenceTests:
   path:  '/opt/sonar-scanner/jre/bin/java'
   shouldExist: true
   isExecutableBy: 'owner'
-  
+
 
 commandTests:
 - name: '"java" executable works'

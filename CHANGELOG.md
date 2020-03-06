@@ -5,12 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.11.3] - 2020-03-06
+
+Thanks to [Samed Ozdemir](https://github.com/xsorifc28) who provided a patch to
+enhance the functionality of this resource for this release.
+
+### Added
+
+- The parameters `branch_name_file` and `branch_target_file` have been added to
+  allow for more sophisticated integration options with SonarQube's branch
+  management feature. ([#52](https://github.com/cathive/concourse-sonarqube-resource/issues/52))
+
+### Updated
+
+- The bundled TypeScript version has been updated to v3.8.3.
+
+### Fixed
+
+- The environment variable `NODE_PATH` is now set correctly, which should fix
+  issues with the sonar-typescript-plugin. ([#51](https://github.com/cathive/concourse-sonarqube-resource/issues/51))
+
 ## [0.11.2] - 2020-02-05
 
 ### Fixed
 
 - JAVA_HOME was not correctly linked and rendered the `cli` variant of the sonar-scanner
-  unusable. [#50](https://github.com/cathive/concourse-sonarqube-resource/issues/50) 
+  unusable. ([#50](https://github.com/cathive/concourse-sonarqube-resource/issues/50))
 
 ## [0.11.1] - 2020-01-24 [YANKED]
 

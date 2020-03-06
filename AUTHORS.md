@@ -16,6 +16,7 @@
 * Pontus Arfwedson &lt;pontus.arfwedson@netlight.com&gt;
 * Rekha Mittal &lt;rekha.mittal@calculi.com&gt;
 * Rune Engseth &lt;rune.engseth@tine.no&gt;
+* Samed Ozdemir &lt;samed@xsorcreations.com&gt;
 * Ye Yang &lt;yangye@vmware.com&gt;
 
 ## Third party components
