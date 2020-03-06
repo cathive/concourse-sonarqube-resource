@@ -37,7 +37,7 @@ FROM openjdk:11.0.6-slim
 RUN apt-get -y update \
 && apt-get -y install bash curl gawk git jq nodejs npm
 
-ARG TYPESCRIPT_VERSION="3.7.5"
+ARG TYPESCRIPT_VERSION="3.8.3"
 RUN npm install -g typescript@${TYPESCRIPT_VERSION}
 
 RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" \
@@ -64,6 +64,7 @@ RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get \
 -DrepoUrl="https://repo.maven.apache.org/maven2/" \
 -Dartifact="org.sonarsource.scanner.maven:sonar-maven-plugin:${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}:jar"
 
+ENV NODE_PATH="/usr/local/lib/node_modules"
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
