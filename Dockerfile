@@ -5,7 +5,7 @@ ARG MAVEN_VERSION="3.6.3"
 ARG MAVEN_SHA512_CHECKSUM="1c095ed556eda06c6d82fdf52200bc4f3437a1bab42387e801d6f4c56e833fb82b16e8bf0aab95c9708de7bfb55ec27f653a7cf0f491acebc541af234eded94d"
 ARG SONAR_SCANNER_CLI_VERSION="4.2.0.1873"
 ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="c70e8b4b5fed0708cff1f671dbaaefeff3d6feb07b8cb3d926286d5bb1285a295d79ef3075c3202ac29c6e2b4dad198dbb7558f7e4301ee26115866202e304fe"
-ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.6.0.1398"
+ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.7.0.1746"
 
 # =================================================
 # Builder image (just for downloads / preparations)
@@ -33,9 +33,16 @@ RUN rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 # ===========
 # Final image
 # ===========
-FROM openjdk:13.0.1-slim
+FROM openjdk:11.0.6-slim
 RUN apt-get -y update \
-&& apt-get -y install bash curl gawk git jq nodejs
+&& apt-get -y install bash curl gawk git jq nodejs npm
+
+ARG TYPESCRIPT_VERSION="3.8.3"
+RUN npm install -g typescript@${TYPESCRIPT_VERSION}
+
+RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" \
+&& ln -sf "${JAVA_HOME}/bin/javac" "/usr/local/bin/javac" \
+&& ln -sf "${JAVA_HOME}/bin/jar" "/usr/local/bin/jar"
 
 # TODO How should we do this with Slim?
 # https://github.com/concourse/concourse/issues/2042
@@ -44,7 +51,7 @@ RUN apt-get -y update \
 
 COPY --from=builder "/data/sonar-scanner" "/opt/sonar-scanner"
 RUN rm -Rf "/opt/sonar-scanner/jre" \
-&& ln -sf "/usr" "/opt/sonar-scanner/jre" \
+&& ln -sf "${JAVA_HOME}" "/opt/sonar-scanner/jre" \
 && ln -sf "/opt/sonar-scanner/bin/sonar-scanner" "/usr/local/bin/sonar-scanner" \
 && ln -sf "/opt/sonar-scanner/bin/sonar-scanner-debug" "/usr/local/bin/sonar-scanner-debug"
 COPY --from=builder "/data/apache-maven" "/opt/apache-maven"
@@ -57,16 +64,15 @@ RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get \
 -DrepoUrl="https://repo.maven.apache.org/maven2/" \
 -Dartifact="org.sonarsource.scanner.maven:sonar-maven-plugin:${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}:jar"
 
-RUN sed -i -e 's/use_embedded_jre=true//' /usr/local/bin/sonar-scanner \
-&& ln -s "/opt/sonar-scanner/lib/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}.jar" "/usr/local/lib/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}.jar"
-
+ENV NODE_PATH="/usr/local/lib/node_modules"
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
-      version="0.11.0" \
+      version="0.11.3" \
       maven.version="{MAVEN_VERSION}" \
       sonar-scanner.cli.version="${SONAR_SCANNER_CLI_VERSION}" \
       sonar-scanner.maven-plugin.version="${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}" \
+      typescript.version=${TYPESCRIPT_VERSION} \
       org.concourse-ci.target-version="5.8.0" \
       org.concourse-ci.resource-id="sonarqube" \
       org.concourse-ci.resource-name="SonarQube Static Code Analysis" \

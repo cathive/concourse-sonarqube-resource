@@ -5,12 +5,64 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.11.3] - 2020-03-06
+
+Thanks to [Samed Ozdemir](https://github.com/xsorifc28) who provided a patch to
+enhance the functionality of this resource for this release.
+
+### Added
+
+- The parameters `branch_name_file` and `branch_target_file` have been added to
+  allow for more sophisticated integration options with SonarQube's branch
+  management feature. ([#52](https://github.com/cathive/concourse-sonarqube-resource/issues/52))
+
+### Updated
+
+- The bundled TypeScript version has been updated to v3.8.3.
+
+### Fixed
+
+- The environment variable `NODE_PATH` is now set correctly, which should fix
+  issues with the sonar-typescript-plugin. ([#51](https://github.com/cathive/concourse-sonarqube-resource/issues/51))
+
+## [0.11.2] - 2020-02-05
+
+### Fixed
+
+- JAVA_HOME was not correctly linked and rendered the `cli` variant of the sonar-scanner
+  unusable. ([#50](https://github.com/cathive/concourse-sonarqube-resource/issues/50))
+
+## [0.11.1] - 2020-01-24 [YANKED]
+
+### Fixed
+
+- Base container image has been downgraded to `openjdk:11.0.6-slim`
+  SonarQube scanners as of now only support Java 8 and Java 11
+  according to the [documentation](https://docs.sonarqube.org/latest/requirements/requirements/).
+  Some plugins don't support newer Java runtimes which breaks all
+  functionality of this resource.
+
+## [0.11.0] - 2020-01-22 [YANKED]
 
 ### Updated
 
 - Base container image has been updated to `openjdk:13.0.1-slim`
+- The bundled sonar-scanner-cli has been updated to v4.2.0.1873.
 - The bundled Maven command line has been updated to v3.6.3.
+- The bundled sonar-maven-plugin has been updated to v3.7.0.1746.
+
+### Fixed
+
+- The TypeScript (`tsc`) command line has been removed in a prior version of the
+  resource without proper notice. This breaks existing build pipelines that rely
+  upon tsc's existence and therefore TypeScript has been re-added to the image
+  and is now properly being version-managed. ([#48](https://github.com/cathive/concourse-sonarqube-resource/issues/48))
+
+### Improved
+
+- A container structure test has been added to the repository to make sure that
+  the resource won't break as easily when updates are being made under the hood.
+  ([#48](https://github.com/cathive/concourse-sonarqube-resource/issues/48), [#49](https://github.com/cathive/concourse-sonarqube-resource/issues/49))
 
 ## [0.10.0] - 2019-11-13
 

@@ -131,9 +131,19 @@ if [[ -n "${sonar_project_version_file}" ]]; then
 	fi
 fi
 
+sonar_branch_name_file=$(jq -r '.params.branch_name_file // ""' < "${payload}")
+if [[ -n "${sonar_branch_name_file}" ]]; then
+	if [[ ! -f "${sonar_branch_name_file}" ]]; then
+		echo "error: Branch name file not found: ${sonar_branch_name_file}"
+		exit 1
+	else
+		sonar_branch_name=$(cat "${sonar_branch_name_file}")
+	fi
+fi
+
 sonar_branch_name=$(jq -r '.params.branch_name // ""' < "${payload}")
 if [[ -z "${sonar_branch_name}" ]]; then
-	# If the branch name has NOT been specified, we'll check if autodetect_branch_name
+	# If the branch name or branch name file has NOT been specified, we'll check if autodetect_branch_name
 	# has been set to true and try to figure figure the branch out by using installed
 	# SCM tools.
 	autodetect_branch_name=$(jq -r '.params.autodetect_branch_name // "false"' < "${payload}")
@@ -157,6 +167,17 @@ if [[ -n "${sonar_branch_target}" ]]; then
 	scanner_opts+=" -Dsonar.branch.target=\"${sonar_branch_target}\""
 fi
 
+sonar_branch_target_file=$(jq -r '.params.branch_target_file // ""' < "${payload}")
+if [[ -n "${sonar_branch_target_file}" ]]; then
+	if [[ ! -f "${sonar_branch_target_file}" ]]; then
+		echo "error: Branch target file not found: ${sonar_branch_target_file}"
+		exit 1
+	else
+		sonar_branch_target=$(cat "${sonar_branch_target_file}")
+		scanner_opts+=" -Dsonar.branch.target=\"${sonar_branch_target}\""
+	fi
+fi
+
 decorate_pr=$(jq -r '.params.decorate_pr // ""' < "${payload}")
 if [[ -n "${decorate_pr}" ]]; then
 	if [ -f "${project_path}/.git/resource/metadata.json" ]; then
@@ -167,7 +188,7 @@ if [[ -n "${decorate_pr}" ]]; then
 		branch_name=$(git config --get pullrequest.branch)
 	fi
 
-	scanner_opts+=" -Dsonar.pullrequest.key=${pr_id} -Dsonar.pullrequest.branch=${branch_name}"
+	scanner_opts+=" -Dsonar.pullrequest.key=${pr_id} -Dsonar.pullrequest.branch=${branch_name} -Dsonar.pullrequest.base=\"${sonar_branch_name}"
 	echo "Decorating PR: ${pr_id} for branch ${branch_name}"
 fi
 

@@ -7,10 +7,16 @@ trim_trailing_whitespace = true
 indent_style = tab
 indent_size = 8
 
-[*.{json,xml,yml}]
+[*.{json,xml,yaml,yml}]
 indent_style = space
 indent_size = 2
 
 [*.properties]
 charset = latin1
+
+[*.awk]
+end_of_line = lf
+
+[*.sh]
+end_of_line = lf
 

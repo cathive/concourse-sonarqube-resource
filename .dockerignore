@@ -1,0 +1,4 @@
+/.ci/
+/.vscode/
+/.editorconfig
+/.travis.yml

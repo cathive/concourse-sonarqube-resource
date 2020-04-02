@@ -1,0 +1,58 @@
+schemaVersion: '2.0.0'
+
+metadataTest:
+  env:
+  - key: 'JAVA_HOME'
+    value: '/usr/java/openjdk-11'
+  - key: 'M2_HOME'
+    value: '/opt/apache-maven'
+  - key: 'NODE_PATH'
+    value: '/usr/local/lib/node_modules'
+
+fileExistenceTests:
+- name: 'Java Runtime must be installed'
+  path: '/usr/local/bin/java'
+  shouldExist: true
+  isExecutableBy: 'owner'
+- name: 'Maven must be installed'
+  path: '/usr/local/bin/mvn'
+  shouldExist: true
+  isExecutableBy: 'owner'
+- name: 'TypeScript compiler must be installed'
+  path: '/usr/local/bin/tsc'
+  shouldExist: true
+  isExecutableBy: 'owner'
+- name: '/opt/resource/check must exist'
+  path: '/opt/resource/check'
+  shouldExist: true
+  isExecutableBy: 'owner'
+- name: '/opt/resource/in must exist'
+  path: '/opt/resource/in'
+  shouldExist: true
+  isExecutableBy: 'owner'
+- name: '/opt/resource/out must exist'
+  path: '/opt/resource/out'
+  shouldExist: true
+  isExecutableBy: 'owner'
+- name: 'sonar-scanner JRE must be fully functional'
+  path:  '/opt/sonar-scanner/jre/bin/java'
+  shouldExist: true
+  isExecutableBy: 'owner'
+
+
+commandTests:
+- name: '"java" executable works'
+  command: 'java'
+  args:
+  - '-version'
+  exitCode: 0
+- name: '"mvn" executable works'
+  command: 'mvn'
+  args:
+  - '-version'
+  exitCode: 0
+- name: '"tsc" executable works'
+  command: 'tsc'
+  args:
+  - '-version'
+  exitCode: 0
