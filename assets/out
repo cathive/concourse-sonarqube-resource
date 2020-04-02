@@ -188,7 +188,7 @@ if [[ -n "${decorate_pr}" ]]; then
 		branch_name=$(git config --get pullrequest.branch)
 	fi
 
-	scanner_opts+=" -Dsonar.pullrequest.key=${pr_id} -Dsonar.pullrequest.branch=${branch_name} -Dsonar.pullrequest.base=\"${sonar_branch_name}"
+	scanner_opts+=" -Dsonar.pullrequest.key=${pr_id} -Dsonar.pullrequest.branch=${branch_name} -Dsonar.pullrequest.base=\"${sonar_branch_name}\""
 	echo "Decorating PR: ${pr_id} for branch ${branch_name}"
 fi
 
