@@ -139,22 +139,25 @@ if [[ -n "${sonar_branch_name_file}" ]]; then
 	else
 		sonar_branch_name=$(cat "${sonar_branch_name_file}")
 	fi
-fi
-
-sonar_branch_name=$(jq -r '.params.branch_name // ""' < "${payload}")
-if [[ -z "${sonar_branch_name}" ]]; then
-	# If the branch name or branch name file has NOT been specified, we'll check if autodetect_branch_name
-	# has been set to true and try to figure figure the branch out by using installed
-	# SCM tools.
-	autodetect_branch_name=$(jq -r '.params.autodetect_branch_name // "false"' < "${payload}")
-	if [[ "${autodetect_branch_name}" == "true" ]]; then
-		echo "Trying to detect branch name automatically..."
-		if [[ -d "${project_path}/.git" ]]; then
-			sonar_branch_name=$(git --git-dir="${project_path}/.git" name-rev --name-only HEAD)
+else
+# branch name file has NOT been specified, we'll check if branch name has been set.
+	sonar_branch_name=$(jq -r '.params.branch_name // ""' < "${payload}")
+	if [[ -z "${sonar_branch_name}" ]]; then
+		# If the branch name has NOT been specified, we'll check if autodetect_branch_name
+		# has been set to true and try to figure out the branch by using installed
+		# SCM tools.
+		autodetect_branch_name=$(jq -r '.params.autodetect_branch_name // "false"' < "${payload}")
+		if [[ "${autodetect_branch_name}" == "true" ]]; then
+			echo "Trying to detect branch name automatically..."
+			if [[ -d "${project_path}/.git" ]]; then
+				sonar_branch_name=$(git --git-dir="${project_path}/.git" name-rev --name-only HEAD)
+			fi
+			echo "Auto-detected branch name: \"${sonar_branch_name:-<nil>}\""
 		fi
-		echo "Auto-detected branch name: \"${sonar_branch_name:-<nil>}\""
 	fi
 fi
+
+
 # So... if the branch name has been either specified manually or we have been able
 # to figure it out automatically using our SCM tools, we can pass sonar.branch.name
 # to the sonar-scanner. Yay!!
