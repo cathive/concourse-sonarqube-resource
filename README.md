@@ -2,7 +2,7 @@
 
 Performs SonarQube analyses and tracks the state of SonarQube [quality gates](https://docs.sonarqube.org/display/SONAR/Quality+Gates).
 
-This resource works with [SonarCloud](https://sonarcloud.io/) and self-hosted instaces of SonarQube.
+This resource works with [SonarCloud](https://sonarcloud.io/) and self-hosted instances of SonarQube.
 
 If you want to implement a real quality gate in your build pipeline, you might want to also use the [concourse-sonarqube-qualitygate-task](https://github.com/cathive/concourse-sonarqube-qualitygate-task) which can be used to break a build if certain quality goals (as reported by SonarQube) are not reached.
 
@@ -187,7 +187,7 @@ resources:
 
 - name: artifact
   type: s3
-  # ... configuration ommited
+  # ... configuration omitted
 
 - name: code-analysis
   type: sonar-runner
@@ -198,7 +198,7 @@ resources:
 jobs:
 
 # The build job performs fetches stuff from the "sources" resource
-# and executes a task that builds and tests everyhing. Once compilation,
+# and executes a task that builds and tests everything. Once compilation,
 # test execution and <whatever> has been performed, we copy the whole
 # working directory into the output folder "sonarqube-analysis-input"
 # and push the package that has been created by the "build" task to the
