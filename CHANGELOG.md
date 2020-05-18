@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.11.4] - 2020-05-18
+
+### Fixed
+
+Thanks to [Nabil Abdelwahd](https://github.com/Labout) for the patch that made this
+release possible.
+
+- The `branch_name_file` parameter should now work as supposed to. ([#55](https://github.com/cathive/concourse-sonarqube-resource/issues/55))
+
 ## [0.11.3] - 2020-03-06
 
 Thanks to [Samed Ozdemir](https://github.com/xsorifc28) who provided a patch to

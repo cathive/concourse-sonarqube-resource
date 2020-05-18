@@ -13,6 +13,7 @@
 * Horst Gutmann &lt;zerok@zerokspot.com&gt;
 * Marek Urban
 * Ming Xu &lt;mingx@vmware.com&gt;
+* Nabil Abdelwahd &lt;nabil.labout@gmail.com&gt;
 * Pontus Arfwedson &lt;pontus.arfwedson@netlight.com&gt;
 * Rekha Mittal &lt;rekha.mittal@calculi.com&gt;
 * Rune Engseth &lt;rune.engseth@tine.no&gt;
