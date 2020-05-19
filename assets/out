@@ -186,6 +186,9 @@ if [[ -n "${decorate_pr}" ]]; then
 	if [ -f "${project_path}/.git/resource/metadata.json" ]; then
 		pr_id=$( jq -r '.pr' "${project_path}/.git/resource/version.json" )
 		branch_name=$( jq -r '.[] | select (.name == "head_name") | .value' "${project_path}/.git/resource/metadata.json" )
+	elif [ -f "${project_path}/pull-request-info" ]; then
+		pr_id=$( jq -r '.id' "${project_path}/pull-request-info" )
+		branch_name=$( jq -r '.feature_branch' "${project_path}/pull-request-info" )
 	else
 		pr_id=$(git config --get pullrequest.id)
 		branch_name=$(git config --get pullrequest.branch)
