@@ -3,8 +3,8 @@
 # ======================
 ARG MAVEN_VERSION="3.6.3"
 ARG MAVEN_SHA512_CHECKSUM="1c095ed556eda06c6d82fdf52200bc4f3437a1bab42387e801d6f4c56e833fb82b16e8bf0aab95c9708de7bfb55ec27f653a7cf0f491acebc541af234eded94d"
-ARG SONAR_SCANNER_CLI_VERSION="4.2.0.1873"
-ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="c70e8b4b5fed0708cff1f671dbaaefeff3d6feb07b8cb3d926286d5bb1285a295d79ef3075c3202ac29c6e2b4dad198dbb7558f7e4301ee26115866202e304fe"
+ARG SONAR_SCANNER_CLI_VERSION="4.3.0.2102"
+ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="b24f15d2425560084928ec5fb18253b67b3c640c341766f036510332337d5e4d90f747b0ac2c0fc71064f4bea39064235094825be62bcdf8ab230a596f9212ae"
 ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.7.0.1746"
 
 # =================================================
@@ -33,11 +33,11 @@ RUN rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 # ===========
 # Final image
 # ===========
-FROM openjdk:11.0.6-slim
+FROM openjdk:11.0.7-slim
 RUN apt-get -y update \
 && apt-get -y install bash curl gawk git jq nodejs npm
 
-ARG TYPESCRIPT_VERSION="3.8.3"
+ARG TYPESCRIPT_VERSION="3.9.5"
 RUN npm install -g typescript@${TYPESCRIPT_VERSION}
 
 RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" \
@@ -60,7 +60,7 @@ RUN ln -sf "/opt/apache-maven/bin/mvn" "/usr/local/bin/mvn" \
 ENV M2_HOME="/opt/apache-maven"
 
 ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION
-RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get \
+RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
 -DrepoUrl="https://repo.maven.apache.org/maven2/" \
 -Dartifact="org.sonarsource.scanner.maven:sonar-maven-plugin:${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}:jar"
 
@@ -68,12 +68,12 @@ ENV NODE_PATH="/usr/local/lib/node_modules"
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
-      version="0.11.4" \
+      version="0.12.0" \
       maven.version="{MAVEN_VERSION}" \
       sonar-scanner.cli.version="${SONAR_SCANNER_CLI_VERSION}" \
       sonar-scanner.maven-plugin.version="${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}" \
       typescript.version=${TYPESCRIPT_VERSION} \
-      org.concourse-ci.target-version="6.1.0" \
+      org.concourse-ci.target-version="6.3.0" \
       org.concourse-ci.resource-id="sonarqube" \
       org.concourse-ci.resource-name="SonarQube Static Code Analysis" \
       org.concourse-ci.resource-homepage="https://github.com/cathive/concourse-sonarqube-resource"

@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] - 2020-06-12
+
+Thanks to "[noelcat](https://github.com/noelcatt)" for the pull request to add support
+for BitBucket pull request decorators.
+
+### Added
+
+- Support for BitBucket pull request decorations has been added.
+
+### Updated
+
+- Base docker image has been updaed to openjdk:11.0.7-slim.
+- The bundled Sonar Scanner CLI has been updated to v4.3.0.2102.
+- The bundled TypeScript version has been updated to v3.9.5.
+
 ## [0.11.4] - 2020-05-18
 
 ### Fixed
