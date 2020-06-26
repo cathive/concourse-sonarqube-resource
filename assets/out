@@ -218,6 +218,7 @@ if [[ -n "${sonar_tests}" ]]; then
 	fi
 	scanner_opts+=" -Dsonar.tests=\"${sonar_tests}\""
 fi
+
 scanner_type=$(jq -r '.params.scanner_type // ""' < "${payload}")
 
 
