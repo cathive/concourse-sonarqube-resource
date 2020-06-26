@@ -24,7 +24,7 @@ if [[ ! -d "${source}" ]]; then
 	exit 1
 fi
 
-cd "${source}/${project_path}"
+cd "${source}"
 
 payload=$(mktemp "${TMPDIR}/sonarqube-resource-out.XXXXXX")
 cat > "${payload}" <&0
@@ -45,6 +45,8 @@ if [[ ! -d "${project_path}" ]]; then
 	echo "error: Project path (${project_path}) not found or not a directory."
 	exit 1
 fi
+
+cd "${project_path}"
 
 sonar_host_url=$(jq -r '.source.host_url // ""' < "${payload}")
 if [[ -z "${sonar_host_url}" ]]; then
