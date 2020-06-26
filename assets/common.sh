@@ -212,7 +212,7 @@ function wildcard_convert {
     convert_res=""
     IFS=',';
     for wildcard in $wildcards; do
-        for w in ${project_path}/$wildcard; do
+        for w in $wildcard; do
             if [ "$( wildcard_exists "$w" )" -ne "0" ]; then
                 # Warning about path not exist, instead of fail/block the build.
                 echo "Warning: path [$w] does not exist under $(pwd)" >&2
