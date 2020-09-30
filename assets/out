@@ -82,6 +82,7 @@ if [[ -n "${maven_settings}" ]]; then
 	unset maven_settings
 else
 	maven_settings_file=$(jq -r '.params.maven_settings_file // ""' < "${payload}")
+	maven_settings_file="$(realpath "${maven_settings_file}")"
 fi
 
 if [[ -n "${maven_settings_file}" ]]; then
