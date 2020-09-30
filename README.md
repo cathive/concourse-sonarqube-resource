@@ -107,8 +107,13 @@ quality gate associated with a project are not met.
 * `branch_target_file`: File to be used to read the branch target.
   When this option has been specified, it has precedence over the `branch_target` parameter.
 
-* `decorate_pr`: If set to `true` it will try to fetch the pull request id and the head branch name from
-the pull request resource. It works for `telia-oss/github-pr-resource` and `jtarchie/github-pullrequest-resource`. It will enable `sonar.pullrequest.key` and `sonar.pullrequest.branch` flags when performing your analysis.
+* `decorate_pr`: If set to `true` it will try to fetch the pull request id, the head branch name and the base branch name from
+the pull request resource. It will enable `sonar.pullrequest.key`, `sonar.pullrequest.branch` and `sonar.pullrequest.base` flags when performing your analysis.
+
+  It works for:
+  * `telia-oss/github-pr-resource`
+  * `zarplata/concourse-git-bitbucket-pr-resource`
+  * `jtarchie/github-pullrequest-resource`
 
   >_In order to use this feature you must be using `SonarCloud` or `SonarQube Developer` edition._
 
