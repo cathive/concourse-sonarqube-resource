@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.13.1] - 2020-09-30
+
+### Fixed
+
+- Wrong relative lookup of `maven_settings_file` has been fixed.
+  ([#59](https://github.com/cathive/concourse-sonarqube-resource/issues/59), [#65](https://github.com/cathive/concourse-sonarqube-resource/issues/65))
+
 ## [0.13.0] - 2020-09-30
 
 Thanks to [Chien Jon Soon](https://github.com/sooncj) and [Pruthvidhar Rao Nadunooru](https://github.com/pnedunuri) for their contributions to this release!
