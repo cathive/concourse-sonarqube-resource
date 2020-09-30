@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2020-09-30
+
+Thanks to [Chien Jon Soon](https://github.com/sooncj) and [Pruthvidhar Rao Nadunooru](https://github.com/pnedunuri) for their contributions to this release!
+
+### Added
+
+- Globbing syntax support (`shopt -s globstar`) has been added. ([#60](https://github.com/cathive/concourse-sonarqube-resource/issues/60))
+
+### Fixed
+
+- `sonar.branch.name` should now work correctly when performing pull-request analysis
+
+### Updated
+
+- Base docker image has been updaed to openjdk:11.0.8-slim.
+- The bundled Sonar Scanner CLI has been updated to v4.4.0.2170.
+- The bundled TypeScript version has been updated to v[3.9.7](https://github.com/microsoft/TypeScript/releases/tag/v3.9.7).
+
 ## [0.12.0] - 2020-06-12
 
 Thanks to "[noelcat](https://github.com/noelcatt)" for the pull request to add support

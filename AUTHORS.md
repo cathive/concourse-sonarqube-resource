@@ -6,6 +6,7 @@
 
 ## Contributors
 
+* Chien Jon Soon &lt;sooncj@hotmail.com&gt;
 * Febin Rejoe &lt;FM046667@cerner.net&gt;
 * Fernando Torres &lt;fft@hellofresh.com&gt;
 * Greg Carter &lt;greg_carter@comcast.com&gt;
@@ -15,6 +16,7 @@
 * Ming Xu &lt;mingx@vmware.com&gt;
 * Nabil Abdelwahd &lt;nabil.labout@gmail.com&gt;
 * Pontus Arfwedson &lt;pontus.arfwedson@netlight.com&gt;
+* Pruthvidhar Rao Nadunooru &lt;nadunoorup@vmware.com&gt;
 * Rekha Mittal &lt;rekha.mittal@calculi.com&gt;
 * Rune Engseth &lt;rune.engseth@tine.no&gt;
 * Samed Ozdemir &lt;samed@xsorcreations.com&gt;

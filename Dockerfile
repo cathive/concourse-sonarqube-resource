@@ -3,8 +3,8 @@
 # ======================
 ARG MAVEN_VERSION="3.6.3"
 ARG MAVEN_SHA512_CHECKSUM="1c095ed556eda06c6d82fdf52200bc4f3437a1bab42387e801d6f4c56e833fb82b16e8bf0aab95c9708de7bfb55ec27f653a7cf0f491acebc541af234eded94d"
-ARG SONAR_SCANNER_CLI_VERSION="4.3.0.2102"
-ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="b24f15d2425560084928ec5fb18253b67b3c640c341766f036510332337d5e4d90f747b0ac2c0fc71064f4bea39064235094825be62bcdf8ab230a596f9212ae"
+ARG SONAR_SCANNER_CLI_VERSION="4.4.0.2170"
+ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="08107612f77eba584dcad6d939d092b3934e382f32075c26687ab013402e2634cf4b6e3b3635d842e2a9120c9612d39051ca8c62b09303f47aa6ea21f6251bb5"
 ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.7.0.1746"
 
 # =================================================
@@ -33,11 +33,11 @@ RUN rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 # ===========
 # Final image
 # ===========
-FROM openjdk:11.0.7-slim
+FROM openjdk:11.0.8-slim
 RUN apt-get -y update \
 && apt-get -y install bash curl gawk git jq nodejs npm
 
-ARG TYPESCRIPT_VERSION="3.9.5"
+ARG TYPESCRIPT_VERSION="3.9.7"
 RUN npm install -g typescript@${TYPESCRIPT_VERSION}
 
 RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" \
@@ -68,12 +68,12 @@ ENV NODE_PATH="/usr/local/lib/node_modules"
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
-      version="0.12.0" \
+      version="0.13.0" \
       maven.version="{MAVEN_VERSION}" \
       sonar-scanner.cli.version="${SONAR_SCANNER_CLI_VERSION}" \
       sonar-scanner.maven-plugin.version="${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}" \
       typescript.version=${TYPESCRIPT_VERSION} \
-      org.concourse-ci.target-version="6.3.0" \
+      org.concourse-ci.target-version="6.5.1" \
       org.concourse-ci.resource-id="sonarqube" \
       org.concourse-ci.resource-name="SonarQube Static Code Analysis" \
       org.concourse-ci.resource-homepage="https://github.com/cathive/concourse-sonarqube-resource"
