@@ -12,6 +12,7 @@
 * Greg Carter &lt;greg_carter@comcast.com&gt;
 * Guillaume Pouilloux &lt;gpouilloux@idmog.com&gt;
 * Horst Gutmann &lt;zerok@zerokspot.com&gt;
+* Julien Syx &lt;julien.syx@cycloid.io&gt;
 * Marek Urban
 * Ming Xu &lt;mingx@vmware.com&gt;
 * Nabil Abdelwahd &lt;nabil.labout@gmail.com&gt;

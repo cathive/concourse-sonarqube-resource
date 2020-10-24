@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.13.2] - 2020-10-24
+
+This version contains fixes provided by [Julien Syx](https://github.com/Seraf).
+Thanks for helping out and making this release possible!
+
+### Fixed
+
+- Fix broken builds that occured when no `maven_settings_file` is set.
+  ([#66](https://github.com/cathive/concourse-sonarqube-resource/issues/66), [#67](https://github.com/cathive/concourse-sonarqube-resource/issues/67))
+
+- Pull request identification if `decorate_pr` is set to `true` has been fixed.
+
 ## [0.13.1] - 2020-09-30
 
 ### Fixed
