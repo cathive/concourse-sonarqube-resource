@@ -269,7 +269,7 @@ elif [[ "${scanner_type}" == "maven" ]]; then
 	fi
 
 	# shellcheck disable=SC2016
-	maven_project_build_directory=$(${mvn} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)
+	maven_project_build_directory=$(${mvn/-X} -q -f "${project_path}/pom.xml" -Dexec.executable="echo" -Dexec.args='${project.build.directory}' --non-recursive exec:exec)
 	scanner_report_file="${maven_project_build_directory}/sonar/report-task.txt"
 	unset maven_project_build_directory
 fi
