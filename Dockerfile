@@ -10,7 +10,7 @@ ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.7.0.1746"
 # =================================================
 # Builder image (just for downloads / preparations)
 # =================================================
-FROM debian:jessie as builder
+FROM debian:latest as builder
 RUN apt-get -y update && apt-get -y install curl unzip
 ARG MAVEN_VERSION
 ARG MAVEN_SHA512_CHECKSUM
