@@ -37,7 +37,7 @@ FROM openjdk:19-slim
 RUN apt-get -y update \
 && apt-get -y install bash curl gawk git jq shellcheck
 
-# Install nodejs 18
+# Install nodejs 14
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt -y install nodejs
 
