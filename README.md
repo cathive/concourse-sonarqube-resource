@@ -121,6 +121,10 @@ the pull request resource. It will enable `sonar.pullrequest.key`, `sonar.pullre
 
 * `tests`: A list of paths to directories containing source files.
 
+* `additional_sonar_scanner_opts`: Optional values to be passed in to the $SONAR_SCANNER_OPTS env variable.
+  Can be used to provide parameters to Sonar before the scanner process starts. This is at the moment
+  essentially necessary for HTTP proxy settings.
+
 * `additional_properties`: Optional object/dictionary that may contain any additional properties
   that one might want to pass when running the sonar-scanner.
 

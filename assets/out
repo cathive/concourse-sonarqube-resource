@@ -274,6 +274,12 @@ elif [[ "${scanner_type}" == "maven" ]]; then
 	unset maven_project_build_directory
 fi
 
+additional_sonar_scanner_opts=$(jq -r '.params.additional_sonar_scanner_opts // ""' < "${payload}")
+echo "additional_sonar_scanner_opts=${SONAR_SCANNER_OPTS}"
+if [[ -n "${additional_sonar_scanner_opts}" ]]; then
+	export SONAR_SCANNER_OPTS="${SONAR_SCANNER_OPTS} ${additional_sonar_scanner_opts}"
+fi
+
 # If any additional properties have been specified, we'll just append them to the
 # command line. We don't check for any duplicates that might have been created due to
 # the fact that some "basic" properties might have specified a second time as
