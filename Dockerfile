@@ -1,16 +1,16 @@
 # ======================
 # Global build arguments
 # ======================
-ARG MAVEN_VERSION="3.6.3"
-ARG MAVEN_SHA512_CHECKSUM="1c095ed556eda06c6d82fdf52200bc4f3437a1bab42387e801d6f4c56e833fb82b16e8bf0aab95c9708de7bfb55ec27f653a7cf0f491acebc541af234eded94d"
-ARG SONAR_SCANNER_CLI_VERSION="4.4.0.2170"
-ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="08107612f77eba584dcad6d939d092b3934e382f32075c26687ab013402e2634cf4b6e3b3635d842e2a9120c9612d39051ca8c62b09303f47aa6ea21f6251bb5"
+ARG MAVEN_VERSION="3.8.6"
+ARG MAVEN_SHA512_CHECKSUM="f92dbd90060c5fd422349f844ea904a0918c9c9392f3277543ce2bfb0aab941950bb4174d9b6e2ea84cd48d2940111b83ffcc2e3acf5a5b2004277105fd22be9"
+ARG SONAR_SCANNER_CLI_VERSION="4.7.0.2747"
+ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="92475d0b32d15c3602657852e8670b862ba2d1a1ecafefbc40c2b176173375e21931ae94c5966f454d31e3dea7fb3033cec742498660cf0dc0ff9fa742a9fe4a"
 ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.7.0.1746"
 
 # =================================================
 # Builder image (just for downloads / preparations)
 # =================================================
-FROM debian:latest as builder
+FROM debian:stable-slim as builder
 RUN apt-get -y update && apt-get -y install curl unzip
 ARG MAVEN_VERSION
 ARG MAVEN_SHA512_CHECKSUM
@@ -23,7 +23,7 @@ RUN unzip -qq "/tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip" -d
 RUN mv "/data/sonar-scanner-${SONAR_SCANNER_CLI_VERSION}-linux" "/data/sonar-scanner"
 RUN rm -f "/tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip"
 
-ARG MAVEN_DOWNLOAD_URL="http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.zip"
+ARG MAVEN_DOWNLOAD_URL="https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.zip"
 RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 RUN echo "${MAVEN_SHA512_CHECKSUM}  /tmp/apache-maven-${MAVEN_VERSION}-bin.zip" | sha512sum -c
 RUN unzip -qq "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip" -d "/data"
@@ -33,9 +33,13 @@ RUN rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 # ===========
 # Final image
 # ===========
-FROM openjdk:11.0.8-slim
+FROM openjdk:19-slim
 RUN apt-get -y update \
-&& apt-get -y install bash curl gawk git jq nodejs npm
+&& apt-get -y install bash curl gawk git jq shellcheck
+
+# Install nodejs 14
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt -y install nodejs
 
 ARG TYPESCRIPT_VERSION="3.9.7"
 RUN npm install -g typescript@${TYPESCRIPT_VERSION}
