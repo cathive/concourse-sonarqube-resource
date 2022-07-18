@@ -33,7 +33,7 @@ RUN rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 # ===========
 # Final image
 # ===========
-FROM openjdk:19-slim
+FROM openjdk:17-slim
 RUN apt-get -y update \
 && apt-get -y install bash curl gawk git jq shellcheck
 
