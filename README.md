@@ -1,6 +1,6 @@
 [![CI](https://github.com/cathive/concourse-sonarqube-resource/actions/workflows/ci.yml/badge.svg)](https://github.com/cathive/concourse-sonarqube-resource/actions/workflows/ci.yml)
 
-# [SonarQube](https://sonarqube.org/) Resource for [Concourse CI](https://concourse.ci/)
+# [SonarQube](https://sonarqube.org/) Resource for [Concourse CI](https://concourse-ci.org/)
 
 Performs SonarQube analyses and tracks the state of SonarQube [quality gates](https://docs.sonarqube.org/display/SONAR/Quality+Gates).
 
