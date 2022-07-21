@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+A new maintainer has stepped forward!
+Welcome, [Holger Stolzenberg](https://github.com/holgerstolzenberg)!
+
+
+### Added
+
+- Container images are now available for amd64 *and* arm64 architecture. Thanks a lot, ["odidev"](https://github.com/odidev)
+  for the initial pull request to introduce this feature.
+- A new parameter `additional_sonar_scanner_opts` is now available, which allows users to specifiy the
+  `SONAR_SCANNER_OPTS` environment variable for elobarorated SonarQube scanner invocations.
+
+### Changed
+
+- Main development branch has been renamed from `master` to `main`.
+- Fully-automated CI/CD builds that will create container images with tag `:latest` whenever changes to the
+  `main` branch are pushed works again after some changes made by Docker Hub that broke the old CI/CD workflow.
+
+### Fixed
+
+- Setting argument `__debug=true` no longer breaks Maven-based builds. Thanks for the fix,[Roberto C. Salome](https://github.com/rcsalome)!
+
+### Updated
+
+- Sonar CLI, bundled Node.js version and all other dependencies in the container image(s) have been updated
+  to their latest release versions.
+
 ## [0.13.2] - 2020-10-24
 
 This version contains fixes provided by [Julien Syx](https://github.com/Seraf).

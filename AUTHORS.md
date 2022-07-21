@@ -3,6 +3,7 @@
 ## Maintainer
 
 * Benjamin P. Jung &lt;headcr4sh@gmail.com&gt;
+* Holger Stolzenberg &lt;h.stolzenberg@ewerk.com&gt;
 
 ## Contributors
 
@@ -16,9 +17,12 @@
 * Marek Urban
 * Ming Xu &lt;mingx@vmware.com&gt;
 * Nabil Abdelwahd &lt;nabil.labout@gmail.com&gt;
+* "odidev" &lt;odidev@puresoftware.com&gt;
+* Pinaki Sarkar &lt;pinaki.sarkar@calculi.com&gt;
 * Pontus Arfwedson &lt;pontus.arfwedson@netlight.com&gt;
 * Pruthvidhar Rao Nadunooru &lt;nadunoorup@vmware.com&gt;
 * Rekha Mittal &lt;rekha.mittal@calculi.com&gt;
+* Roberto C. Salome &lt;robertocsalome@gmail.com&gt;
 * Rune Engseth &lt;rune.engseth@tine.no&gt;
 * Samed Ozdemir &lt;samed@xsorcreations.com&gt;
 * Ye Yang &lt;yangye@vmware.com&gt;
