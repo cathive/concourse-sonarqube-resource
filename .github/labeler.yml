@@ -1,0 +1,13 @@
+---
+metadata:
+- '.editorconfig'
+- '.gitattributes'
+- '.gitattributes'
+- '.gitignore'
+
+ci-setup:
+- '.github/**/*'
+
+documentation:
+- '**/*.md'
+...

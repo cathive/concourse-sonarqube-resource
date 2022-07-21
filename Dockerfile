@@ -1,6 +1,7 @@
 # ======================
 # Global build arguments
 # ======================
+ARG RESOURCE_VERSION="0.13.2"
 ARG MAVEN_VERSION="3.8.6"
 ARG MAVEN_SHA512_CHECKSUM="f92dbd90060c5fd422349f844ea904a0918c9c9392f3277543ce2bfb0aab941950bb4174d9b6e2ea84cd48d2940111b83ffcc2e3acf5a5b2004277105fd22be9"
 ARG SONAR_SCANNER_CLI_VERSION="4.7.0.2747"
@@ -72,7 +73,7 @@ ENV NODE_PATH="/usr/local/lib/node_modules"
 ENV PATH="/usr/local/bin:/usr/bin:/bin"
 
 LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
-      version="0.13.2" \
+      version="${RESOURCE_VERSION}" \
       maven.version="{MAVEN_VERSION}" \
       sonar-scanner.cli.version="${SONAR_SCANNER_CLI_VERSION}" \
       sonar-scanner.maven-plugin.version="${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}" \
@@ -81,6 +82,15 @@ LABEL maintainer="Benjamin P. Jung <headcr4sh@gmail.com>" \
       org.concourse-ci.resource-id="sonarqube" \
       org.concourse-ci.resource-name="SonarQube Static Code Analysis" \
       org.concourse-ci.resource-homepage="https://github.com/cathive/concourse-sonarqube-resource"
+
+# org.opencontainers annotations / labels.
+# See https://github.com/opencontainers/image-spec/blob/main/annotations.md for further details.
+LABEL org.opencontainers.image.title="concourse-sonarqube-resource"
+LABEL org.opencontainers.image.description="Concourse CI resource to interact with SonarQube"
+LABEL org.opencontainers.image.source="https://github.com/cathive/concourse-sonarqube-resource"
+LABEL org.opencontainers.image.vendor="The Cat Hive Developers"
+LABEL org.opencontainers.image.licenses="LicenseRef-apache-2.0"
+LABEL org.opencontainers.image.version="${RESOURCE_VERSION}"
 
 COPY ./assets/* /opt/resource/
 
