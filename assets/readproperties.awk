@@ -5,7 +5,7 @@ BEGIN {
 	v="";
 	c=0; # Not a line continuation.
 }
-/^\#/ { # The line is a comment.  Breaks line continuation.
+/^#/ { # The line is a comment.  Breaks line continuation.
 	c=0;
 	next;
 }
