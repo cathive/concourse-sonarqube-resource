@@ -65,7 +65,7 @@ RUN ln -sf "/opt/apache-maven/bin/mvn" "/usr/local/bin/mvn" \
 ENV M2_HOME="/opt/apache-maven"
 
 ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION
-RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.1.2:get \
+RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.3.0:get \
 -DrepoUrl="https://repo.maven.apache.org/maven2/" \
 -Dartifact="org.sonarsource.scanner.maven:sonar-maven-plugin:${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}:jar"
 
