@@ -2,20 +2,17 @@
 name: Pull Request Labeler
 on:
 - pull_request_target
-permissions:
-  contents: read
-  pull-requests: write
 jobs:
   triage:
     permissions:
       contents: read
       issues: write
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Add labels to pull request
       uses: actions/labeler@v4
       with:
-        repo-token: '${{ secrets.GITHUB_TOKEN }}'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
         configuration-path: .github/labeler.yml
         sync-labels: true
 ...
