@@ -1,6 +1,6 @@
 # Authors
 
-## Maintainer
+## Maintainers
 
 * Benjamin P. Jung &lt;headcr4sh@gmail.com&gt;
 * Holger Stolzenberg &lt;h.stolzenberg@ewerk.com&gt;
