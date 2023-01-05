@@ -2,8 +2,8 @@
 # Global build arguments
 # ======================
 ARG RESOURCE_VERSION="0.14.1"
-ARG MAVEN_VERSION="3.8.6"
-ARG MAVEN_SHA512_CHECKSUM="f92dbd90060c5fd422349f844ea904a0918c9c9392f3277543ce2bfb0aab941950bb4174d9b6e2ea84cd48d2940111b83ffcc2e3acf5a5b2004277105fd22be9"
+ARG MAVEN_VERSION="3.8.7"
+ARG MAVEN_SHA512_CHECKSUM="c687fcdc3890bcf0f9f9dbc42ceded21dc80f0dcc5541c28912a99224694793f6e437998e46b5939bd314178865263c62a069c6c6f15d1d0541eea75748c46fd"
 ARG SONAR_SCANNER_CLI_VERSION="4.7.0.2747"
 ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="92475d0b32d15c3602657852e8670b862ba2d1a1ecafefbc40c2b176173375e21931ae94c5966f454d31e3dea7fb3033cec742498660cf0dc0ff9fa742a9fe4a"
 ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.9.1.2184"
@@ -11,7 +11,7 @@ ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.9.1.2184"
 # =================================================
 # Builder image (just for downloads / preparations)
 # =================================================
-FROM debian:stable-slim as builder
+FROM docker.io/library/debian:stable-slim as builder
 RUN apt-get -y update && apt-get -y install curl unzip
 ARG MAVEN_VERSION
 ARG MAVEN_SHA512_CHECKSUM
@@ -34,7 +34,7 @@ RUN rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 # ===========
 # Final image
 # ===========
-FROM openjdk:17-slim
+FROM docker.io/openjdk:17-slim
 RUN apt-get -y update \
 && apt-get -y install bash curl gawk git jq shellcheck
 
