@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 - The bundled version of Apache Maven has been updated to v3.8.7.
+- The bundled version of Node.js has been updated to v18.x.
+- The bundled version of TypeScript has been updated to v4.9.4.
 
 
 ## [0.14.1] - 2022-08-24
