@@ -39,10 +39,10 @@ RUN apt-get -y update \
 && apt-get -y install bash curl gawk git jq shellcheck
 
 # Install nodejs 14
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt -y install nodejs
 
-ARG TYPESCRIPT_VERSION="3.9.7"
+ARG TYPESCRIPT_VERSION="4.9.4"
 RUN npm install -g typescript@${TYPESCRIPT_VERSION}
 
 RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" \
@@ -93,5 +93,3 @@ LABEL org.opencontainers.image.licenses="LicenseRef-apache-2.0"
 LABEL org.opencontainers.image.version="${RESOURCE_VERSION}"
 
 COPY ./assets/* /opt/resource/
-
-
