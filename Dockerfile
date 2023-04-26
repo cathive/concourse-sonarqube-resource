@@ -42,7 +42,7 @@ RUN apt-get -y update \
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt -y install nodejs
 
-ARG TYPESCRIPT_VERSION="4.9.4"
+ARG TYPESCRIPT_VERSION="5.0.4"
 RUN npm install -g typescript@${TYPESCRIPT_VERSION}
 
 RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" \
