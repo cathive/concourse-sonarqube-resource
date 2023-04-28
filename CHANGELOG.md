@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Updated
+
+- The bundled version of Apache Maven has been updated to v3.9.1.
+
+
 ## [0.14.2] - 2023-01-10
+
+### Updated
 
 - The bundled version of Apache Maven has been updated to v3.8.7.
 - The bundled version of Node.js has been updated to v18.x.
