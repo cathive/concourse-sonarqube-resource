@@ -38,9 +38,9 @@ FROM docker.io/openjdk:17-slim
 RUN apt-get -y update \
 && apt-get -y install bash curl gawk git jq shellcheck
 
-# Install nodejs 14
+# Install nodejs 18
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
-RUN apt -y install nodejs
+RUN apt-get -y install nodejs
 
 ARG TYPESCRIPT_VERSION="4.9.4"
 RUN npm install -g typescript@${TYPESCRIPT_VERSION}
