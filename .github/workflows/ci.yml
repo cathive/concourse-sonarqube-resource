@@ -23,9 +23,6 @@ jobs:
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      - name: Debug credentials
-        id: debug
-        run: echo ${{ secrets.DOCKER_HUB_USERNAME }}
       - name: Login to docker.io
         id: docker-login
         if: ${{ github.actor != 'dependabot[bot]' }}
