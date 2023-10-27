@@ -45,9 +45,8 @@ RUN apt-get -y update && apt-get -y install bash curl gawk git jq shellcheck ca-
     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
     apt-get update && \
-    apt-get install nodejs -y
-
-RUN npm install -g typescript@${TYPESCRIPT_VERSION}
+    apt-get install nodejs -y && \
+    npm install -g typescript@${TYPESCRIPT_VERSION}
 
 RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" && \
     ln -sf "${JAVA_HOME}/bin/javac" "/usr/local/bin/javac" && \
