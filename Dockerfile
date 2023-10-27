@@ -2,8 +2,8 @@
 # Global build arguments
 # ======================
 ARG RESOURCE_VERSION="0.14.1"
-ARG MAVEN_VERSION="3.9.1"
-ARG MAVEN_SHA512_CHECKSUM="4ae5a0d17f9e6cbe57640c481f426a9184dfb451c2bb7cc7db324da095f616a14e7c482a79240e5286e241d8cd2805ea1cd9c95e38954101c2fa4088baad9a1a"
+ARG MAVEN_VERSION="3.9.5"
+ARG MAVEN_SHA512_CHECKSUM="ca59380b839c6bea8f464a08bb7873a1cab91007b95876ba9ed8a9a2b03ceac893e661d218ba3d4af3ccf46d26600fc4c59fccabba9d7b2cc4adcd8aecc1df2a"
 ARG SONAR_SCANNER_CLI_VERSION="4.7.0.2747"
 ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="92475d0b32d15c3602657852e8670b862ba2d1a1ecafefbc40c2b176173375e21931ae94c5966f454d31e3dea7fb3033cec742498660cf0dc0ff9fa742a9fe4a"
 ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.9.1.2184"
@@ -35,19 +35,22 @@ RUN rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 # Final image
 # ===========
 FROM docker.io/openjdk:17-slim
-RUN apt-get -y update \
-&& apt-get -y install bash curl gawk git jq shellcheck
 
-# Install nodejs 18
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
-RUN apt-get -y install nodejs
-
+ARG NODE_MAJOR=20
 ARG TYPESCRIPT_VERSION="5.0.4"
-RUN npm install -g typescript@${TYPESCRIPT_VERSION}
 
-RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" \
-&& ln -sf "${JAVA_HOME}/bin/javac" "/usr/local/bin/javac" \
-&& ln -sf "${JAVA_HOME}/bin/jar" "/usr/local/bin/jar"
+# Install nodejs
+RUN apt-get -y update && apt-get -y install bash curl gawk git jq shellcheck ca-certificates gnupg && \
+    mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
+    apt-get update && \
+    apt-get install nodejs -y && \
+    npm install -g typescript@${TYPESCRIPT_VERSION}
+
+RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" && \
+    ln -sf "${JAVA_HOME}/bin/javac" "/usr/local/bin/javac" && \
+    ln -sf "${JAVA_HOME}/bin/jar" "/usr/local/bin/jar"
 
 # TODO How should we do this with Slim?
 # https://github.com/concourse/concourse/issues/2042
