@@ -1,7 +1,7 @@
 # ======================
 # Global build arguments
 # ======================
-ARG RESOURCE_VERSION="0.14.1"
+ARG RESOURCE_VERSION="0.14.3"
 ARG MAVEN_VERSION="3.9.5"
 ARG MAVEN_SHA512_CHECKSUM="ca59380b839c6bea8f464a08bb7873a1cab91007b95876ba9ed8a9a2b03ceac893e661d218ba3d4af3ccf46d26600fc4c59fccabba9d7b2cc4adcd8aecc1df2a"
 ARG SONAR_SCANNER_CLI_VERSION="4.7.0.2747"

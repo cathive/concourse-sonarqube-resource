@@ -146,7 +146,7 @@ function parse_quality_gates {
 
     if [[ "$project_status" == "ERROR" ]]; then
         ignore_all_error=$(echo "${qg_settings}" | jq -r '.ignore_all_error // false')
-        if [[ "$ignore_all_error" == "ERROR" ]]; then
+        if [[ "$ignore_all_error" == true || "$ignore_all_error" == "true" ]]; then
             return 0
         fi
         ignore_errors=$(echo "${qg_settings}" | jq -r '.ignore_errors // ""')
