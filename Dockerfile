@@ -34,7 +34,7 @@ RUN rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 # ===========
 # Final image
 # ===========
-FROM docker.io/openjdk:17-slim
+FROM docker.io/eclipse-temurin:25.0.2_10-jre-noble
 
 ARG NODE_MAJOR=20
 ARG TYPESCRIPT_VERSION="5.0.4"

@@ -3,7 +3,7 @@ schemaVersion: '2.0.0'
 metadataTest:
   env:
   - key: 'JAVA_HOME'
-    value: '/usr/java/openjdk-11'
+    value: '/opt/java/openjdk'
   - key: 'M2_HOME'
     value: '/opt/apache-maven'
   - key: 'NODE_PATH'
@@ -11,7 +11,7 @@ metadataTest:
 
 fileExistenceTests:
 - name: 'Java Runtime must be installed'
-  path: '/usr/local/bin/java'
+  path: '/opt/java/openjdk/bin/java'
   shouldExist: true
   isExecutableBy: 'owner'
 - name: 'Maven must be installed'
