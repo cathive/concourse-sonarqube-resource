@@ -1,9 +1,6 @@
 # ======================
 # Global build arguments
 # ======================
-ARG RESOURCE_VERSION="0.14.3"
-ARG MAVEN_VERSION="3.9.5"
-ARG MAVEN_SHA512_CHECKSUM="ca59380b839c6bea8f464a08bb7873a1cab91007b95876ba9ed8a9a2b03ceac893e661d218ba3d4af3ccf46d26600fc4c59fccabba9d7b2cc4adcd8aecc1df2a"
 ARG SONAR_SCANNER_CLI_VERSION="4.7.0.2747"
 ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="92475d0b32d15c3602657852e8670b862ba2d1a1ecafefbc40c2b176173375e21931ae94c5966f454d31e3dea7fb3033cec742498660cf0dc0ff9fa742a9fe4a"
 ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.9.1.2184"
@@ -11,15 +8,20 @@ ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION="3.9.1.2184"
 # =================================================
 # Builder image (just for downloads / preparations)
 # =================================================
-FROM docker.io/library/debian:stable-slim as builder
+FROM docker.io/library/debian:stable-slim AS builder
+
 RUN apt-get -y update && apt-get -y install curl unzip
-ARG MAVEN_VERSION
-ARG MAVEN_SHA512_CHECKSUM
+
+ARG MAVEN_VERSION="3.9.14"
+ARG MAVEN_SHA512_CHECKSUM="4122c5e7a8794260539dd8fcd78480549511babff2f85e2b1258c8d4cf33c50af90f65d323f43c88d4959f35a8f37ced3eca802983caa6eb7cc81b16af936ab0"
+
 ARG SONAR_SCANNER_CLI_VERSION
 ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM
 ARG SONAR_SCANNER_DOWNLOAD_URL="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip"
+
 RUN curl -s -L "${SONAR_SCANNER_DOWNLOAD_URL}" > "/tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip"
-RUN echo "${SONAR_SCANNER_CLI_SHA512_CHECKSUM}  /tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip" | sha512sum -c
+RUN echo "${SONAR_SCANNER_CLI_SHA512_CHECKSUM} /tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip" \
+    | sha512sum -c
 RUN unzip -qq "/tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip" -d "/data"
 RUN mv "/data/sonar-scanner-${SONAR_SCANNER_CLI_VERSION}-linux" "/data/sonar-scanner"
 RUN rm -f "/tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux.zip"
@@ -34,7 +36,7 @@ RUN rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 # ===========
 # Final image
 # ===========
-FROM docker.io/openjdk:17-slim
+FROM docker.io/eclipse-temurin:25.0.2_10-jre-noble
 
 ARG NODE_MAJOR=20
 ARG TYPESCRIPT_VERSION="5.0.4"
@@ -46,9 +48,8 @@ RUN apt-get -y update && apt-get -y install bash curl gawk git jq shellcheck ca-
     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
     apt-get update && \
     apt-get install nodejs -y && \
-    npm install -g typescript@${TYPESCRIPT_VERSION}
-
-RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" && \
+    npm install -g typescript@${TYPESCRIPT_VERSION} && \
+    ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" && \
     ln -sf "${JAVA_HOME}/bin/javac" "/usr/local/bin/javac" && \
     ln -sf "${JAVA_HOME}/bin/jar" "/usr/local/bin/jar"
 
@@ -58,19 +59,26 @@ RUN ln -sf "${JAVA_HOME}/bin/java" "/usr/local/bin/java" && \
 #cp "/etc/ssl/certs/java/cacerts" "${JAVA_HOME}/lib/security/cacerts"
 
 COPY --from=builder "/data/sonar-scanner" "/opt/sonar-scanner"
+
 RUN rm -Rf "/opt/sonar-scanner/jre" \
-&& ln -sf "${JAVA_HOME}" "/opt/sonar-scanner/jre" \
-&& ln -sf "/opt/sonar-scanner/bin/sonar-scanner" "/usr/local/bin/sonar-scanner" \
-&& ln -sf "/opt/sonar-scanner/bin/sonar-scanner-debug" "/usr/local/bin/sonar-scanner-debug"
+	&& ln -sf "${JAVA_HOME}" "/opt/sonar-scanner/jre" \
+	&& ln -sf "/opt/sonar-scanner/bin/sonar-scanner" "/usr/local/bin/sonar-scanner" \
+	&& ln -sf "/opt/sonar-scanner/bin/sonar-scanner-debug" "/usr/local/bin/sonar-scanner-debug"
+
 COPY --from=builder "/data/apache-maven" "/opt/apache-maven"
+
 RUN ln -sf "/opt/apache-maven/bin/mvn" "/usr/local/bin/mvn" \
-&& ln -sf "/opt/apache-maven/bin/mvnDebug" "/usr/local/bin/mvnDebug"
+	&& ln -sf "/opt/apache-maven/bin/mvnDebug" "/usr/local/bin/mvnDebug"
+
 ENV M2_HOME="/opt/apache-maven"
 
+ARG RESOURCE_VERSION="0.15.0"
+ARG SONAR_SCANNER_CLI_VERSION
 ARG SONAR_SCANNER_MAVEN_PLUGIN_VERSION
+
 RUN mvn -q org.apache.maven.plugins:maven-dependency-plugin:3.3.0:get \
--DrepoUrl="https://repo.maven.apache.org/maven2/" \
--Dartifact="org.sonarsource.scanner.maven:sonar-maven-plugin:${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}:jar"
+	-DrepoUrl="https://repo.maven.apache.org/maven2/" \
+	-Dartifact="org.sonarsource.scanner.maven:sonar-maven-plugin:${SONAR_SCANNER_MAVEN_PLUGIN_VERSION}:jar"
 
 ENV NODE_PATH="/usr/local/lib/node_modules"
 ENV PATH="/usr/local/bin:/usr/bin:/bin"

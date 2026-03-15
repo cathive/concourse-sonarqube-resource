@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Updated
 
 - The bundled version of Apache Maven has been updated to v3.9.1.
+- the base image has been updated to eclipse-temurin:25.0.2_10-jre-noble
 
 
 ## [0.14.3] - ???
