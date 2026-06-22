@@ -32,8 +32,9 @@ RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-${MAVEN_VERSION}-bin
 
 # ========================================================================================
 # Final image
+
 # ========================================================================================
-FROM docker.io/eclipse-temurin:25.0.2_10-jre-noble
+FROM docker.io/eclipse-temurin:26.0.1_8-jre-noble
 
 ARG NODE_MAJOR=20
 ARG TYPESCRIPT_VERSION="5.0.4"
