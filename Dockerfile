@@ -10,8 +10,15 @@ FROM docker.io/library/debian:stable-slim AS builder
 
 RUN apt-get -y update && apt-get -y install curl unzip
 
-ARG MAVEN_VERSION="3.9.14"
-ARG MAVEN_SHA512_CHECKSUM="4122c5e7a8794260539dd8fcd78480549511babff2f85e2b1258c8d4cf33c50af90f65d323f43c88d4959f35a8f37ced3eca802983caa6eb7cc81b16af936ab0"
+ARG MAVEN_VERSION="3.9.16"
+ARG MAVEN_SHA512_CHECKSUM="ed41650d42485cfc243fad22158caf9cbb5dc408ce7a09ddb94dd42a019de929ca43065bfa450612cf12bf78b5cafa3884b96c090de326ff590448c933454af3"
+
+ARG MAVEN_DOWNLOAD_URL="https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.zip"
+RUN curl -s -L --fail "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip" && \
+    echo "${MAVEN_SHA512_CHECKSUM}  /tmp/apache-maven-${MAVEN_VERSION}-bin.zip" | sha512sum -c && \
+    unzip -qq "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip" -d "/data" && \
+    mv "/data/apache-maven-${MAVEN_VERSION}" "/data/apache-maven" && \
+    rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 
 ARG SONAR_SCANNER_CLI_VERSION
 ARG SONAR_SCANNER_CLI_SHA512_CHECKSUM="0f9ea6231c0373834cf2b9f0935ae34314f83026687ebee4f6f6fa0843512f0754e101b21ef2ca5b839b1b2f08e2a5c758c9575e4ae5247a934b56e37931bd29"
@@ -22,13 +29,6 @@ RUN curl -s -L "${SONAR_SCANNER_DOWNLOAD_URL}" > "/tmp/sonar-scanner-cli-${SONAR
     unzip -qq "/tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux-x64.zip" -d "/data" && \
     mv "/data/sonar-scanner-${SONAR_SCANNER_CLI_VERSION}-linux-x64" "/data/sonar-scanner" && \
     rm -f "/tmp/sonar-scanner-cli-${SONAR_SCANNER_CLI_VERSION}-linux-x64.zip"
-
-ARG MAVEN_DOWNLOAD_URL="https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.zip"
-RUN curl -s -L "${MAVEN_DOWNLOAD_URL}" > "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip" && \
-    echo "${MAVEN_SHA512_CHECKSUM}  /tmp/apache-maven-${MAVEN_VERSION}-bin.zip" | sha512sum -c && \
-    unzip -qq "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip" -d "/data" && \
-    mv "/data/apache-maven-${MAVEN_VERSION}" "/data/apache-maven" && \
-    rm -f "/tmp/apache-maven-${MAVEN_VERSION}-bin.zip"
 
 # ========================================================================================
 # Final image
