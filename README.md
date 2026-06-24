@@ -201,7 +201,7 @@ resources:
   type: sonar-runner
   source:
     host_url: https://sonarqube.example.com/
-    login: ((sonarqube-auth-token))
+    token: ((sonarqube-auth-token))
 
 jobs:
 
