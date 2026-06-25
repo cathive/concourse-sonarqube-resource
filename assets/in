@@ -34,15 +34,9 @@ if [[ -z "${sonar_host_url}" ]]; then
 fi
 sonar_host_url=$(sanitize_base_url "${sonar_host_url}")
 
-sonar_login=$(jq -r '.source.login // ""' < "${payload}")
-
-sonar_password=$(jq -r '.source.password // ""' < "${payload}")
-
-if [[ -n "${sonar_login}" ]] && [[ "${sonar_login}" != "" ]]; then
-	sonar_token="${sonar_login}:"
-	if [[ -n "${sonar_password}" ]] && [[ "${sonar_password}" != "" ]]; then
-		sonar_token+="${sonar_password}"
-	fi
+sonar_token=$(jq -r '.source.token // ""' < "${payload}")
+if [[ -n "${sonar_token}" ]] && [[ "${sonar_token}" != "" ]]; then
+    sonar_token="${sonar_token}:"
 fi
 
 ce_task_id=$(jq -r '.version.ce_task_id // ""' < "${payload}")

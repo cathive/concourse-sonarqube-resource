@@ -9,8 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Updated
 
-- The bundled version of Apache Maven has been updated to v3.9.1.
-- the base image has been updated to eclipse-temurin:25.0.2_10-jre-noble
+- The bundled version of Apache Maven has been updated to `v3.9.16`
+- The base image has been updated to `eclipse-temurin:26.0.1_8-jre-noble`
+- The sonar scanner CLI was updated to `8.0.1.6346`
+- BREAKING: remove `sonar.login` and `sonar.password` config properties in favor of `sonar.token`
 
 
 ## [0.14.3] - ???

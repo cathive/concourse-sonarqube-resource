@@ -12,6 +12,6 @@
   },
   "source": {
     "host_url": "https://sonar.example.com/",
-    "login": "$$ACCESS_TOKEN$$"
+    "token": "$$ACCESS_TOKEN$$"
   }
 }

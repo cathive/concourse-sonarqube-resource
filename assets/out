@@ -62,14 +62,9 @@ if [[ -n "${sonar_organization}" ]]; then
 	scanner_opts+=" -Dsonar.organization=\"${sonar_organization}\""
 fi
 
-sonar_login=$(jq -r '.source.login // ""' < "${payload}")
-if [[ -n "${sonar_login}" ]]; then
-	scanner_opts+=" -Dsonar.login=\"${sonar_login}\""
-fi
-
-sonar_password=$(jq -r '.source.password // ""' < "${payload}")
-if [[ -n "${sonar_password}" ]]; then
-	scanner_opts+=" -Dsonar.password=\"${sonar_password}\""
+sonar_token=$(jq -r '.source.token // ""' < "${payload}")
+if [[ -n "${sonar_token}" ]]; then
+	scanner_opts+=" -Dsonar.token=\"${sonar_token}\""
 fi
 
 # Try to determine Maven settings configuration.
@@ -314,12 +309,8 @@ if [[ -f "${scanner_report_file}" ]]; then
 		# Older versions of SonarQube don't store the serverVersion in
 		# report-task.txt. There is a REST API though, that can be used
 		# to fetch the version.
-		sonar_token=""
-		if [[ -n "${sonar_login}" ]] && [[ "${sonar_login}" != "" ]]; then
-			sonar_token="${sonar_login}"
-			if [[ -n "${sonar_password}" ]] && [[ "${sonar_password}" != "" ]]; then
-				sonar_token+=":${sonar_password}"
-			fi
+		if [[ -n "${sonar_token}" ]] && [[ "${sonar_token}" != "" ]]; then
+			sonar_token="${sonar_token}:"
 		fi
 		serverVersion="$(sq_server_version "${sonar_token}" "${sonar_host_url}")"
 	fi

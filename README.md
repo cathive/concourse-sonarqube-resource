@@ -23,10 +23,10 @@ Add a new resource type to your Concourse CI pipeline:
 ```yaml
  resource_types:
  - name: sonar-runner
-  type: docker-image
-  source:
-    repository: cathive/concourse-sonarqube-resource
-    tag: latest # For reproducible builds use a specific tag and don't rely on "latest".
+   type: docker-image
+   source:
+     repository: cathive/concourse-sonarqube-resource
+     tag: latest # For reproducible builds use a specific tag and don't rely on "latest".
 ```
 
 ## Source Configuration
@@ -38,11 +38,8 @@ Add a new resource type to your Concourse CI pipeline:
   instance. This field is *required* when using SonarCloud to perform the analysis
   of your code.
 
-* `login`: The login or authentication token of a SonarQube user with Execute Analysis
+* `token`: The authentication token of a SonarQube user with Execute Analysis
   permission. Can be left out if SonarQube instance does not require any authentication.
-
-* `password`: The password that goes with the sonar.login username. This should be left blank if an
-  authentication token is being used.
 
 * `maven_settings`: Maven settings to be used when performing SonarQube analysis.
   Only used if the scanner_type during the out phase has been set to / determined to use
@@ -204,7 +201,7 @@ resources:
   type: sonar-runner
   source:
     host_url: https://sonarqube.example.com/
-    login: ((sonarqube-auth-token))
+    token: ((sonarqube-auth-token))
 
 jobs:
 
