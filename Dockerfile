@@ -34,7 +34,7 @@ RUN curl -s -L "${SONAR_SCANNER_DOWNLOAD_URL}" > "/tmp/sonar-scanner-cli-${SONAR
 # Final image
 
 # ========================================================================================
-FROM docker.io/eclipse-temurin:26.0.1_8-jre-noble
+FROM docker.io/eclipse-temurin:26.0.2_10-jre-noble
 
 ARG NODE_MAJOR=20
 ARG TYPESCRIPT_VERSION="5.0.4"
